@@ -1,0 +1,23 @@
+.screen-state {
+  text-align: center;
+  padding: 70px 20px;
+  border: 1px solid #dee7d7;
+  background: #fff;
+  border-radius: 14px;
+  margin: 20px 0;
+}
+.screen-state > .icon {
+  width: 32px;
+  height: 32px;
+  color: #7c9b66;
+}
+.screen-state h2 {
+  font-size: 21px;
+  color: #315b3c;
+  margin: 16px 0;
+}
+.screen-state p {
+  font-size: 12px;
+  color: #859b78;
+  margin: 12px 0 22px;
+}

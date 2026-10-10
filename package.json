@@ -20,8 +20,11 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@tanstack/react-query": "5.104.1",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "react-router": "7.18.4",
+    "zod": "4.6.5"
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.3",
