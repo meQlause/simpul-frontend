@@ -9,8 +9,10 @@ export function apiUrl(path: string) {
 export async function getResponse<ResponseData>(
   path: string,
   schema: ZodType<ResponseData>,
+  options?: RequestInit,
 ): Promise<ResponseData> {
   const response = await fetch(apiUrl(path), {
+    ...options,
     credentials: 'include',
   });
   const body: unknown = await response.json();
