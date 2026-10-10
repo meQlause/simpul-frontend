@@ -102,7 +102,7 @@ export async function connectBackend(page: Page, baseUrl: string) {
     data: { email: 'admin@pointstar.example', password: 'test-password-123' },
   });
   expect(login.ok()).toBe(true);
-  await page.route('**/api/v1/**', async (route) => {
+  await page.route(/\/api\/(v1|auth)\//, async (route) => {
     const url = new URL(route.request().url());
     const response = await route.fetch({ url: `${baseUrl}${url.pathname}${url.search}` });
     await route.fulfill({ response });

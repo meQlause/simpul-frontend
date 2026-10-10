@@ -4,7 +4,7 @@ export const errorEnvelope = schema.object({
   error: schema.object({
     code: schema.string(),
     message: schema.string(),
-    details: schema.array(schema.unknown()),
+    details: schema.array(schema.unknown()).default([]),
     requestId: schema.string(),
   }),
 });

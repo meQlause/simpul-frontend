@@ -15,6 +15,20 @@ export const shellCopy = {
   quietLead: 'Relevant updates,',
   quietPeople: 'for the right people.',
   rules: 'View your rules',
+  workspaceEyebrow: 'SIMPUL / WORKSPACE',
+  workspaceDescription: 'Connected conversations. Shared operational clarity.',
+  workspaceSection: 'Your workspace',
+  workspaceSectionDescription: 'The people and conversations connected here.',
+  members: 'Members',
+  memberUnit: 'people across operational roles',
+  channels: 'Channels',
+  channelUnit: 'Telegram groups',
+  activeRules: 'Active rules',
+  ruleUnit: 'notification rules',
+  timezone: 'Timezone',
+  jakartaTimezone: 'WIB · Asia/Jakarta · UTC+7',
+  back: 'Back to workspace',
+  close: 'Close',
 };
 
 export const navigation = [

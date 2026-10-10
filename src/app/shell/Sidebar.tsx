@@ -39,7 +39,15 @@ function QuietCard({ onNavigate }: { onNavigate: () => void }) {
   );
 }
 
-export function Sidebar({ expanded, onNavigate }: { expanded: boolean; onNavigate: () => void }) {
+export function Sidebar({
+  expanded,
+  onNavigate,
+  onWorkspace,
+}: {
+  expanded: boolean;
+  onNavigate: () => void;
+  onWorkspace: () => void;
+}) {
   const { me, workCount, attentionCount } = useShellData();
   return (
     <aside
@@ -63,13 +71,15 @@ export function Sidebar({ expanded, onNavigate }: { expanded: boolean; onNavigat
           <span className="brand-period">.</span>
         </span>
       </Link>
-      <div className="workspace">
-        <span className="workspace-logo">{initials(me?.workspace.name)}</span>
+      <button className="workspace" type="button" onClick={onWorkspace} disabled={!me}>
+        <span className="workspace-logo" aria-hidden="true">
+          {initials(me?.workspace.name)}
+        </span>
         <span className="workspace-copy">
           <strong>{me?.workspace.name}</strong>
           <small>{me?.workspace.descriptor}</small>
         </span>
-      </div>
+      </button>
       <div className="nav-label">{shellCopy.workspaceHeading}</div>
       <nav>
         {navigation.map((item) => (

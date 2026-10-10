@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { connectBackend, startBackend } from './helpers/backend';
 
 test('Ctrl K focuses the search field; the skip link moves focus to #page-content', async ({
   page,
@@ -16,6 +17,90 @@ test('Ctrl K focuses the search field; the skip link moves focus to #page-conten
   await expect(page.getByRole('searchbox', { name: 'Search all work' })).toBeFocused();
 });
 
+test.describe('shell against the real GET /me', () => {
+  let backend: Awaited<ReturnType<typeof startBackend>>;
+  test.beforeAll(async () => {
+    test.setTimeout(60000);
+    backend = await startBackend();
+  });
+  test.afterAll(() => {
+    backend?.stop();
+  });
+  test.afterEach(async ({ page }) => {
+    await page.unrouteAll({ behavior: 'wait' });
+  });
+  test.beforeEach(async ({ page }) => {
+    await connectBackend(page, backend.baseUrl);
+    // F1 verifies GET /me; overview and review aggregates are implemented in B6.
+    await page.route('**/api/v1/overview', (route) =>
+      route.fulfill({ json: { data: { activeWork: { count: 48 } } } }),
+    );
+    await page.route('**/api/v1/review-items?limit=1', (route) =>
+      route.fulfill({ json: { data: [], page: { total: 7 } } }),
+    );
+    await page.goto('/settings');
+  });
+
+  test('Shell acceptance 1: Point Star and Siti Aminah come from the real session', async ({
+    page,
+  }) => {
+    const sidebar = page.getByRole('complementary', { name: 'Main navigation' });
+    for (const name of [
+      'Point Star',
+      'Operations workspace',
+      'Siti Aminah',
+      'Operations Manager',
+    ]) {
+      await expect(sidebar.getByText(name, { exact: true })).toBeVisible();
+    }
+    await expect(sidebar.getByRole('link', { name: 'Work 48', exact: true })).toBeVisible();
+    await expect(
+      sidebar.getByRole('link', { name: 'Needs attention 7', exact: true }),
+    ).toBeVisible();
+  });
+
+  test('Shell acceptance 4: the workspace drawer shows real counts and timezone', async ({
+    page,
+  }) => {
+    await page
+      .getByRole('button', { name: 'Point Star Operations workspace', exact: true })
+      .click();
+    const drawer = page.getByRole('dialog');
+    for (const value of [
+      '4 people across operational roles',
+      '3 Telegram groups',
+      '3 notification rules',
+      'WIB · Asia/Jakarta · UTC+7',
+    ]) {
+      await expect(drawer.getByText(value, { exact: true })).toBeVisible();
+    }
+    await drawer.getByRole('button', { name: 'Back to workspace', exact: true }).click();
+    await expect(drawer).toHaveCount(0);
+  });
+
+  test('Shell acceptance 6: an expired session returns to its page after signing in', async ({
+    page,
+    context,
+  }) => {
+    await expect(page.getByLabel('Daily digest', { exact: true })).toBeVisible();
+    const expired = await page.request.post(`${backend.baseUrl}/api/auth/sign-out`, {
+      data: {},
+      headers: { Origin: new URL(page.url()).origin },
+    });
+    expect(expired.ok(), await expired.text()).toBe(true);
+    await context.clearCookies();
+    const session = await page.request.get(`${backend.baseUrl}/api/v1/me`);
+    expect(session.status(), await session.text()).toBe(401);
+    await page.reload();
+    await expect(page).toHaveURL('/sign-in');
+    await page.getByLabel('Email', { exact: true }).fill('admin@pointstar.example');
+    await page.getByLabel('Password', { exact: true }).fill('test-password-123');
+    await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+    await expect(page).toHaveURL('/settings');
+    await expect(page.getByLabel('Daily digest', { exact: true })).toHaveValue('08:30');
+  });
+});
+
 test('At 760px the menu button opens the sidebar and sets aria-expanded=true (shell acceptance 5)', async ({
   page,
 }) => {
@@ -26,7 +111,12 @@ test('At 760px the menu button opens the sidebar and sets aria-expanded=true (sh
         json: {
           data: {
             person: { name: 'Siti Aminah', roleName: 'Operations Manager' },
-            workspace: { name: 'Point Star', descriptor: 'Operations workspace' },
+            workspace: {
+              name: 'Point Star',
+              descriptor: 'Operations workspace',
+              timezone: 'Asia/Jakarta',
+              counts: { members: 4, channels: 3, activeRules: 3 },
+            },
           },
         },
       });
