@@ -1,17 +1,8 @@
-import { useSyncExternalStore } from 'react';
 import { ApiError } from './api/error';
-
-function subscribe(notify: () => void) {
-  window.addEventListener('online', notify);
-  window.addEventListener('offline', notify);
-  return () => {
-    window.removeEventListener('online', notify);
-    window.removeEventListener('offline', notify);
-  };
-}
+import { useOnline } from './useOnline';
 
 export function useScreenState(query: { isPending: boolean; error: Error | null }, empty: boolean) {
-  const online = useSyncExternalStore(subscribe, () => navigator.onLine);
+  const online = useOnline();
   if (!online) {
     return 'offline';
   }
