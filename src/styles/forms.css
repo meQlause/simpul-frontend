@@ -1,0 +1,53 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 11px;
+  color: #6c8061;
+  margin-bottom: 18px;
+}
+.field label,
+.field > span {
+  font-weight: 550;
+}
+.field input,
+.field select,
+.field textarea {
+  padding: 11px 12px;
+  border: 1px solid #dfe7d7;
+  border-radius: 7px;
+  background: #fff;
+  font-size: 12px;
+  min-width: 0;
+  width: 100%;
+  outline-color: #91b27e;
+}
+.field small {
+  color: #96a18e;
+  font-size: 10px;
+}
+.field input[type='checkbox'] {
+  width: auto;
+}
+.page-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  font-size: 8px;
+  color: #afb6a4;
+  padding-top: 21px;
+}
+.page-footer > span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.page-footer > span:last-child {
+  gap: 9px;
+}
+.page-footer .tiny-dot {
+  width: 4px;
+  height: 4px;
+  background: #a6b68f;
+}
