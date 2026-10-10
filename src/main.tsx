@@ -6,4 +6,8 @@ if (!root) {
   throw new Error('Missing application root');
 }
 
-createRoot(root).render(<StrictMode />);
+createRoot(root).render(
+  <StrictMode>
+    <main id="page-content" tabIndex={-1} />
+  </StrictMode>,
+);
