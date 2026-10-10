@@ -16,6 +16,7 @@ import './styles/responsive.css';
 import './styles/nav-links.css';
 import './styles/auth.css';
 import './styles/directory.css';
+import './styles/settings.css';
 
 const root = document.getElementById('root');
 if (!root) {

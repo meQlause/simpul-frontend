@@ -14,15 +14,6 @@ export type Person = schema.infer<typeof personSchema>;
 export const responseSchema = schema.object({ data: schema.array(personSchema) });
 export const savedPersonSchema = schema.object({ data: personSchema });
 
-export const deliverySettingsSchema = schema.object({
-  data: schema.object({
-    quietStart: schema.string(),
-    quietEnd: schema.string(),
-    budgetPerHour: schema.number(),
-    timezone: schema.string(),
-  }),
-});
-
 export function personInputSchema(personId: string, eligibleIds: string[]) {
   const reference = schema.guid().refine((id) => id !== personId && eligibleIds.includes(id));
   return schema.strictObject({

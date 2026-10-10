@@ -13,4 +13,18 @@ export const settingsInputSchema = schema
     message: 'Choose different start and end times.',
   });
 
-export const responseSchema = schema.object({ data: schema.object({}) });
+const settingsSchema = schema.object({
+  quietStart: time,
+  quietEnd: time,
+  budgetPerHour: schema.number().int().min(1).max(50),
+  digestTime: time,
+  holdSeconds: schema.number().int().nonnegative(),
+  timezone: schema.string(),
+});
+export type Settings = schema.infer<typeof settingsSchema>;
+export const responseSchema = schema.object({ data: settingsSchema });
+export const workspaceSchema = schema.object({
+  data: schema.object({
+    workspace: schema.object({ name: schema.string(), timezone: schema.string() }),
+  }),
+});

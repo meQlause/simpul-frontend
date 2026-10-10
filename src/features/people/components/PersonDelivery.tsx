@@ -1,11 +1,11 @@
 import { Link } from 'react-router';
 import { ScreenState } from '../../../shared/ui/ScreenState';
 import { useScreenState } from '../../../shared/useScreenState';
-import { usePersonSettings } from '../people.api';
+import { useSettingsQuery } from '../../settings';
 import { peopleCopy as copy } from '../people.copy';
 
 export function PersonDelivery() {
-  const query = usePersonSettings();
+  const query = useSettingsQuery();
   const state = useScreenState(query, false);
   if (!query.data) {
     return (

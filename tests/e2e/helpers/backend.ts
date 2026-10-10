@@ -1,6 +1,7 @@
 import { execFileSync, spawn, type ChildProcess } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
+import { expect, type Page } from '@playwright/test';
 
 const docker =
   process.platform === 'win32'
@@ -40,6 +41,7 @@ export async function startBackend() {
     { stdio: 'pipe' },
   );
   let child: ChildProcess | undefined;
+  let baseUrl: string;
   try {
     const address = execFileSync(docker, ['port', name, '5432'], { encoding: 'utf8' }).trim();
     child = spawn(
@@ -55,20 +57,23 @@ export async function startBackend() {
         stdio: ['ignore', 'pipe', 'pipe'],
       },
     );
-    await ready(child);
+    baseUrl = await ready(child);
   } catch (error) {
     child?.kill();
     execFileSync(docker, ['rm', '-f', name], { stdio: 'pipe' });
     throw error;
   }
-  return () => {
-    child?.kill();
-    execFileSync(docker, ['rm', '-f', name], { stdio: 'pipe' });
+  return {
+    baseUrl,
+    stop: () => {
+      child?.kill();
+      execFileSync(docker, ['rm', '-f', name], { stdio: 'pipe' });
+    },
   };
 }
 
 function ready(child: ChildProcess) {
-  return new Promise<void>((accept, reject) => {
+  return new Promise<string>((accept, reject) => {
     let output = '';
     const timeout = setTimeout(
       () => reject(new Error(output || 'Browser API did not start')),
@@ -79,14 +84,27 @@ function ready(child: ChildProcess) {
     });
     child.stdout?.on('data', (chunk: Buffer) => {
       output += chunk.toString();
-      if (output.includes('BROWSER_FIXTURE_READY')) {
+      const address = /BROWSER_FIXTURE_READY (http:\/\/127\.0\.0\.1:\d+)\n/.exec(output);
+      if (address) {
         clearTimeout(timeout);
-        accept();
+        accept(address[1]);
       }
     });
     child.once('exit', () => {
       clearTimeout(timeout);
       reject(new Error(output));
     });
+  });
+}
+
+export async function connectBackend(page: Page, baseUrl: string) {
+  const login = await page.request.post(`${baseUrl}/api/auth/sign-in/email`, {
+    data: { email: 'admin@pointstar.example', password: 'test-password-123' },
+  });
+  expect(login.ok()).toBe(true);
+  await page.route('**/api/v1/**', async (route) => {
+    const url = new URL(route.request().url());
+    const response = await route.fetch({ url: `${baseUrl}${url.pathname}${url.search}` });
+    await route.fulfill({ response });
   });
 }

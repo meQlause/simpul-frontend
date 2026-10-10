@@ -1,18 +1,18 @@
 import { expect, test } from '@playwright/test';
-import { startBackend } from './helpers/backend';
+import { connectBackend, startBackend } from './helpers/backend';
 
-let stop: () => void;
+let backend: Awaited<ReturnType<typeof startBackend>>;
 test.beforeAll(async () => {
-  stop = await startBackend();
+  backend = await startBackend();
 });
 test.afterAll(() => {
-  stop?.();
+  backend?.stop();
+});
+test.afterEach(async ({ page }) => {
+  await page.unrouteAll({ behavior: 'wait' });
 });
 test.beforeEach(async ({ page }) => {
-  const login = await page.request.post('/api/auth/sign-in/email', {
-    data: { email: 'admin@pointstar.example', password: 'test-password-123' },
-  });
-  expect(login.ok()).toBe(true);
+  await connectBackend(page, backend.baseUrl);
   await page.goto('/people');
 });
 
