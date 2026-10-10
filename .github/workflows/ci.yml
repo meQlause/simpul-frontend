@@ -27,12 +27,24 @@ jobs:
   e2e:
     name: Chromium
     runs-on: ubuntu-latest
+    env:
+      SIMPUL_BACKEND_PATH: backend
     steps:
       - uses: actions/checkout@v7.0.1
+      - name: Check out the public backend for browser tests
+        uses: actions/checkout@v7.0.1
+        with:
+          repository: meQlause/simpul-backend
+          path: backend
       - uses: actions/setup-node@v7.1.0
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - name: Install backend test dependencies
+        working-directory: backend
+        run: npm ci
+      - name: Prepare browser database image
+        run: docker pull pgvector/pgvector:0.8.7-pg15-trixie
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
