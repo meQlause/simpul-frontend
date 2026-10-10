@@ -15,7 +15,7 @@ export async function getResponse<ResponseData>(
   });
   const body: unknown = await response.json();
   if (!response.ok) {
-    throw new ApiError(errorEnvelope.parse(body).error.code);
+    throw new ApiError(errorEnvelope.parse(body).error);
   }
   return schema.parse(body);
 }

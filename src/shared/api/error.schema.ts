@@ -8,3 +8,5 @@ export const errorEnvelope = schema.object({
     requestId: schema.string(),
   }),
 });
+
+export type ErrorInfo = schema.infer<typeof errorEnvelope>['error'];
