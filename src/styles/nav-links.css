@@ -1,0 +1,14 @@
+.quiet-card a {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #6b845b;
+  margin-top: 16px;
+  padding: 0;
+}
+.quiet-card a .icon {
+  width: 14px;
+  height: 14px;
+}

@@ -1,0 +1,13 @@
+.brand-mark .brand-logo {
+  display: block;
+  width: 28px;
+  height: 30px;
+  object-fit: contain;
+}
+.flow-core .flow-logo {
+  display: block;
+  width: 70%;
+  height: 76%;
+  object-fit: contain;
+  transform: rotate(7deg);
+}
