@@ -3,4 +3,5 @@ export const shellCopy = {
   searchPlaceholder: 'Search work…',
   shortcut: 'Ctrl K',
   workspace: 'Workspace',
+  skip: 'Skip to content',
 };
