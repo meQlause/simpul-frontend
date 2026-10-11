@@ -1,0 +1,88 @@
+/* The Telegram and email previews in the recipient preview drawer, as drawn in the mockup. */
+.message-preview {
+  background: #fff;
+  border: 1px solid #dce7d8;
+  border-radius: 12px;
+  padding: 18px;
+  margin: 20px 0;
+  color: #405c44;
+}
+.message-preview p {
+  font-size: 13px;
+  line-height: 1.9;
+  margin: 14px 0;
+}
+.message-preview small {
+  font-size: 10px;
+  color: #7e9375;
+  line-height: 1.8;
+}
+.message-sender {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+  color: #176448;
+  font-weight: 600;
+}
+.telegram-preview {
+  background: #eff6eb;
+}
+.message-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 17px 0 10px;
+}
+.message-actions > button {
+  font-size: 10px;
+  padding: 11px 12px;
+  background: #fff;
+  border: 1px solid #cbdcc1;
+  border-radius: 6px;
+  color: #176448;
+}
+.message-actions > button:disabled {
+  opacity: 0.5;
+}
+.message-outcome {
+  font-size: 10px;
+  line-height: 1.8;
+  border-top: 1px solid #d3e2ca;
+  padding-top: 14px;
+  margin-top: 17px;
+  color: #65855a;
+}
+.message-facts {
+  font-size: 10px;
+  line-height: 1.8;
+  color: #7e9375;
+  padding-left: 16px;
+  margin: 12px 0;
+}
+.clarification-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.clarification-options > .button {
+  justify-content: flex-start;
+  font-size: 11px;
+}
+.email-preview ul {
+  padding-left: 17px;
+  font-size: 12px;
+  line-height: 2;
+}
+.setup-failure {
+  padding: 18px;
+  background: #fbf4e9;
+  border: 1px solid #ecdfc3;
+  border-radius: 9px;
+  color: #8b6a32;
+  font-size: 11px;
+}
+.setup-failure p {
+  line-height: 1.9;
+  margin-top: 7px;
+}
