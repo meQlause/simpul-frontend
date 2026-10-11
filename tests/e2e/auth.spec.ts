@@ -213,7 +213,7 @@ test('Auth acceptance 6 and 7 against the real backend: Budi is not the admin', 
     await expect(browser.locator('.sidebar')).toHaveCount(0);
     await browser.getByRole('button', { name: 'Sign out', exact: true }).click();
     await expect(browser.getByRole('heading', { name: 'Sign in.' })).toBeVisible();
-    const response = await browser.request.get(`${backend.baseUrl}/api/v1/response`);
+    const response = await browser.request.get(`${backend.baseUrl}/api/v1/me`);
 
     expect(response.status()).toBe(401);
   } finally {
