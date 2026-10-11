@@ -28,6 +28,7 @@ export const shellCopy = {
   timezone: 'Timezone',
   jakartaTimezone: 'WIB · Asia/Jakarta · UTC+7',
   back: 'Back to workspace',
+  signOut: 'Sign out',
   close: 'Close',
 };
 

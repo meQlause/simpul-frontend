@@ -11,7 +11,7 @@ import { VocabularyDrawer } from '../features/vocabulary';
 import { OnboardingDrawer } from '../features/onboarding';
 import { RecipientPreviewDrawer } from '../features/recipient-preview';
 import { ScreenState } from '../shared/ui/ScreenState';
-import { SignInPage } from '../features/auth';
+import { SetPasswordPage, SignInPage } from '../features/auth';
 import { SessionGuard } from './SessionGuard';
 import { Shell } from './shell/Shell';
 
@@ -19,6 +19,7 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="/sign-in" element={<SignInPage />} />
+      <Route path="/set-password" element={<SetPasswordPage />} />
       <Route element={<SessionGuard />}>
         <Route element={<Shell />}>
           <Route path="/" element={<OverviewPage />} />

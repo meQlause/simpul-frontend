@@ -1,18 +1,22 @@
 import { authCopy } from './auth.copy';
 
-export function AuthStory() {
+export function AuthStory({ held = false }: { held?: boolean }) {
   return (
-    <aside className="auth-story" aria-hidden="true" data-component="AuthStory">
+    <aside
+      className={held ? 'auth-story is-held' : 'auth-story'}
+      aria-hidden="true"
+      data-component="AuthStory"
+    >
       <span className="eyebrow" data-role="eyebrow">
         {authCopy.storyEyebrow}
       </span>
       <h2>
-        {authCopy.storyTitle}
+        {held ? authCopy.heldTitle : authCopy.storyTitle}
         <br />
-        <span>{authCopy.storyAccent}</span>
+        <span>{held ? authCopy.heldAccent : authCopy.storyAccent}</span>
       </h2>
-      <p data-role="body">{authCopy.storyLead}</p>
-      <div className="auth-stage">
+      <p data-role="body">{held ? authCopy.heldLead : authCopy.storyLead}</p>
+      <div className={held ? 'auth-stage is-held' : 'auth-stage'}>
         <div className="orbit orbit-one" />
         <div className="orbit orbit-two" />
         <div className="orbit auth-orbit" />
@@ -47,7 +51,7 @@ export function AuthStory() {
         <svg className="icon">
           <use href="#i-shield" />
         </svg>
-        {authCopy.footer}
+        {held ? authCopy.held : authCopy.footer}
       </div>
     </aside>
   );

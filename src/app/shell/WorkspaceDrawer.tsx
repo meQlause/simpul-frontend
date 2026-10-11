@@ -1,9 +1,11 @@
+import { useSignOut } from '../../features/auth';
 import { Drawer } from '../../shared/ui/Drawer';
 import { useShellData } from './shell.api';
 import { shellCopy as copy } from './shell.copy';
 
 export function WorkspaceDrawer({ onClose }: { onClose: () => void }) {
   const { me } = useShellData();
+  const signOut = useSignOut();
 
   if (!me) {
     return null;
@@ -19,9 +21,14 @@ export function WorkspaceDrawer({ onClose }: { onClose: () => void }) {
       closeLabel={copy.close}
       onClose={onClose}
       footer={
-        <button className="button button-primary" onClick={onClose}>
-          {copy.back}
-        </button>
+        <>
+          <button className="button" onClick={() => void signOut()}>
+            {copy.signOut}
+          </button>
+          <button className="button button-primary" onClick={onClose}>
+            {copy.back}
+          </button>
+        </>
       }
     >
       <div className="drawer-workspace-hero">

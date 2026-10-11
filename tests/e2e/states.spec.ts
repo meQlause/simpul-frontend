@@ -63,7 +63,7 @@ for (const path of lists) {
         json: {
           data: [],
           page: { nextCursor: null, total: 0 },
-          counts: { unrouted: 0, alias: 0, category: 0 },
+          counts: { unrouted: 0, alias: 0, category: 0, routing: 0, work: 0, queue: 0, digest: 0 },
           weeklyEstimate: 0,
         },
       });

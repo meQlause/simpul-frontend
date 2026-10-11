@@ -110,9 +110,13 @@ function ready(child: ChildProcess) {
   });
 }
 
-export async function connectBackend(page: Page, baseUrl: string) {
+export async function connectBackend(
+  page: Page,
+  baseUrl: string,
+  email = 'admin@pointstar.example',
+) {
   const login = await page.request.post(`${baseUrl}/api/auth/sign-in/email`, {
-    data: { email: 'admin@pointstar.example', password: 'test-password-123' },
+    data: { email, password: 'test-password-123' },
   });
 
   expect(login.ok()).toBe(true);
