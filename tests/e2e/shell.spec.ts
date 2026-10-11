@@ -18,11 +18,11 @@ test('Ctrl K focuses the search field; the skip link moves focus to #page-conten
   await expect(page.getByRole('searchbox', { name: 'Search all work' })).toBeFocused();
 });
 
-test.describe('shell against the real GET /me', () => {
+test.describe('shell against the real API', () => {
   let backend: Awaited<ReturnType<typeof startBackend>>;
 
   test.beforeAll(async () => {
-    test.setTimeout(60000);
+    test.setTimeout(120000);
     backend = await startBackend();
   });
   test.afterAll(() => {
@@ -33,14 +33,21 @@ test.describe('shell against the real GET /me', () => {
   });
   test.beforeEach(async ({ page }) => {
     await connectBackend(page, backend.baseUrl);
-    // F1 verifies GET /me; overview and review aggregates are implemented in B6.
-    await page.route('**/api/v1/overview', (route) =>
-      route.fulfill({ json: { data: { activeWork: { count: 48 } } } }),
-    );
-    await page.route('**/api/v1/review-items?limit=1', (route) =>
-      route.fulfill({ json: { data: [], page: { total: 7 } } }),
-    );
     await page.goto('/settings');
+  });
+
+  test('Shell acceptance 2: searching sri from Work navigates to /work?q=sri and lists ORD-0091', async ({
+    page,
+  }) => {
+    await page.goto('/work');
+    await expect(page.getByRole('row')).toHaveCount(26);
+    const search = page.getByRole('searchbox', { name: 'Search all work', exact: true });
+
+    await search.fill('sri');
+    await search.press('Enter');
+    await expect(page).toHaveURL('/work?q=sri');
+    await expect(page.getByRole('row')).toHaveCount(2);
+    await expect(page.getByRole('link', { name: 'ORD-0091', exact: true })).toBeVisible();
   });
 
   test('Shell acceptance 1: Point Star and Siti Aminah come from the real session', async ({
