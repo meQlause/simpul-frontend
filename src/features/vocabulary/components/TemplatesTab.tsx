@@ -45,6 +45,7 @@ export function TemplatesTab({
               onChange={(event) => setBody(event.target.value)}
               disabled={form.disabled}
               aria-invalid={!!form.errors.body}
+              aria-describedby={form.errors.body ? 'vocab-error-body' : undefined}
             />
             <small>
               Available:{' '}

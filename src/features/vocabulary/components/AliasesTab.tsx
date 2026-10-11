@@ -45,6 +45,7 @@ export function AliasesTab({
               maxLength={80}
               disabled={form.disabled}
               aria-invalid={!!form.errors.alias}
+              aria-describedby={form.errors.alias ? 'vocab-error-alias' : undefined}
             />
           </VocabularyField>
           <VocabularyField name="personId" label="Person" error={form.errors.personId}>
@@ -53,6 +54,7 @@ export function AliasesTab({
               name="personId"
               disabled={form.disabled}
               aria-invalid={!!form.errors.personId}
+              aria-describedby={form.errors.personId ? 'vocab-error-personId' : undefined}
             >
               {people.data.data.map((person) => (
                 <option key={person.id} value={person.id}>

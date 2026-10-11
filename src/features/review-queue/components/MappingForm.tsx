@@ -1,4 +1,4 @@
-import { useState, type SubmitEvent } from 'react';
+import { useEffect, useRef, useState, type SubmitEvent } from 'react';
 import { usePeople } from '../../people';
 import { useVocabulary } from '../../vocabulary';
 import { Drawer } from '../../../shared/ui/Drawer';
@@ -71,7 +71,6 @@ function useMapping(item: ReviewItem, onSaved: (kind: string) => void) {
         onSuccess: () => onSaved(item.kind),
         onError: (failure) => {
           setError(mappingError(failure));
-          (form.elements.namedItem('value') as HTMLSelectElement).focus();
         },
       },
     );
@@ -140,15 +139,25 @@ export function MappingForm({
 }
 
 function MappingFields({ model }: { model: ReturnType<typeof useMapping> }) {
+  const select = useRef<HTMLSelectElement>(null);
+
+  useEffect(() => {
+    if (model.error) {
+      select.current?.focus();
+    }
+  }, [model.error]);
+
   return (
     <form id="resolve-form" onSubmit={model.submit}>
       <label className="field">
         {model.text.label}
         <select
+          ref={select}
           name="value"
           defaultValue={model.suggested ?? model.options[0]?.id}
           disabled={model.disabled}
           aria-invalid={!!model.error}
+          aria-describedby={model.error ? 'mapping-error' : undefined}
         >
           {model.options.map((option) => (
             <option key={option.id} value={option.id}>
@@ -157,7 +166,11 @@ function MappingFields({ model }: { model: ReturnType<typeof useMapping> }) {
           ))}
         </select>
       </label>
-      {model.error && <p role="alert">{model.error}</p>}
+      {model.error && (
+        <p role="alert" id="mapping-error">
+          {model.error}
+        </p>
+      )}
       <p>{model.text.note}</p>
     </form>
   );
