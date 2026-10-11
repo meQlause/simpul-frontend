@@ -20,6 +20,7 @@ export function AppRoutes() {
         <Route element={<Shell />}>
           <Route path="/" element={<OverviewPage />} />
           <Route path="/work" element={<WorkPage />} />
+          <Route path="/work/:displayId" element={<WorkPage />} />
           <Route path="/queue" element={<ReviewQueuePage />} />
           <Route path="/rules" element={<RulesPage />} />
           <Route path="/people" element={<PeoplePage />} />
