@@ -115,14 +115,15 @@ export async function connectBackend(
   baseUrl: string,
   email = 'admin@pointstar.example',
 ) {
-  const login = await page.request.post(`${baseUrl}/api/auth/sign-in/email`, {
-    data: { email, password: 'test-password-123' },
-  });
-
-  expect(login.ok()).toBe(true);
   await page.route(/\/api\/(v1|auth)\//, async (route) => {
     const url = new URL(route.request().url());
 
     await route.continue({ url: `${baseUrl}${url.pathname}${url.search}` });
   });
+  await page.goto('/sign-in');
+  await page.getByLabel('Email', { exact: true }).fill(email);
+  await page.getByLabel('Password', { exact: true }).fill('test-password-123');
+  await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+  await expect(page).not.toHaveURL(/\/sign-in$/);
+  await page.waitForLoadState('networkidle');
 }
