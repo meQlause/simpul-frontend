@@ -8,6 +8,9 @@ const tabs = ['', 'routing', 'queue', 'work', 'digest'] as const;
 
 export function AuditTable({
   entries,
+  total,
+  pending,
+  onLoadMore,
   counts,
   kind,
   q,
@@ -15,6 +18,9 @@ export function AuditTable({
   onSearch,
 }: {
   entries: Entry[];
+  total: number;
+  pending: boolean;
+  onLoadMore?: () => void;
   counts: Counts;
   kind: string;
   q: string;
@@ -70,6 +76,14 @@ export function AuditTable({
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="directory-footer">
+        <span role="status">{copy.showing(entries.length, total)}</span>
+        {onLoadMore && (
+          <button className="button button-soft" disabled={pending} onClick={onLoadMore}>
+            {copy.loadMore}
+          </button>
+        )}
       </div>
       {entries.length === 0 && (
         <div className="screen-state">

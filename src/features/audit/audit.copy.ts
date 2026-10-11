@@ -57,6 +57,8 @@ export const auditCopy = {
   noMatchHelp: 'Try another name or filter.',
   footnote: 'Decisions are shown as summaries. Access to raw conversation content is disabled.',
   summary: (count: number) => `${count} recorded decisions`,
+  showing: (shown: number, total: number) => `Showing ${shown} of ${total} decisions`,
+  loadMore: 'Load more',
   timezone: 'WIB · UTC+7',
   trace: {
     eyebrow: 'HISTORY & AUDIT / DECISION TRACE',

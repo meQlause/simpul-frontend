@@ -11,9 +11,10 @@ export function AuditPage() {
   const { decisionId } = useParams();
   const { kind, search } = filtersOf(params);
   const query = useAudit(kind, search);
-  const state = useScreenState(query, isEmptyUnfiltered(query.data, kind, search));
+  const first = query.data?.pages[0];
+  const state = useScreenState(query, isEmptyUnfiltered(first, kind, search));
 
-  if (!query.data || state !== 'ready') {
+  if (!first || state !== 'ready') {
     return (
       <ScreenState
         state={state}
@@ -24,7 +25,7 @@ export function AuditPage() {
     );
   }
 
-  const counts = query.data.counts;
+  const counts = first.counts;
   const total = counts.routing + counts.work + counts.queue + counts.digest;
 
   return (
@@ -53,7 +54,16 @@ export function AuditPage() {
         <span>{copy.timezone}</span>
       </div>
       <AuditTable
-        entries={query.data.data}
+        entries={query.data?.pages.flatMap((page) => page.data) ?? []}
+        total={first.page.total}
+        pending={query.isFetchingNextPage}
+        onLoadMore={
+          query.hasNextPage
+            ? () => {
+                void query.fetchNextPage();
+              }
+            : undefined
+        }
         counts={{ all: total, ...counts }}
         kind={kind}
         q={search}

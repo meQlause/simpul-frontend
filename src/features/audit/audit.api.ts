@@ -1,25 +1,30 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { z as schema } from 'zod';
 import { getResponse } from '../../shared/api/client';
 import { listResponse, traceResponse } from './audit.schema';
 
 export function useAudit(kind: string, search: string) {
-  const params = new URLSearchParams();
-
-  if (kind) {
-    params.set('kind', kind);
-  }
-
-  if (search) {
-    params.set('q', search);
-  }
-
-  const query = params.toString();
-  const suffix = query ? '?' + query : '';
-
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ['audit', kind, search],
-    queryFn: () => getResponse(`/decisions${suffix}`, listResponse),
+    initialPageParam: '',
+    queryFn: ({ pageParam }) => {
+      const params = new URLSearchParams();
+
+      for (const [key, value] of [
+        ['kind', kind],
+        ['q', search],
+        ['cursor', pageParam],
+      ]) {
+        if (value) {
+          params.set(key, value);
+        }
+      }
+
+      const query = params.toString();
+
+      return getResponse(`/decisions${query ? '?' + query : ''}`, listResponse);
+    },
+    getNextPageParam: (last) => last.page.nextCursor ?? undefined,
   });
 }
 
