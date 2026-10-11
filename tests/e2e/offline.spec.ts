@@ -5,7 +5,16 @@ test('In the offline state every form control and the export button are disabled
   context,
 }) => {
   await page.route('**/api/v1/**', async (route) => {
-    await route.fulfill({ json: { data: {} } });
+    await route.fulfill({
+      json: {
+        data: {
+          messagesUnderstood: { count: 0, trendPercent: null },
+          activeWork: { count: 0, completedToday: 0 },
+          updatesDelivered: { count: 0, recipients: 0, topRecipients: [] },
+          needsReview: { count: 0, areas: 0, byKind: { unrouted: 0, alias: 0, category: 0 } },
+        },
+      },
+    });
   });
   await page.goto('/');
   const search = page.getByRole('searchbox', { name: 'Search all work' });

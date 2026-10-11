@@ -95,7 +95,10 @@ for (const path of ['/', '/settings']) {
       await route.fulfill({
         json: {
           data: {
-            activeWork: { count: 0 },
+            messagesUnderstood: { count: 0, trendPercent: null },
+            activeWork: { count: 0, completedToday: 0 },
+            updatesDelivered: { count: 0, recipients: 0, topRecipients: [] },
+            needsReview: { count: 0, areas: 0, byKind: { unrouted: 0, alias: 0, category: 0 } },
             quietStart: '21:00',
             quietEnd: '07:00',
             budgetPerHour: 6,
