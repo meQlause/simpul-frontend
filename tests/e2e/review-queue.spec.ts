@@ -55,3 +55,16 @@ test('Needs review acceptance 3–4: mapping Pak Bud preselects Budi and refresh
   await expect(page.getByRole('row')).toHaveCount(7);
   await expect(page.getByRole('link', { name: 'Needs attention 6', exact: true })).toBeVisible();
 });
+
+test('Needs review acceptance 5: Create rule on a returns gap opens the rule with Returns chosen', async ({
+  page,
+}) => {
+  const row = page.getByRole('row').filter({ hasText: 'Returns need a routing rule' });
+
+  await row.getByRole('link', { name: 'Create rule', exact: true }).click();
+
+  await expect(page).toHaveURL(/\/rules\/new\?reviewItemId=/);
+  await expect(
+    page.getByRole('dialog').locator('select[name="categoryId"] option:checked'),
+  ).toHaveText('Returns');
+});
