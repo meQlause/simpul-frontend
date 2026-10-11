@@ -14,7 +14,8 @@ function useSetPassword() {
 
   async function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
-    const values = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const values = new FormData(form);
     const password = String(values.get('password'));
 
     if (password !== values.get('confirm')) {
@@ -32,6 +33,7 @@ function useSetPassword() {
     } catch {
       setMessage(authCopy.saveFailed);
     } finally {
+      form.reset();
       setPending(false);
     }
   }

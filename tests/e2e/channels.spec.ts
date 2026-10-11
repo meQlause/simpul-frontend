@@ -331,6 +331,7 @@ async function expectNoCredential(page: Page, token: string) {
     await page.evaluate(() => ({ local: localStorage.length, session: sessionStorage.length })),
   ).toEqual({ local: 0, session: 0 });
   expect(await page.content()).not.toContain(token);
+  expect(page.url()).not.toContain(token);
 }
 
 test('Channels acceptance 13: a successful credential rotation leaves storage empty and no token in page HTML', async ({
