@@ -18,7 +18,9 @@
     "typecheck": "tsc --noEmit",
     "knip": "knip",
     "check": "prettier --check . && eslint --max-warnings=0 . && tsc --noEmit && knip",
-    "prepare": "husky"
+    "prepare": "husky",
+    "fidelity:analyse": "node tests/fidelity/analyse.ts",
+    "fidelity:check": "node tests/fidelity/analyse.ts --check"
   },
   "dependencies": {
     "@tanstack/react-query": "5.104.1",
