@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import { ScreenState } from '../../shared/ui/ScreenState';
 import { useScreenState } from '../../shared/useScreenState';
+import { databaseCopy, useDatabase } from '../database-setup';
 import { useSettings, useSettingsWorkspace } from './settings.api';
 import { NotificationSettingsForm } from './NotificationSettingsForm';
 import { settingsCopy as copy } from './settings.copy';
@@ -9,6 +10,7 @@ import { settingsCopy as copy } from './settings.copy';
 export function SettingsPage() {
   const query = useSettings();
   const workspace = useSettingsWorkspace();
+  const database = useDatabase();
   const [saved, setSaved] = useState(false);
   const mailToast: unknown = useLocation().state?.toast;
   const state = useScreenState(query, false);
@@ -56,6 +58,14 @@ export function SettingsPage() {
           {saved ? copy.saved : String(mailToast)}
         </p>
       )}
+      <SettingsCallouts hasDatabase={Boolean(database.data)} />
+    </section>
+  );
+}
+
+function SettingsCallouts({ hasDatabase }: { hasDatabase: boolean }) {
+  return (
+    <>
       {[
         {
           title: copy.vocabulary,
@@ -78,6 +88,17 @@ export function SettingsPage() {
           path: '/settings/mail',
           icon: 'mail',
         },
+        ...(hasDatabase
+          ? [
+              {
+                title: databaseCopy.calloutTitle,
+                description: databaseCopy.calloutDescription,
+                action: databaseCopy.view,
+                path: '/settings/database',
+                icon: 'shield',
+              },
+            ]
+          : []),
       ].map((entry) => (
         <div
           className="directory-callout"
@@ -102,6 +123,6 @@ export function SettingsPage() {
           </Link>
         </div>
       ))}
-    </section>
+    </>
   );
 }

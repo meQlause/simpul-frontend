@@ -11,3 +11,5 @@ export const databaseSchema = schema.object({
     unreachableSince: schema.string().nullable().optional(),
   }),
 });
+
+export type Database = schema.infer<typeof databaseSchema>['data'];

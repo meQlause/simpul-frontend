@@ -129,3 +129,137 @@ test('Database setup acceptance 4: connecting disables the button with its label
   ).toBeVisible();
   await expect(page).toHaveURL(/\/$/);
 });
+
+const CONNECTED = {
+  mode: 'own',
+  status: 'connected',
+  host: 'db.pointstar.example',
+  port: 5432,
+  databaseName: 'simpul',
+  schemaVersion: '0007',
+  unreachableSince: null,
+};
+const IDENTITY = {
+  person: { name: 'Siti Aminah', roleName: 'Operations Manager' },
+  workspace: {
+    name: 'Point Star',
+    descriptor: 'Operations workspace',
+    timezone: 'Asia/Jakarta',
+    counts: { members: 4, channels: 3, activeRules: 3 },
+  },
+};
+const SETTINGS = {
+  quietStart: '21:00',
+  quietEnd: '07:00',
+  budgetPerHour: 6,
+  digestTime: '08:30',
+  holdSeconds: 60,
+  timezone: 'Asia/Jakarta',
+};
+
+// A connected own-database workspace with the Settings page's own data.
+type Answer = { status: number; json: unknown };
+
+async function connectedWorkspace(page: Page, put?: () => Answer, hosted = false) {
+  const pages: Record<string, unknown> = {
+    '/me': IDENTITY,
+    '/settings': SETTINGS,
+    '/overview': { activeWork: { count: 0 } },
+  };
+
+  await page.route('**/api/v1/**', async (route) => {
+    const request = route.request();
+    const path = new URL(request.url()).pathname.replace('/api/v1', '');
+
+    if (path === '/database') {
+      await route.fulfill(databaseAnswer(request.method(), hosted, put));
+
+      return;
+    }
+
+    await route.fulfill({
+      json: { data: pages[path] ?? [], page: { nextCursor: null, total: 0 } },
+    });
+  });
+}
+
+function databaseAnswer(method: string, hosted: boolean, put?: () => Answer) {
+  if (hosted) {
+    return {
+      status: 404,
+      json: { error: { code: 'E-NOT-FOUND', message: '', details: [], requestId: 'hosted' } },
+    };
+  }
+
+  if (method === 'PUT') {
+    return put?.() ?? { status: 200, json: { data: CONNECTED } };
+  }
+
+  return { status: 200, json: { data: CONNECTED } };
+}
+
+test('Database setup acceptance 5: the drawer shows host, port, name and status, never the string', async ({
+  page,
+}) => {
+  await connectedWorkspace(page);
+  await page.goto('/settings/database');
+  const drawer = page.getByRole('dialog');
+
+  for (const text of ['db.pointstar.example', '5432', 'simpul', 'Connected']) {
+    await expect(drawer.getByText(text, { exact: true }).first()).toBeVisible();
+  }
+
+  await drawer.getByLabel('Connection string', { exact: true }).fill(STRING);
+  await drawer.getByRole('button', { name: 'Update connection', exact: true }).click();
+  await expect(drawer.getByText('Database connection updated.')).toBeVisible();
+  const stored = await page.evaluate(() =>
+    JSON.stringify([{ ...localStorage }, { ...sessionStorage }]),
+  );
+  const html = await page.content();
+
+  for (const secret of [STRING, 'secret-pass']) {
+    expect(html).not.toContain(secret);
+    expect(stored).not.toContain(secret);
+  }
+});
+
+test('Database setup acceptance 6: a refused replacement shows its sentence and keeps the old host', async ({
+  page,
+}) => {
+  await connectedWorkspace(page, () => ({
+    status: 422,
+    json: {
+      error: { code: 'E-DB-WORKSPACE-MISMATCH', message: '', details: [], requestId: 'swap' },
+    },
+  }));
+  await page.goto('/settings/database');
+  const drawer = page.getByRole('dialog');
+
+  await drawer.getByLabel('Connection string', { exact: true }).fill(STRING);
+  await drawer.getByRole('button', { name: 'Update connection', exact: true }).click();
+
+  await expect(
+    drawer.getByText(
+      'This database does not contain this workspace’s data. The connection was not changed.',
+    ),
+  ).toBeVisible();
+  await expect(drawer.getByText('db.pointstar.example', { exact: true }).first()).toBeVisible();
+  await expect(drawer.getByLabel('Connection string', { exact: true })).toHaveValue('');
+});
+
+test('Database setup: the drawer lists a callout on Settings, and a successful update toasts', async ({
+  page,
+}) => {
+  await connectedWorkspace(page);
+  await page.goto('/settings');
+  await page
+    .locator('[data-component="Callout"]')
+    .filter({ hasText: 'Where this workspace’s data is stored.' })
+    .getByRole('link')
+    .click();
+  const drawer = page.getByRole('dialog');
+
+  await drawer.getByLabel('Connection string', { exact: true }).fill(STRING);
+  await drawer.getByRole('button', { name: 'Update connection', exact: true }).click();
+  await expect(drawer.getByText('Database connection updated.')).toBeVisible();
+});

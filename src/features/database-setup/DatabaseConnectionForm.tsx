@@ -14,7 +14,12 @@ function failureOf(error: unknown) {
     : copy.failed;
 }
 
-type Props = { firstConnect: boolean; onConnected: () => void };
+type Props = {
+  firstConnect: boolean;
+  onConnected: () => void;
+  placeholder?: string;
+  submitLabel?: string;
+};
 
 function refusal(values: FormData, firstConnect: boolean) {
   if (firstConnect && values.get('availabilityAck') !== 'on') {
@@ -95,6 +100,7 @@ export function DatabaseConnectionForm(props: Props) {
           name="connectionString"
           type="password"
           autoComplete="off"
+          placeholder={props.placeholder}
           aria-invalid={Boolean(problem.string)}
           aria-describedby="database-string-hint database-string-error"
         />
@@ -106,7 +112,7 @@ export function DatabaseConnectionForm(props: Props) {
           {problem.failure}
         </p>
         <button className="button button-primary auth-submit" type="submit" disabled={pending}>
-          {copy.connect}
+          {props.submitLabel ?? copy.connect}
         </button>
         {pending && <p role="status">{copy.connecting}</p>}
       </OfflineControls>

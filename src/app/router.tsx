@@ -7,7 +7,7 @@ import { PeoplePage } from '../features/people';
 import { ChannelsPage } from '../features/channels';
 import { AuditPage } from '../features/audit';
 import { MailDrawer, SettingsPage } from '../features/settings';
-import { DatabaseSetupPage } from '../features/database-setup';
+import { DatabaseDrawer, DatabaseSetupPage } from '../features/database-setup';
 import { VocabularyDrawer } from '../features/vocabulary';
 import { OnboardingDrawer } from '../features/onboarding';
 import { RecipientPreviewDrawer } from '../features/recipient-preview';
@@ -73,6 +73,15 @@ export function AppRoutes() {
               <>
                 <SettingsPage />
                 <MailDrawer />
+              </>
+            }
+          />
+          <Route
+            path="/settings/database"
+            element={
+              <>
+                <SettingsPage />
+                <DatabaseDrawer />
               </>
             }
           />
