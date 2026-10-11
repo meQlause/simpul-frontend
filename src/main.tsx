@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router';
 import { Providers } from './app/providers';
 import { AppRoutes } from './app/router';
 import { IconSprite } from './shared/ui/IconSprite';
+import './styles/fonts.css';
 import './styles/base.css';
 import './styles/screen-state.css';
 import './styles/shell.css';

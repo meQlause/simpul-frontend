@@ -1,5 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "entry": ["src/main.tsx"],
-  "project": ["src/**/*.{ts,tsx}", "tests/**/*.{ts,tsx}"]
+  "project": ["src/**/*.{ts,tsx}", "tests/**/*.{ts,tsx}"],
+  "ignoreDependencies": ["@fontsource-variable/dm-sans", "@fontsource-variable/manrope"]
 }
