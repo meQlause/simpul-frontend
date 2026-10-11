@@ -1,0 +1,36 @@
+/* The on/off switch on the rules list, as drawn in the mockup. */
+.toggle {
+  border-radius: 20px;
+  width: 34px;
+  height: 20px;
+  background: #dce2d8;
+  position: relative;
+  flex-shrink: 0;
+  padding: 0;
+  border: 1px solid #d4dece;
+  transition: background 0.2s;
+}
+.toggle:before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px #0001;
+  transition: transform 0.2s;
+}
+.toggle.active,
+.toggle[aria-checked='true'] {
+  background: #4a865c;
+  border-color: #4a865c;
+}
+.toggle.active:before,
+.toggle[aria-checked='true']:before {
+  transform: translateX(14px);
+}
+.toggle:disabled {
+  opacity: 0.5;
+}

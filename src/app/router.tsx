@@ -25,6 +25,8 @@ export function AppRoutes() {
           <Route path="/queue" element={<ReviewQueuePage />} />
           <Route path="/queue/:itemId/:action?" element={<ReviewQueuePage />} />
           <Route path="/rules" element={<RulesPage />} />
+          <Route path="/rules/new" element={<RulesPage />} />
+          <Route path="/rules/:ruleId" element={<RulesPage />} />
           <Route path="/people" element={<PeoplePage />} />
           <Route path="/people/:personId" element={<PeoplePage />} />
           <Route path="/channels/*" element={<ChannelsPage />} />

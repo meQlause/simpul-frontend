@@ -19,6 +19,7 @@ import './styles/auth.css';
 import './styles/directory.css';
 import './styles/settings.css';
 import './styles/channels.css';
+import './styles/rules.css';
 
 const root = document.getElementById('root');
 
