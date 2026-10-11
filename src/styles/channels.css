@@ -1,0 +1,138 @@
+.telegram-connection {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 24px 26px;
+  border: 1px solid #dce7df;
+  border-radius: 14px;
+  background: linear-gradient(110deg, #edf6ef, #fff);
+  margin-bottom: 20px;
+}
+.telegram-connection-mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: #176448;
+  color: white;
+}
+.telegram-connection-mark .icon {
+  width: 27px;
+  height: 27px;
+}
+.telegram-connection h3 {
+  margin: 5px 0;
+  font-size: 17px;
+}
+.telegram-connection p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.telegram-connection > div {
+  flex: 1;
+}
+.telegram-connection > .button {
+  flex: none;
+}
+.channel-bot-reference {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #dce7df;
+  border-radius: 10px;
+  padding: 14px;
+  background: #f6faf6;
+}
+.channel-bot-reference > div {
+  flex: 1;
+}
+.channel-bot-reference strong {
+  font-size: 13px;
+}
+.channel-bot-reference small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.channel-form-pair {
+  display: flex;
+  gap: 14px;
+}
+.channel-form-pair > .field {
+  flex: 1;
+  min-width: 0;
+}
+.channel-check-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 17px 0;
+}
+.channel-check-actions .button {
+  font-size: 11px;
+  padding: 10px 12px;
+}
+.channel-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.7;
+  padding: 14px;
+  background: #f5f8f3;
+  border-radius: 9px;
+  color: #43544a;
+}
+.channel-consent input {
+  accent-color: #176448;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  margin-top: 3px;
+}
+.channel-error {
+  color: #ad3b2c;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 14px 0 0;
+}
+.channel-error:empty {
+  display: none;
+}
+.field small {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+@media (max-width: 760px) {
+  .telegram-connection {
+    flex-wrap: wrap;
+    padding: 18px;
+    gap: 12px;
+  }
+  .telegram-connection > div {
+    min-width: 170px;
+  }
+  .telegram-connection > .button {
+    width: 100%;
+    justify-content: center;
+  }
+  .channel-form-pair {
+    flex-direction: column;
+    gap: 0;
+  }
+  .channel-bot-reference {
+    flex-wrap: wrap;
+  }
+  .channel-bot-reference small {
+    max-width: 230px;
+  }
+}

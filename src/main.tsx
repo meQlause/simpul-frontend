@@ -17,6 +17,7 @@ import './styles/nav-links.css';
 import './styles/auth.css';
 import './styles/directory.css';
 import './styles/settings.css';
+import './styles/channels.css';
 
 const root = document.getElementById('root');
 if (!root) {

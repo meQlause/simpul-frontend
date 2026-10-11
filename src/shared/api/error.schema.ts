@@ -6,6 +6,7 @@ export const errorEnvelope = schema.object({
     message: schema.string(),
     details: schema.array(schema.unknown()).default([]),
     requestId: schema.string(),
+    retryAfter: schema.number().nonnegative().optional(),
   }),
 });
 

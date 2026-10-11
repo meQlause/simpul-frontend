@@ -5,6 +5,7 @@ export class ApiError extends Error {
   readonly code: string;
   readonly details: unknown[];
   readonly requestId: string;
+  readonly retryAfter?: number;
 
   constructor(info: ErrorInfo) {
     super(info.message);
@@ -12,6 +13,7 @@ export class ApiError extends Error {
     this.code = Object.hasOwn(errorPresentations, info.code) ? info.code : 'E-INTERNAL';
     this.details = info.details;
     this.requestId = info.requestId;
+    this.retryAfter = info.retryAfter;
     if (this.code !== info.code) {
       console.error('Unknown API error code', info.code);
     }

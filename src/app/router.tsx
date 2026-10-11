@@ -24,7 +24,7 @@ export function AppRoutes() {
           <Route path="/rules" element={<RulesPage />} />
           <Route path="/people" element={<PeoplePage />} />
           <Route path="/people/:personId" element={<PeoplePage />} />
-          <Route path="/channels" element={<ChannelsPage />} />
+          <Route path="/channels/*" element={<ChannelsPage />} />
           <Route path="/audit" element={<AuditPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="*" element={<ScreenState state="not-found" />} />
