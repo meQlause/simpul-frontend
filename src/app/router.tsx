@@ -7,8 +7,9 @@ import { PeoplePage } from '../features/people';
 import { ChannelsPage } from '../features/channels';
 import { AuditPage } from '../features/audit';
 import { SettingsPage } from '../features/settings';
-import { RecipientPreviewDrawer } from '../features/recipient-preview';
 import { VocabularyDrawer } from '../features/vocabulary';
+import { OnboardingDrawer } from '../features/onboarding';
+import { RecipientPreviewDrawer } from '../features/recipient-preview';
 import { ScreenState } from '../shared/ui/ScreenState';
 import { SignInPage } from '../features/auth';
 import { SessionGuard } from './SessionGuard';
@@ -40,6 +41,15 @@ export function AppRoutes() {
               <>
                 <SettingsPage />
                 <VocabularyDrawer />
+              </>
+            }
+          />
+          <Route
+            path="/settings/onboarding"
+            element={
+              <>
+                <SettingsPage />
+                <OnboardingDrawer />
               </>
             }
           />

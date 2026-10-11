@@ -20,6 +20,7 @@ import './styles/directory.css';
 import './styles/settings.css';
 import './styles/channels.css';
 import './styles/rules.css';
+import './styles/onboarding.css';
 import './styles/recipient-preview.css';
 
 const root = document.getElementById('root');
