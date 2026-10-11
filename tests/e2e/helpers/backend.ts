@@ -32,6 +32,12 @@ export async function startBackend() {
       'run',
       '-d',
       '--rm',
+      '--label',
+      'pspt.test.project=simpul',
+      '--label',
+      'pspt.test.disposable=true',
+      '--tmpfs',
+      '/var/lib/postgresql/data:rw,size=256m',
       '--name',
       name,
       '-e',
@@ -64,7 +70,7 @@ export async function startBackend() {
     baseUrl = await ready(child);
   } catch (error) {
     child?.kill();
-    execFileSync(docker, ['rm', '-f', name], { stdio: 'pipe' });
+    execFileSync(docker, ['rm', '-f', '-v', name], { stdio: 'pipe' });
     throw error;
   }
 
@@ -72,7 +78,7 @@ export async function startBackend() {
     baseUrl,
     stop: () => {
       child?.kill();
-      execFileSync(docker, ['rm', '-f', name], { stdio: 'pipe' });
+      execFileSync(docker, ['rm', '-f', '-v', name], { stdio: 'pipe' });
     },
   };
 }
