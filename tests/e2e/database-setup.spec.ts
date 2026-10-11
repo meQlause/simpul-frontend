@@ -263,3 +263,37 @@ test('Database setup: the drawer lists a callout on Settings, and a successful u
   await drawer.getByRole('button', { name: 'Update connection', exact: true }).click();
   await expect(drawer.getByText('Database connection updated.')).toBeVisible();
 });
+
+test('Database setup acceptance 7: an unreachable database shows the error state with Retry and keeps the shell', async ({
+  page,
+}) => {
+  await connectedWorkspace(page);
+  await page.route(/\/api\/v1\/work(\?|$)/, async (route) => {
+    await route.fulfill({
+      status: 503,
+      json: { error: { code: 'E-DB-UNAVAILABLE', message: '', details: [], requestId: 'down' } },
+    });
+  });
+  await page.goto('/work');
+  const state = page.locator('[data-component="ScreenState"][data-variant="error"]');
+
+  await expect(state).toContainText(
+    'Your database cannot be reached. Nothing is lost on our side, but new messages are not being recorded. Retry when it is back.',
+  );
+  await expect(state.getByRole('button', { name: 'Retry', exact: true })).toBeVisible();
+  await expect(page.locator('.sidebar')).toBeVisible();
+  await expect(page).toHaveURL(/\/work$/);
+});
+
+test('Database setup acceptance 8: a hosted workspace has no Database callout and no setup page', async ({
+  page,
+}) => {
+  await connectedWorkspace(page, undefined, true);
+  await page.goto('/settings');
+  await expect(page.getByRole('heading', { name: 'Vocabulary & message templates' })).toBeVisible();
+  await expect(page.getByText('Where this workspace’s data is stored.')).toHaveCount(0);
+  await page.goto('/setup/database');
+  await expect(
+    page.locator('[data-component="ScreenState"][data-variant="not-found"]'),
+  ).toBeVisible();
+});

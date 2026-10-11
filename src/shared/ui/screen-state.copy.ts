@@ -24,6 +24,8 @@ export const screenStateCopy = {
     description: 'Return to Home to continue.',
     icon: 'inbox',
   },
+  databaseUnavailable:
+    'Your database cannot be reached. Nothing is lost on our side, but new messages are not being recorded. Retry when it is back.',
   retry: 'Retry',
   home: 'Back to workspace',
 };
