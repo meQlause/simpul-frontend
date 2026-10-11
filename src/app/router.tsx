@@ -7,6 +7,7 @@ import { PeoplePage } from '../features/people';
 import { ChannelsPage } from '../features/channels';
 import { AuditPage } from '../features/audit';
 import { MailDrawer, SettingsPage } from '../features/settings';
+import { DatabaseSetupPage } from '../features/database-setup';
 import { VocabularyDrawer } from '../features/vocabulary';
 import { OnboardingDrawer } from '../features/onboarding';
 import { RecipientPreviewDrawer } from '../features/recipient-preview';
@@ -20,6 +21,9 @@ export function AppRoutes() {
     <Routes>
       <Route path="/sign-in" element={<SignInPage />} />
       <Route path="/set-password" element={<SetPasswordPage />} />
+      <Route element={<SessionGuard />}>
+        <Route path="/setup/database" element={<DatabaseSetupPage />} />
+      </Route>
       <Route element={<SessionGuard />}>
         <Route element={<Shell />}>
           <Route path="/" element={<OverviewPage />} />

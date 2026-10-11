@@ -10,6 +10,7 @@ const hasCode = (code: string) => (entry: Entry) =>
   entry.state.error instanceof ApiError && entry.state.error.code === code;
 const isExpired = hasCode('E-AUTH-REQUIRED');
 const isForbidden = hasCode('E-FORBIDDEN');
+const needsSetup = hasCode('E-DB-SETUP-REQUIRED');
 
 export function SessionGuard() {
   const client = useQueryClient();
@@ -28,6 +29,10 @@ export function SessionGuard() {
       client.getQueryCache().getAll().some(isExpired) ||
       client.getMutationCache().getAll().some(isExpired),
   );
+  const setupRequired = useSyncExternalStore(
+    (notify) => client.getQueryCache().subscribe(notify),
+    () => client.getQueryCache().getAll().some(needsSetup),
+  );
   const forbidden = useSyncExternalStore(
     (notify) => client.getQueryCache().subscribe(notify),
     () => client.getQueryCache().getAll().some(isForbidden),
@@ -41,6 +46,10 @@ export function SessionGuard() {
         state={{ returnTo: location.pathname + location.search + location.hash }}
       />
     );
+  }
+
+  if (setupRequired && location.pathname !== '/setup/database') {
+    return <Navigate to="/setup/database" replace />;
   }
 
   return forbidden ? <NoAccess /> : <Outlet />;

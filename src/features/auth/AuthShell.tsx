@@ -2,7 +2,7 @@ import { useEffect, type ReactNode } from 'react';
 import { AuthStory } from './AuthStory';
 import { authCopy } from './auth.copy';
 
-type AuthVariant = 'sign-in' | 'set-password' | 'no-access';
+type AuthVariant = 'sign-in' | 'set-password' | 'no-access' | 'database-setup';
 
 type Props = {
   variant: AuthVariant;
