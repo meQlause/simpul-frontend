@@ -8,6 +8,7 @@ import { WorkspaceDrawer } from './WorkspaceDrawer';
 export function Shell() {
   const [expanded, setExpanded] = useState(false);
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
+
   return (
     <>
       <a className="skip-link" href="#page-content">
@@ -45,4 +46,5 @@ export function Shell() {
     </>
   );
 }
+
 import { useState } from 'react';

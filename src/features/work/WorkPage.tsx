@@ -5,6 +5,7 @@ import { useWork } from './work.api';
 export function WorkPage() {
   const query = useWork();
   const state = useScreenState(query, query.data?.data.length === 0);
+
   return (
     <ScreenState
       state={state}

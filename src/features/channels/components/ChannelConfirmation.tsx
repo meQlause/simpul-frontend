@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { useOnline } from '../../../shared/useOnline';
+
 export function ChannelConfirmation({
   title,
   children,
@@ -17,9 +18,11 @@ export function ChannelConfirmation({
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const online = useOnline();
+
   useEffect(() => {
     dialog.current?.showModal();
   }, []);
+
   return (
     <dialog
       ref={dialog}

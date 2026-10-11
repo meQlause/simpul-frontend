@@ -13,6 +13,7 @@ export function PeoplePage() {
   const { personId } = useParams();
   const navigate = useNavigate();
   const [saved, setSaved] = useState(false);
+
   if (!query.data || ['loading', 'error', 'not-found', 'empty'].includes(state)) {
     return (
       <ScreenState
@@ -23,8 +24,10 @@ export function PeoplePage() {
       />
     );
   }
+
   const people = query.data.data;
   const person = people.find((candidate) => candidate.id === personId);
+
   return (
     <section data-component="PeoplePage" data-variant="default">
       <PeopleList people={people} />

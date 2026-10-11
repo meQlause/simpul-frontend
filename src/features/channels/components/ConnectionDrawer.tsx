@@ -7,11 +7,13 @@ import { connectionSchema, credentialCheckSchema, type Connection } from '../cha
 import { channelsCopy as copy } from '../channels.copy';
 import { setupError } from '../useChannelSetup';
 import { ChannelConfirmation } from './ChannelConfirmation';
+
 async function digest(value: string) {
   return new Uint8Array(
     await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)),
   ).join(',');
 }
+
 export function ConnectionDrawer({
   connection,
   onClose,
@@ -25,6 +27,7 @@ export function ConnectionDrawer({
 }) {
   const token = useRef<HTMLInputElement>(null);
   const form = useCredentialForm(connection, onSaved, token);
+
   return (
     <Drawer
       title="Telegram bot connection"
@@ -110,16 +113,21 @@ function useCredentialForm(
   const [result, setResult] = useState('');
   const [pending, setPending] = useState(false);
   const [confirmation, setConfirmation] = useState('');
+
   async function verify() {
     const field = token.current;
+
     if (pending || !field) {
       return;
     }
+
     setPending(true);
     setVerified('');
     setMatches(false);
+
     try {
       const checked = await verifyToken(field.value);
+
       if (checked.sameBotAsStored === false) {
         setResult(copy.mismatch);
       } else {
@@ -133,19 +141,26 @@ function useCredentialForm(
       setPending(false);
     }
   }
+
   async function changed() {
     setMatches(false);
+
     if (token.current && verified) {
       const candidate = await digest(token.current.value);
+
       setMatches(candidate === verified);
     }
   }
+
   async function rotate() {
     const field = token.current;
+
     if (pending || !field) {
       return;
     }
+
     setPending(true);
+
     try {
       const saved = await rotateToken({
         botToken: field.value,
@@ -154,6 +169,7 @@ function useCredentialForm(
         name,
         key: confirmation,
       });
+
       if (saved) {
         onSaved();
       }
@@ -210,6 +226,7 @@ function ConnectionFooter({
   onClose: () => void;
 }) {
   const online = useOnline();
+
   return (
     <>
       <button
@@ -243,8 +260,10 @@ async function verifyToken(botToken: string) {
     'POST',
     { botToken },
   );
+
   return { ...checked, fingerprint };
 }
+
 async function rotateToken(input: {
   botToken: string;
   verified: string;
@@ -255,6 +274,7 @@ async function rotateToken(input: {
   if ((await digest(input.botToken)) !== input.verified) {
     return false;
   }
+
   await channelRequest(
     '/telegram/connections/' + input.connection.id + '/credentials',
     connectionSchema,
@@ -265,5 +285,6 @@ async function rotateToken(input: {
       expectedCredentialVersion: input.connection.credentialVersion,
     },
   );
+
   return true;
 }

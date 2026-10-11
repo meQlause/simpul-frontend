@@ -29,5 +29,6 @@ export function useSettings() {
       }),
     onSuccess: (response) => client.setQueryData(queryKeys.page('settings'), response),
   });
+
   return { ...query, save };
 }

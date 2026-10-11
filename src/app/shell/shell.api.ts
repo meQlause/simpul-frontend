@@ -16,6 +16,7 @@ export function useShellData() {
     queryKey: queryKeys.page('shell-attention'),
     queryFn: () => getResponse('/review-items?limit=1', attentionSchema),
   });
+
   return {
     me: person.data?.data,
     workCount: overview.data?.data.activeWork.count,

@@ -14,6 +14,7 @@ export function SessionGuard() {
     (notify) => {
       const queries = client.getQueryCache().subscribe(notify);
       const mutations = client.getMutationCache().subscribe(notify);
+
       return () => {
         queries();
         mutations();
@@ -23,6 +24,7 @@ export function SessionGuard() {
       client.getQueryCache().getAll().some(isExpired) ||
       client.getMutationCache().getAll().some(isExpired),
   );
+
   if (expired) {
     return (
       <Navigate
@@ -32,5 +34,6 @@ export function SessionGuard() {
       />
     );
   }
+
   return <Outlet />;
 }

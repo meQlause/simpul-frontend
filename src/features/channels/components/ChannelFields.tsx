@@ -1,5 +1,6 @@
 import type { GroupInput } from '../useChannelSetup';
 import { channelsCopy as copy } from '../channels.copy';
+
 export function ChannelFields({
   input,
   onChange,
@@ -13,6 +14,7 @@ export function ChannelFields({
 }) {
   const invalid =
     error.includes('E-TG-INPUT-INVALID') || error.includes('E-TG-CHAT-TYPE-UNSUPPORTED');
+
   return (
     <section className="drawer-section" data-component="DrawerSection">
       <h3 data-role="section-title">Identify the group</h3>

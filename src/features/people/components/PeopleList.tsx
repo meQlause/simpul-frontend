@@ -16,15 +16,19 @@ export function PeopleList({ people }: { people: Person[] }) {
       (!team || person.role?.team === team) &&
       `${person.name} ${person.role?.name} ${person.backup?.name}`.toLowerCase().includes(search),
   );
+
   function filter(key: string, value: string) {
     const next = new URLSearchParams(params);
+
     if (value) {
       next.set(key, value);
     } else {
       next.delete(key);
     }
+
     void setParams(next);
   }
+
   return (
     <>
       <PeopleHeading />

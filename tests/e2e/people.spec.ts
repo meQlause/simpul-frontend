@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { connectBackend, startBackend } from './helpers/backend';
 
 let backend: Awaited<ReturnType<typeof startBackend>>;
+
 test.beforeAll(async () => {
   backend = await startBackend();
 });
@@ -20,14 +21,17 @@ test('People acceptance 1–2: four role holders and Budi’s responsibility are
   page,
 }) => {
   const rows = page.getByRole('row');
+
   await expect(rows).toHaveCount(5);
   await expect(page.getByText('4 team members with defined roles.', { exact: true })).toBeVisible();
   const budi = rows.filter({
     has: page.getByRole('button', { name: 'Budi Santoso', exact: true }),
   });
+
   for (const name of ['Warehouse Lead', 'Reports to Siti Aminah', 'Siti Aminah', 'Available']) {
     await expect(budi.getByText(name, { exact: true })).toBeVisible();
   }
+
   await expect(page.getByRole('button', { name: 'Mr. Hendra', exact: true })).toHaveCount(0);
 });
 
@@ -36,17 +40,21 @@ test('People acceptance 3–5: availability persists and all eligible people are
 }) => {
   await page.getByRole('button', { name: 'Budi Santoso', exact: true }).click();
   const drawer = page.getByRole('dialog');
+
   for (const label of ['Backup person', 'Direct supervisor']) {
     const select = drawer.getByLabel(label, { exact: true });
+
     await expect(select.getByRole('option', { name: 'Mr. Hendra', exact: true })).toHaveCount(1);
     await expect(select.getByRole('option', { name: 'Budi Santoso', exact: true })).toHaveCount(0);
   }
+
   await drawer.getByLabel('Availability', { exact: true }).selectOption('leave');
   await drawer.getByRole('button', { name: 'Save role', exact: true }).click();
   await expect(drawer).toHaveCount(0);
   const budi = page
     .getByRole('row')
     .filter({ has: page.getByRole('button', { name: 'Budi Santoso', exact: true }) });
+
   await expect(budi.getByText('On leave', { exact: true })).toBeVisible();
   await page.reload();
   await page.getByRole('button', { name: 'Budi Santoso', exact: true }).click();
@@ -59,6 +67,7 @@ test('People acceptance 6: clearing Role saves nothing and focuses its field err
   page,
 }) => {
   let writes = 0;
+
   page.on('request', (request) => {
     if (request.method() === 'PATCH') {
       writes += 1;
@@ -67,6 +76,7 @@ test('People acceptance 6: clearing Role saves nothing and focuses its field err
   await page.getByRole('button', { name: 'Budi Santoso', exact: true }).click();
   const drawer = page.getByRole('dialog');
   const role = drawer.getByLabel('Role', { exact: true });
+
   await role.fill('');
   await drawer.getByRole('button', { name: 'Save role', exact: true }).click();
   await expect(drawer.getByText('Enter a role name first.', { exact: true })).toBeVisible();

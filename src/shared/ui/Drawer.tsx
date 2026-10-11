@@ -18,9 +18,11 @@ export function Drawer({
   closeLabel: string;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
+
   useEffect(() => {
     dialog.current?.showModal();
   }, []);
+
   return (
     <dialog
       ref={dialog}

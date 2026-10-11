@@ -26,12 +26,15 @@ for (const path of routes) {
         if (state === 'loading') {
           return;
         }
+
         const code = state === 'not-found' ? 'E-NOT-FOUND' : 'E-INTERNAL';
+
         await route.fulfill({
           status: 500,
           json: { error: { code, message: '', details: [], requestId: 'state-test' } },
         });
       });
+
       if (state === 'offline') {
         await page.goto('/');
         await context.setOffline(true);
@@ -44,6 +47,7 @@ for (const path of routes) {
       }
 
       const screen = page.getByRole('status');
+
       await expect(screen).toHaveAttribute('data-component', 'ScreenState');
       await expect(screen).toHaveAttribute('data-variant', state);
       await expect(screen.getByRole('heading')).toHaveText(messages[state][0]);
@@ -67,6 +71,7 @@ for (const path of lists) {
     await page.goto(path);
 
     const screen = page.getByRole('status');
+
     await expect(screen).toHaveAttribute('data-variant', 'empty');
     await expect(screen.getByRole('heading')).toHaveText(messages.empty[0]);
     await expect(screen.getByText(messages.empty[1], { exact: true })).toBeVisible();
@@ -84,6 +89,7 @@ for (const path of ['/', '/settings']) {
     const responseReady = new Promise<void>((resolve) => {
       release = resolve;
     });
+
     await page.route('**/api/v1/**', async (route) => {
       await responseReady;
       await route.fulfill({

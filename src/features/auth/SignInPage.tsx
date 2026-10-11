@@ -5,10 +5,12 @@ import { authCopy } from './auth.copy';
 export function SignInPage() {
   useEffect(() => {
     document.body.classList.add('auth-view');
+
     return () => {
       document.body.classList.remove('auth-view');
     };
   }, []);
+
   return (
     <main id="page-content" tabIndex={-1}>
       <section className="auth-shell" data-component="AuthShell" data-variant="sign-in">
@@ -48,4 +50,5 @@ export function SignInPage() {
     </main>
   );
 }
+
 import { useEffect } from 'react';

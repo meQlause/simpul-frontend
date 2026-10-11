@@ -15,11 +15,13 @@ export const meSchema = schema.object({
     }),
   }),
 });
+
 export const overviewSchema = schema.object({
   data: schema.object({
     activeWork: schema.object({ count: schema.number().int().nonnegative() }),
   }),
 });
+
 export const attentionSchema = schema.object({
   page: schema.object({ total: schema.number().int().nonnegative() }),
 });

@@ -9,6 +9,7 @@ import { returnPath } from './auth.rules';
 
 function clearPassword(form: HTMLFormElement) {
   const password = form.elements.namedItem('password');
+
   if (password instanceof HTMLInputElement) {
     password.value = '';
   }
@@ -20,11 +21,14 @@ function useSignIn() {
   const client = useQueryClient();
   const location = useLocation();
   const navigate = useNavigate();
+
   async function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
+
     setPending(true);
     setFailed(false);
+
     try {
       await signIn(new FormData(form));
       client.clear();
@@ -37,11 +41,13 @@ function useSignIn() {
       setPending(false);
     }
   }
+
   return { pending, failed, submit };
 }
 
 export function SignInForm() {
   const { pending, failed, submit } = useSignIn();
+
   return (
     <form id="sign-in-form" onSubmit={submit} data-component="SignInForm">
       <OfflineControls>

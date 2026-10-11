@@ -49,6 +49,7 @@ export function Sidebar({
   onWorkspace: () => void;
 }) {
   const { me, workCount, attentionCount } = useShellData();
+
   return (
     <aside
       className={expanded ? 'sidebar open' : 'sidebar'}

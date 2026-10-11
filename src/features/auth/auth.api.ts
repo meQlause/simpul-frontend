@@ -10,6 +10,7 @@ export async function signIn(values: FormData) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email: values.get('email'), password: values.get('password') }),
   });
+
   if (!response.ok) {
     throw new ApiError({
       code: 'E-AUTH-INVALID',
@@ -18,5 +19,6 @@ export async function signIn(values: FormData) {
       requestId: response.headers.get('x-request-id') ?? '',
     });
   }
+
   await getResponse('/me', sessionSchema);
 }

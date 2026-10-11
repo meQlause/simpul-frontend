@@ -4,10 +4,13 @@ import { shellCopy as copy } from './shell.copy';
 
 export function WorkspaceDrawer({ onClose }: { onClose: () => void }) {
   const { me } = useShellData();
+
   if (!me) {
     return null;
   }
+
   const { workspace } = me;
+
   return (
     <Drawer
       title={workspace.name}

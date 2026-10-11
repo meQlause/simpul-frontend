@@ -7,7 +7,9 @@ export function ScreenState({ state, onRetry }: { state: State; onRetry?: () => 
   if (state === 'ready') {
     return null;
   }
+
   const copy = screenStateCopy[state];
+
   return (
     <section
       className="screen-state"

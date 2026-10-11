@@ -18,6 +18,7 @@ test('An error envelope with an unknown code renders as E-INTERNAL (error-handli
   });
   await page.goto('/people');
   const screen = page.getByRole('status');
+
   await expect(screen).toHaveAttribute('data-variant', 'error');
   await expect(screen.getByRole('heading')).toHaveText('Workspace could not be loaded');
   await expect(screen.getByRole('button', { name: 'Retry' })).toBeVisible();

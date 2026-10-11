@@ -14,6 +14,7 @@ export class ApiError extends Error {
     this.details = info.details;
     this.requestId = info.requestId;
     this.retryAfter = info.retryAfter;
+
     if (this.code !== info.code) {
       console.error('Unknown API error code', info.code);
     }

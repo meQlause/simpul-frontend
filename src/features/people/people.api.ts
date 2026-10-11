@@ -12,6 +12,7 @@ export function usePeople() {
 
 export function useSavePerson(personId: string, eligibleIds: string[]) {
   const client = useQueryClient();
+
   return useMutation({
     mutationFn: (input: unknown) =>
       getResponse(`/people/${personId}`, savedPersonSchema, {

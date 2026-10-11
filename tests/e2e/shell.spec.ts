@@ -10,6 +10,7 @@ test('Ctrl K focuses the search field; the skip link moves focus to #page-conten
   await page.goto('/work');
   await page.keyboard.press('Tab');
   const skip = page.getByRole('link', { name: 'Skip to content' });
+
   await expect(skip).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.getByRole('main')).toBeFocused();
@@ -19,6 +20,7 @@ test('Ctrl K focuses the search field; the skip link moves focus to #page-conten
 
 test.describe('shell against the real GET /me', () => {
   let backend: Awaited<ReturnType<typeof startBackend>>;
+
   test.beforeAll(async () => {
     test.setTimeout(60000);
     backend = await startBackend();
@@ -45,6 +47,7 @@ test.describe('shell against the real GET /me', () => {
     page,
   }) => {
     const sidebar = page.getByRole('complementary', { name: 'Main navigation' });
+
     for (const name of [
       'Point Star',
       'Operations workspace',
@@ -53,6 +56,7 @@ test.describe('shell against the real GET /me', () => {
     ]) {
       await expect(sidebar.getByText(name, { exact: true })).toBeVisible();
     }
+
     await expect(sidebar.getByRole('link', { name: 'Work 48', exact: true })).toBeVisible();
     await expect(
       sidebar.getByRole('link', { name: 'Needs attention 7', exact: true }),
@@ -66,6 +70,7 @@ test.describe('shell against the real GET /me', () => {
       .getByRole('button', { name: 'Point Star Operations workspace', exact: true })
       .click();
     const drawer = page.getByRole('dialog');
+
     for (const value of [
       '4 people across operational roles',
       '3 Telegram groups',
@@ -74,6 +79,7 @@ test.describe('shell against the real GET /me', () => {
     ]) {
       await expect(drawer.getByText(value, { exact: true })).toBeVisible();
     }
+
     await drawer.getByRole('button', { name: 'Back to workspace', exact: true }).click();
     await expect(drawer).toHaveCount(0);
   });
@@ -87,9 +93,11 @@ test.describe('shell against the real GET /me', () => {
       data: {},
       headers: { Origin: new URL(page.url()).origin },
     });
+
     expect(expired.ok(), await expired.text()).toBe(true);
     await context.clearCookies();
     const session = await page.request.get(`${backend.baseUrl}/api/v1/me`);
+
     expect(session.status(), await session.text()).toBe(401);
     await page.reload();
     await expect(page).toHaveURL('/sign-in');
@@ -120,14 +128,18 @@ test('At 760px the menu button opens the sidebar and sets aria-expanded=true (sh
           },
         },
       });
+
       return;
     }
+
     const data = route.request().url().endsWith('/overview') ? { activeWork: { count: 48 } } : [];
+
     await route.fulfill({ json: { data, page: { total: 7 } } });
   });
   await page.goto('/work');
   const menu = page.getByRole('button', { name: 'Open navigation' }),
     sidebar = page.getByRole('complementary', { name: 'Main navigation' });
+
   await expect(menu).toHaveAttribute('aria-expanded', 'false');
   await expect(sidebar).not.toBeInViewport();
   await menu.click();

@@ -10,6 +10,7 @@ const docker =
 
 export async function startBackend() {
   const cwd = resolve(process.env.SIMPUL_BACKEND_PATH ?? '../backend');
+
   execFileSync(
     process.execPath,
     [
@@ -24,6 +25,7 @@ export async function startBackend() {
     { cwd, stdio: 'pipe' },
   );
   const name = `simpul-browser-${randomUUID()}`;
+
   execFileSync(
     docker,
     [
@@ -42,8 +44,10 @@ export async function startBackend() {
   );
   let child: ChildProcess | undefined;
   let baseUrl: string;
+
   try {
     const address = execFileSync(docker, ['port', name, '5432'], { encoding: 'utf8' }).trim();
+
     child = spawn(
       process.execPath,
       ['node_modules/.cache/browser-fixture/tests/helpers/browser-server.js'],
@@ -63,6 +67,7 @@ export async function startBackend() {
     execFileSync(docker, ['rm', '-f', name], { stdio: 'pipe' });
     throw error;
   }
+
   return {
     baseUrl,
     stop: () => {
@@ -79,12 +84,14 @@ function ready(child: ChildProcess) {
       () => reject(new Error(output || 'Browser API did not start')),
       30000,
     );
+
     child.stderr?.on('data', (chunk: Buffer) => {
       output += chunk.toString();
     });
     child.stdout?.on('data', (chunk: Buffer) => {
       output += chunk.toString();
       const address = /BROWSER_FIXTURE_READY (http:\/\/127\.0\.0\.1:\d+)\n/.exec(output);
+
       if (address) {
         clearTimeout(timeout);
         accept(address[1]);
@@ -101,10 +108,12 @@ export async function connectBackend(page: Page, baseUrl: string) {
   const login = await page.request.post(`${baseUrl}/api/auth/sign-in/email`, {
     data: { email: 'admin@pointstar.example', password: 'test-password-123' },
   });
+
   expect(login.ok()).toBe(true);
   await page.route(/\/api\/(v1|auth)\//, async (route) => {
     const url = new URL(route.request().url());
     const response = await route.fetch({ url: `${baseUrl}${url.pathname}${url.search}` });
+
     await route.fulfill({ response });
   });
 }

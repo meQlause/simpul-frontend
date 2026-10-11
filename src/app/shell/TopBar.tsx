@@ -5,6 +5,7 @@ import { GlobalSearch } from './GlobalSearch';
 export function TopBar({ expanded, onMenu }: { expanded: boolean; onMenu: () => void }) {
   const location = useLocation();
   const current = navigation.find((item) => item.path === location.pathname);
+
   return (
     <header className="topbar" data-component="TopBar">
       <div className="breadcrumb">
@@ -33,4 +34,5 @@ export function TopBar({ expanded, onMenu }: { expanded: boolean; onMenu: () => 
     </header>
   );
 }
+
 import { useLocation } from 'react-router';

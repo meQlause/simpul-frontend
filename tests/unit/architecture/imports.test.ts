@@ -65,9 +65,11 @@ test('tests/unit/architecture/imports.test.ts enforces C-1 to C-4 on every sourc
     .filter((entry) => entry.isFile() && /\.tsx?$/.test(entry.name))
     .flatMap((entry) => {
       const path = join(entry.parentPath, entry.name);
+
       return inspectImports(relative(process.cwd(), path), readFileSync(path, 'utf8'), options).map(
         (rule) => `${path}: ${rule}`,
       );
     });
+
   expect(violations).toEqual([]);
 });

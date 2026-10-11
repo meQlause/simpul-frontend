@@ -7,9 +7,11 @@ export function PersonRow({ person }: { person: Person }) {
   const open = () => {
     void navigate(`/people/${person.id}`);
   };
+
   const available = person.availability === 'available';
   const badge = available ? 'green' : 'gray';
   const availability = available ? copy.available : copy.leave;
+
   return (
     <tr data-directory-row data-component="PersonRow" data-variant="default">
       <td data-label={copy.columns[0]}>
@@ -48,6 +50,7 @@ function PersonIdentity({ person, onOpen }: { person: Person; onOpen: () => void
   const handle = person.identities.find((identity) => identity.provider === 'telegram')?.handle;
   const colours: Record<string, string> = { Warehouse: 'sand', Sales: 'lavender' };
   const colour = colours[person.role?.team ?? ''] ?? 'mint';
+
   return (
     <div className="directory-identity">
       <span className={`avatar ${colour}`} data-component="Avatar" data-variant={colour}>

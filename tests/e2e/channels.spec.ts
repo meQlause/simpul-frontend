@@ -2,6 +2,7 @@ import { expect, test, type Page, type Route } from '@playwright/test';
 import { connectBackend, startBackend } from './helpers/backend';
 
 let backend: Awaited<ReturnType<typeof startBackend>>;
+
 test.beforeAll(async () => {
   test.setTimeout(60000);
   backend = await startBackend();
@@ -22,6 +23,7 @@ test('Channels acceptance 1: the seed lists three Active groups and the shared w
 }) => {
   await expect(page.getByRole('row')).toHaveCount(4);
   const card = page.locator('[data-component="ConnectionCard"]');
+
   await expect(card).toContainText('Simpul workspace bot');
   await expect(card).toContainText('@simpul_workspace_bot');
   await expect(card).toContainText('Shared by 3 groups');
@@ -30,6 +32,7 @@ test('Channels acceptance 1: the seed lists three Active groups and the shared w
     fullPage: true,
     animations: 'disabled',
   });
+
   for (const tab of ['All groups 3', 'Active 3', 'Drafts 0', 'Paused 0']) {
     await expect(page.getByRole('button', { name: tab, exact: true })).toBeVisible();
   }
@@ -40,6 +43,7 @@ test('Channels acceptance 2: saved group identity is read-only and display name 
 }) => {
   await page.getByRole('button', { name: 'Operations', exact: true }).click();
   const drawer = page.getByRole('dialog');
+
   await expect(drawer.getByLabel('Telegram Chat ID', { exact: true })).toHaveAttribute(
     'readonly',
     '',
@@ -62,6 +66,7 @@ async function addGroup(page: Page, name: string, chatId: string) {
   await expect(page.getByLabel('Display name', { exact: true })).toHaveValue(name);
   await expect(page.getByLabel('Telegram Chat ID', { exact: true })).toHaveValue(chatId);
 }
+
 async function failRequest(page: Page, path: RegExp, code: string) {
   await page.route(path, (route) =>
     route.fulfill({
@@ -78,6 +83,7 @@ async function failRequest(page: Page, path: RegExp, code: string) {
     }),
   );
 }
+
 async function proof(page: Page, chatId: string) {
   const response = await page.request.get(backend.baseUrl + '/api/v1/telegram/connections');
   const connection = (await response.json()).data[0];
@@ -86,6 +92,7 @@ async function proof(page: Page, chatId: string) {
     { data: { purpose: 'receive_check' } },
   );
   const command = (await session.json()).data.command;
+
   for (const text of [command, 'A new ordinary check message']) {
     const receipt = await page.request.post(
       backend.baseUrl + '/api/v1/webhooks/telegram/' + connection.id,
@@ -103,9 +110,11 @@ async function proof(page: Page, chatId: string) {
         },
       },
     );
+
     expect(receipt.ok()).toBe(true);
   }
 }
+
 async function readyGroup(page: Page, name: string, chatId: string) {
   await addGroup(page, name, chatId);
   await page.getByRole('button', { name: 'Check group', exact: true }).click();
@@ -120,10 +129,12 @@ async function readyGroup(page: Page, name: string, chatId: string) {
     page.getByRole('button', { name: 'Activate monitoring', exact: true }),
   ).toBeEnabled();
 }
+
 test('Channels acceptance 3: duplicate group never adds a row', async ({ page }) => {
   const existing = await page.request.get(backend.baseUrl + '/api/v1/channels');
   const groups = (await existing.json()).data;
   const rows = groups.length + 1;
+
   await expect(page.getByRole('row')).toHaveCount(rows);
   await addGroup(page, 'Demo new group', groups[0].providerChatId);
   await page.getByRole('button', { name: 'Save draft', exact: true }).click();
@@ -139,6 +150,7 @@ test('Channels acceptance 4: positive chat IDs show the exact unsupported error'
     'E-TG-CHAT-TYPE-UNSUPPORTED · Only Telegram groups and supergroups are supported.',
   );
 });
+
 for (const [index, [number, code]] of (
   [
     [5, 'E-TG-SETUP-TIMEOUT'],
@@ -152,13 +164,16 @@ for (const [index, [number, code]] of (
     'Channels acceptance ' + number + ': ' + code + ' preserves inputs and prevents activation',
     async ({ page }) => {
       const chatId = '-100' + String(8000000000 + index);
+
       await addGroup(page, code, chatId);
       await failRequest(page, /\/channels\/[^/]+\/verify$/, code);
       await page.getByRole('button', { name: 'Check group', exact: true }).click();
       await expect(page.locator('#channel-setup-error')).toContainText(code);
+
       if (code === 'E-TG-RATE-LIMITED') {
         await expect(page.locator('#channel-setup-error')).toContainText('30s');
       }
+
       await expect(page.getByLabel('Display name', { exact: true })).toHaveValue(code);
       await expect(page.getByLabel('Telegram Chat ID', { exact: true })).toHaveValue(chatId);
       await expect(
@@ -167,6 +182,7 @@ for (const [index, [number, code]] of (
     },
   );
 }
+
 test('Channels acceptance 7: failed activation never marks the group Active', async ({ page }) => {
   await readyGroup(page, 'Failed activation', '-1009000000001');
   await failRequest(page, /\/channels\/[^/]+\/activate$/, 'E-TG-ACTIVATION-FAILED');
@@ -180,6 +196,7 @@ test('Channels acceptance 7: failed activation never marks the group Active', as
   const saved = (await response.json()).data.find(
     (group: { displayName: string }) => group.displayName === 'Failed activation',
   );
+
   expect(saved.monitored).toBe(false);
   expect(saved.connectionStatus).not.toBe('active');
   await page.getByRole('button', { name: 'Close channel setup', exact: true }).click();
@@ -252,6 +269,7 @@ test('Channels credential re-entry uses the token submitted to Verify even if th
 }) => {
   await page.getByRole('button', { name: 'Manage Telegram connection', exact: true }).click();
   const field = page.getByLabel('Replacement bot token', { exact: true });
+
   await page.route(/\/telegram\/connections\/verify$/, async (route) => {
     await field.evaluate((element) => {
       (element as HTMLInputElement).value = 'changed-during-verification';
@@ -267,18 +285,24 @@ test('Channels credential re-entry uses the token submitted to Verify even if th
 
 async function credentialVersion(page: Page) {
   const response = await page.request.get(backend.baseUrl + '/api/v1/telegram/connections');
+
   return (await response.json()).data[0].credentialVersion as number;
 }
+
 async function verifyReplacement(page: Page, token: string) {
   await page.getByRole('button', { name: 'Manage Telegram connection', exact: true }).click();
   const field = page.getByLabel('Replacement bot token', { exact: true });
+
   await field.fill(token);
   await page.getByRole('button', { name: 'Verify', exact: true }).click();
   await expect(field).toHaveValue('');
+
   return field;
 }
+
 async function rotateReplacement(page: Page, token: string) {
   const field = await verifyReplacement(page, token);
+
   await expect(page.getByRole('button', { name: 'Save connection', exact: true })).toBeDisabled();
   await field.fill('a-different-token-for-the-same-bot');
   await expect(page.getByRole('button', { name: 'Save connection', exact: true })).toBeDisabled();
@@ -301,17 +325,20 @@ async function rotateReplacement(page: Page, token: string) {
   ]);
   await expect(page.getByRole('dialog')).toHaveCount(0);
 }
+
 async function expectNoCredential(page: Page, token: string) {
   expect(
     await page.evaluate(() => ({ local: localStorage.length, session: sessionStorage.length })),
   ).toEqual({ local: 0, session: 0 });
   expect(await page.content()).not.toContain(token);
 }
+
 test('Channels acceptance 13: a successful credential rotation leaves storage empty and no token in page HTML', async ({
   page,
 }) => {
   const token = 'browser-rotated-token';
   const version = await credentialVersion(page);
+
   await rotateReplacement(page, token);
   expect(await credentialVersion(page)).toBe(version + 1);
   await expectNoCredential(page, token);
@@ -325,21 +352,27 @@ test('Channels acceptance 13: a successful credential rotation leaves storage em
 
 async function trackSessionPolls(page: Page, answer: (route: Route) => Promise<void>) {
   let calls = 0;
+
   await page.route(/\/telegram\/connection-sessions\//, async (route) => {
     calls += 1;
     await answer(route);
   });
+
   return () => calls;
 }
+
 async function generateIdentificationCode(page: Page) {
   await page.clock.install();
   await addGroup(page, 'Poll candidate', '-1009100000000');
   await page.getByText('Identify with a connection code instead', { exact: true }).click();
   await page.getByRole('button', { name: 'Get connection code', exact: true }).click();
   const command = page.getByLabel('Connection command', { exact: true });
+
   await expect(command).toHaveValue(/\/simpul_connect /);
+
   return command.inputValue();
 }
+
 async function sendIdentificationCommand(page: Page, command: string, chatId: string) {
   const response = await page.request.get(backend.baseUrl + '/api/v1/telegram/connections');
   const connection = (await response.json()).data[0];
@@ -359,27 +392,33 @@ async function sendIdentificationCommand(page: Page, command: string, chatId: st
       },
     },
   );
+
   expect(receipt.ok()).toBe(true);
 }
+
 test('The connection-code poll stops on identified and starts no monitoring', async ({ page }) => {
   const calls = await trackSessionPolls(page, (route) => route.fallback());
   const command = await generateIdentificationCode(page);
+
   await expect.poll(calls).toBe(1);
   await sendIdentificationCommand(page, command, '-1009100000001');
   await expect
     .poll(async () => {
       await page.clock.fastForward(10000);
+
       return page.getByLabel('Telegram Chat ID', { exact: true }).inputValue();
     })
     .toBe('-1009100000001');
   await expect(page.getByText('Identified browser group', { exact: true })).toBeVisible();
   const stopped = calls();
+
   await page.clock.fastForward(60000);
   expect(calls()).toBe(stopped);
   await expect(
     page.getByRole('button', { name: 'Activate monitoring', exact: true }),
   ).toBeDisabled();
   const groups = await page.request.get(backend.baseUrl + '/api/v1/channels');
+
   expect(
     (await groups.json()).data.some(
       (group: { providerChatId: string }) => group.providerChatId === '-1009100000001',
@@ -393,8 +432,10 @@ test('The connection-code poll stops on expired and preserves the typed Chat ID'
   const calls = await trackSessionPolls(page, async (route) => {
     if (!expired) {
       await route.fallback();
+
       return;
     }
+
     await route.fulfill({
       json: {
         data: {
@@ -406,12 +447,14 @@ test('The connection-code poll stops on expired and preserves the typed Chat ID'
       },
     });
   });
+
   await generateIdentificationCode(page);
   await expect.poll(calls).toBe(1);
   expired = true;
   await page.clock.fastForward(10000);
   await expect(page.locator('#channel-setup-error')).toContainText('E-TG-SESSION-EXPIRED');
   const stopped = calls();
+
   await page.clock.fastForward(60000);
   expect(calls()).toBe(stopped);
   await expect(page.getByLabel('Telegram Chat ID', { exact: true })).toHaveValue('-1009100000000');
@@ -419,18 +462,23 @@ test('The connection-code poll stops on expired and preserves the typed Chat ID'
     page.getByRole('button', { name: 'Get connection code', exact: true }),
   ).toBeEnabled();
 });
+
 for (const close of ['button', 'Escape']) {
   test('The connection-code poll stops when the drawer closes using ' + close, async ({ page }) => {
     const calls = await trackSessionPolls(page, (route) => route.fallback());
+
     await generateIdentificationCode(page);
     await expect.poll(calls).toBe(1);
+
     if (close === 'Escape') {
       await page.keyboard.press('Escape');
     } else {
       await page.getByRole('button', { name: 'Close channel setup', exact: true }).click();
     }
+
     await expect(page.getByRole('dialog')).toHaveCount(0);
     const stopped = calls();
+
     await page.clock.fastForward(60000);
     expect(calls()).toBe(stopped);
   });

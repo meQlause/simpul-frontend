@@ -9,7 +9,9 @@ import { ChannelFields } from './ChannelFields';
 import { Checklist, useFreshVerification } from './Checklist';
 import { ConnectionCode } from './ConnectionCode';
 import { ChannelConfirmation } from './ChannelConfirmation';
+
 type Setup = ReturnType<typeof useChannelSetup>;
+
 export function ChannelDrawer({
   channel,
   connection,
@@ -39,6 +41,7 @@ export function ChannelDrawer({
     },
     [setInput],
   );
+
   return (
     <Drawer
       title={channel ? 'Configure channel' : copy.add}
@@ -96,6 +99,7 @@ export function ChannelDrawer({
     </Drawer>
   );
 }
+
 function ChannelFooter({
   setup,
   fresh,
@@ -106,6 +110,7 @@ function ChannelFooter({
   onActivate: () => void;
 }) {
   const online = useOnline();
+
   return (
     <>
       <p id="channel-setup-error" role="alert" className="channel-error drawer-error">
@@ -136,6 +141,7 @@ function ChannelFooter({
     </>
   );
 }
+
 function ChannelIdentity({ saved, name }: { saved: boolean; name: string }) {
   return (
     <div className="drawer-identity" data-component="DrawerIdentity" data-variant="default">
@@ -145,6 +151,7 @@ function ChannelIdentity({ saved, name }: { saved: boolean; name: string }) {
     </div>
   );
 }
+
 function WorkspaceBot({ connection, onManage }: { connection: Connection; onManage: () => void }) {
   return (
     <section className="drawer-section" data-component="DrawerSection">
@@ -168,12 +175,15 @@ function WorkspaceBot({ connection, onManage }: { connection: Connection; onMana
     </section>
   );
 }
+
 function ChannelReadiness({ setup, connection }: { setup: Setup; connection: Connection }) {
   const ignoreCandidate = useCallback(() => {}, []);
   let label = setup.verification || setup.channel ? 'Recheck' : 'Check group';
+
   if (setup.pending) {
     label = 'Verifying…';
   }
+
   return (
     <section className="drawer-section" data-component="DrawerSection">
       <h3 data-role="section-title">Verify before you activate</h3>
@@ -222,6 +232,7 @@ function ChannelReadiness({ setup, connection }: { setup: Setup; connection: Con
 
 function matchesSavedInput(setup: Setup) {
   const saved = setup.channel;
+
   return Boolean(
     saved &&
     setup.input.displayName.trim() === saved.displayName &&
@@ -230,6 +241,7 @@ function matchesSavedInput(setup: Setup) {
     setup.input.providerChatId === saved.providerChatId,
   );
 }
+
 function GroupMetadata({
   channel,
   candidate,
@@ -246,9 +258,11 @@ function GroupMetadata({
           chatType: channel.providerChatType,
         }
       : null);
+
   if (!group?.title) {
     return null;
   }
+
   return (
     <dl
       className="trace-facts group-metadata"

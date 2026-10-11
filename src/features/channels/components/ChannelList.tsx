@@ -2,6 +2,7 @@ import { useSearchParams } from 'react-router';
 import type { Channel, Connection } from '../channels.schema';
 import { channelsCopy as copy } from '../channels.copy';
 import { useOnline } from '../../../shared/useOnline';
+
 export function ChannelList({
   channels,
   connection,
@@ -24,15 +25,19 @@ export function ChannelList({
       (!state || channel.connectionStatus === state) &&
       (channel.displayName + ' ' + channel.providerChatId).toLowerCase().includes(search),
   );
+
   function filter(key: string, value: string) {
     const next = new URLSearchParams(params);
+
     if (value) {
       next.set(key, value);
     } else {
       next.delete(key);
     }
+
     void setParams(next);
   }
+
   return (
     <>
       <ChannelHeading onOpen={onOpen} />
@@ -91,6 +96,7 @@ export function ChannelList({
     </>
   );
 }
+
 function ConnectionCard({
   connection,
   onManage,
@@ -99,6 +105,7 @@ function ConnectionCard({
   onManage: () => void;
 }) {
   const online = useOnline();
+
   return (
     <section
       className="telegram-connection"
@@ -131,6 +138,7 @@ function ConnectionCard({
     </section>
   );
 }
+
 function ChannelTable({
   channels,
   onOpen,
@@ -161,6 +169,7 @@ function ChannelTable({
     </div>
   );
 }
+
 function ChannelRow({
   channel,
   onOpen,
@@ -171,6 +180,7 @@ function ChannelRow({
   onPause: (channel: Channel) => void;
 }) {
   const online = useOnline();
+
   return (
     <tr>
       <td>
@@ -230,6 +240,7 @@ function ChannelRow({
 
 function ChannelHeading({ onOpen }: { onOpen: (id: string) => void }) {
   const online = useOnline();
+
   return (
     <header className="page-heading" data-component="PageHeading" data-variant="default">
       <div>

@@ -20,6 +20,7 @@ test('client accepts quiet hours crossing midnight', () => {
 
 test.each(['id', 'workspaceId', 'level'])('client refuses server-owned %s in settings', (field) => {
   const parsed = settingsInputSchema.safeParse({ ...valid, [field]: 'client-owned-value' });
+
   expect(parsed.success).toBe(false);
   expect(parsed.error?.issues).toEqual([
     expect.objectContaining({ code: 'unrecognized_keys', keys: [field] }),

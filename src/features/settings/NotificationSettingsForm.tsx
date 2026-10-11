@@ -8,12 +8,15 @@ function serverFields(error: unknown): Record<string, string> {
   if (!(error instanceof ApiError)) {
     return {};
   }
+
   if (error.code === 'E-SETTINGS-QUIET-HOURS-EQUAL') {
     return { quietEnd: copy.equalHours };
   }
+
   if (error.code !== 'E-VALIDATION') {
     return {};
   }
+
   return Object.fromEntries(
     error.details.flatMap((detail) => {
       if (
@@ -24,6 +27,7 @@ function serverFields(error: unknown): Record<string, string> {
       ) {
         return [];
       }
+
       return [[detail.field, copy.invalid]];
     }),
   );
@@ -31,6 +35,7 @@ function serverFields(error: unknown): Record<string, string> {
 
 function focusField(form: HTMLFormElement, fields: Record<string, string>) {
   const control = form.elements.namedItem(Object.keys(fields)[0]);
+
   if (control instanceof HTMLElement) {
     control.focus();
   }
@@ -38,6 +43,7 @@ function focusField(form: HTMLFormElement, fields: Record<string, string>) {
 
 function readSettingsForm(form: HTMLFormElement) {
   const input = Object.fromEntries(new FormData(form));
+
   return settingsInputSchema.safeParse({ ...input, budgetPerHour: Number(input.budgetPerHour) });
 }
 
@@ -49,18 +55,24 @@ function useSettingsForm(
   const online = useOnline();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [failed, setFailed] = useState(false);
+
   function showErrors(form: HTMLFormElement, fields: Record<string, string>) {
     setErrors(fields);
     focusField(form, fields);
   }
+
   async function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
+
     if (pending || !online) {
       return;
     }
+
     const form = event.currentTarget;
     const parsed = readSettingsForm(form);
+
     setFailed(false);
+
     if (!parsed.success) {
       showErrors(
         form,
@@ -71,9 +83,12 @@ function useSettingsForm(
           ]),
         ),
       );
+
       return;
     }
+
     setErrors({});
+
     try {
       await save(parsed.data);
       onSaved();
@@ -81,11 +96,14 @@ function useSettingsForm(
       showFailure(form, error);
     }
   }
+
   function showFailure(form: HTMLFormElement, error: unknown) {
     const fields = serverFields(error);
+
     setFailed(Object.keys(fields).length === 0);
     showErrors(form, fields);
   }
+
   return { online, errors, failed, submit };
 }
 
@@ -103,6 +121,7 @@ export function NotificationSettingsForm({
   onSaved: () => void;
 }) {
   const { online, errors, failed, submit } = useSettingsForm(save, pending, onSaved);
+
   return (
     <form
       className="panel"

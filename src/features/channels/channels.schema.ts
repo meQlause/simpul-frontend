@@ -1,10 +1,12 @@
 import { z as schema } from 'zod';
+
 const checkSchema = schema.object({
   key: schema.string(),
   status: schema.enum(['pass', 'pending', 'fail']),
   message: schema.string(),
   action: schema.string().nullable(),
 });
+
 export const verificationSchema = schema.object({
   id: schema.string(),
   checkedAt: schema.string(),
@@ -12,6 +14,7 @@ export const verificationSchema = schema.object({
   activationReady: schema.boolean(),
   checks: schema.array(checkSchema),
 });
+
 export const channelSchema = schema.object({
   id: schema.string(),
   displayName: schema.string(),
@@ -30,13 +33,16 @@ export const channelSchema = schema.object({
   verification: verificationSchema.nullable().optional(),
   monitoringStartedAt: schema.string().nullable(),
 });
+
 export const responseSchema = schema.object({ data: schema.array(channelSchema) });
+
 const groupSchema = schema.object({
   channelId: schema.string(),
   displayName: schema.string(),
   providerChatId: schema.string(),
   connectionStatus: schema.string(),
 });
+
 export const connectionSchema = schema.object({
   id: schema.string(),
   connectionName: schema.string(),
@@ -46,7 +52,9 @@ export const connectionSchema = schema.object({
   credentialVersion: schema.number(),
   groups: schema.array(groupSchema),
 });
+
 export const connectionsSchema = schema.object({ data: schema.array(connectionSchema) });
+
 export const sessionSchema = schema.object({
   id: schema.string(),
   expiresAt: schema.string(),
@@ -57,11 +65,16 @@ export const sessionSchema = schema.object({
     .nullable()
     .optional(),
 });
+
 export const credentialCheckSchema = schema.object({
   botUsername: schema.string(),
   sameBotAsStored: schema.boolean().nullable(),
 });
+
 export type Channel = schema.infer<typeof channelSchema>;
+
 export type Connection = schema.infer<typeof connectionSchema>;
+
 export type Verification = schema.infer<typeof verificationSchema>;
+
 export type CodeSession = schema.infer<typeof sessionSchema>;

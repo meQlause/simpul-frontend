@@ -5,6 +5,7 @@ import { shellCopy } from './shell.copy';
 export function GlobalSearch() {
   const field = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+
   useEffect(() => {
     function shortcut(event: KeyboardEvent) {
       if (event.ctrlKey && event.key.toLowerCase() === 'k') {
@@ -12,11 +13,14 @@ export function GlobalSearch() {
         field.current?.focus();
       }
     }
+
     window.addEventListener('keydown', shortcut);
+
     return () => {
       window.removeEventListener('keydown', shortcut);
     };
   }, []);
+
   return (
     <label className="global-search" data-component="GlobalSearch">
       <svg className="icon" aria-hidden="true">

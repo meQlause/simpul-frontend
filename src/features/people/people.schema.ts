@@ -10,12 +10,16 @@ const personSchema = namedPerson.extend({
   manager: namedPerson.nullable(),
   backup: namedPerson.nullable(),
 });
+
 export type Person = schema.infer<typeof personSchema>;
+
 export const responseSchema = schema.object({ data: schema.array(personSchema) });
+
 export const savedPersonSchema = schema.object({ data: personSchema });
 
 export function personInputSchema(personId: string, eligibleIds: string[]) {
   const reference = schema.guid().refine((id) => id !== personId && eligibleIds.includes(id));
+
   return schema.strictObject({
     roleName: schema
       .string()

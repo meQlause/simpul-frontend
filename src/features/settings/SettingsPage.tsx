@@ -11,6 +11,7 @@ export function SettingsPage() {
   const workspace = useSettingsWorkspace();
   const [saved, setSaved] = useState(false);
   const state = useScreenState(query, false);
+
   if (!query.data) {
     return (
       <ScreenState
@@ -21,6 +22,7 @@ export function SettingsPage() {
       />
     );
   }
+
   return (
     <section data-component="SettingsPage" data-variant="default">
       <div className="page-heading" data-component="PageHeading" data-variant="default">

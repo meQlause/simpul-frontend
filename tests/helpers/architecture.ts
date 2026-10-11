@@ -27,12 +27,15 @@ function targetFor(path: string, module: string, options: compiler.CompilerOptio
     options,
     compiler.sys,
   ).resolvedModule;
+
   if (resolved) {
     return relative(process.cwd(), resolved.resolvedFileName).replaceAll('\\', '/');
   }
+
   if (module.startsWith('.')) {
     return posix.normalize(posix.join(posix.dirname(path), module));
   }
+
   return module;
 }
 
@@ -42,6 +45,7 @@ function contextFor(
   options: compiler.CompilerOptions,
 ): ImportContext {
   const target = targetFor(path, module, options);
+
   return {
     path,
     target,
@@ -54,15 +58,18 @@ function expressionName(expression: compiler.Expression) {
   if (compiler.isIdentifier(expression)) {
     return expression.text;
   }
+
   if (compiler.isPropertyAccessExpression(expression)) {
     return expression.name.text;
   }
+
   if (
     compiler.isElementAccessExpression(expression) &&
     compiler.isStringLiteral(expression.argumentExpression)
   ) {
     return expression.argumentExpression.text;
   }
+
   return undefined;
 }
 
@@ -75,6 +82,7 @@ function makesRequest(node: compiler.Node): boolean {
   ) {
     return true;
   }
+
   return compiler.forEachChild(node, makesRequest) ?? false;
 }
 
@@ -88,13 +96,16 @@ export function inspectImports(
     .preProcessFile(source, true, true)
     .importedFiles.flatMap((imported) => {
       const context = contextFor(path, imported.fileName, options);
+
       return Object.entries(importRules)
         .filter(([_rule, violates]) => violates(context))
         .map(([rule]) => rule);
     });
   const syntax = compiler.createSourceFile(path, source, compiler.ScriptTarget.Latest, true);
+
   if (path.startsWith('src/shared/ui/') && makesRequest(syntax)) {
     violations.push('C-4');
   }
+
   return [...new Set(violations)];
 }

@@ -11,9 +11,11 @@ import { ChannelList } from './components/ChannelList';
 import { ChannelDrawer } from './components/ChannelDrawer';
 import { ConnectionDrawer } from './components/ConnectionDrawer';
 import { ChannelConfirmation } from './components/ChannelConfirmation';
+
 export function ChannelsPage() {
   const page = useChannelPage();
   const state = useScreenState(page.channels, page.channels.data?.data.length === 0);
+
   return (
     <>
       <ScreenState state={state} onRetry={page.reload} />
@@ -44,6 +46,7 @@ export function ChannelsPage() {
     </>
   );
 }
+
 function useChannelPage() {
   const channels = useChannels();
   const connections = useConnections();
@@ -54,27 +57,34 @@ function useChannelPage() {
   const [message, setMessage] = useState('');
   const routeId = useLocation().pathname.split('/')[2] ?? '';
   const drawerId = routeId === 'connection' ? returnId : routeId;
+
   function open(id: string) {
     void navigate('/channels/' + id);
   }
+
   function close() {
     setReturnId('');
     void navigate('/channels');
   }
+
   function reload() {
     void channels.refetch();
     void connections.refetch();
   }
+
   function saved(message: string) {
     reload();
     close();
     setMessage(message);
   }
+
   async function confirmPause() {
     if (!pause || pending) {
       return;
     }
+
     setPending(true);
+
     try {
       await channelRequest('/channels/' + pause.id + '/pause', channelSchema, 'POST', {
         expectedConfigVersion: pause.configVersion,
@@ -88,6 +98,7 @@ function useChannelPage() {
       setPending(false);
     }
   }
+
   return {
     channels,
     connection: connections.data?.data[0],
@@ -106,15 +117,18 @@ function useChannelPage() {
     confirmPause,
   };
 }
+
 function PageDrawers({ page }: { page: ReturnType<typeof useChannelPage> }) {
   const detail = useQuery({
     queryKey: ['channels', page.drawerId],
     queryFn: () => readChannel(page.drawerId),
     enabled: Boolean(page.drawerId && page.drawerId !== 'new'),
   });
+
   if (!page.connection) {
     return null;
   }
+
   return (
     <>
       {page.drawerId && (
@@ -153,6 +167,7 @@ function PageDrawers({ page }: { page: ReturnType<typeof useChannelPage> }) {
     </>
   );
 }
+
 function SetupDrawer(props: {
   id: string;
   channel?: Channel;
@@ -174,6 +189,7 @@ function SetupDrawer(props: {
       />
     );
   }
+
   return (
     <Drawer
       title="Configure channel"

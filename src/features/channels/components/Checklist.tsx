@@ -1,20 +1,26 @@
 import { useEffect, useState } from 'react';
 import type { Verification } from '../channels.schema';
 import { channelsCopy as copy } from '../channels.copy';
+
 export function useFreshVerification(verification: Verification | null) {
   const [now, setNow] = useState(Date.now);
+
   useEffect(() => {
     if (!verification) {
       return;
     }
+
     const timer = setTimeout(
       () => setNow(Date.now()),
       Math.max(0, Date.parse(verification.expiresAt) - Date.now()),
     );
+
     return () => clearTimeout(timer);
   }, [verification]);
+
   return Boolean(verification?.activationReady && Date.parse(verification.expiresAt) > now);
 }
+
 export function Checklist({ verification }: { verification: Verification | null }) {
   return (
     <div data-testid="channel-checklist" data-variant="channel">
@@ -23,6 +29,7 @@ export function Checklist({ verification }: { verification: Verification | null 
         const status = check?.status ?? 'pending';
         const labels = { pass: 'Passed', pending: 'Pending', fail: 'Needs action' };
         const colors = { pass: 'green', pending: 'gray', fail: 'amber' };
+
         return (
           <div
             key={title}

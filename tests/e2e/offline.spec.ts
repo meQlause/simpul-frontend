@@ -10,13 +10,16 @@ test('In the offline state every form control and the export button are disabled
   await page.goto('/');
   const search = page.getByRole('searchbox', { name: 'Search all work' });
   const download = page.getByRole('button', { name: 'Download summary' });
+
   await expect(search).toBeEnabled();
   await expect(download).toBeEnabled();
 
   await context.setOffline(true);
   await expect(page.getByRole('status')).toHaveAttribute('data-variant', 'offline');
   const controls = page.locator('input, select, textarea, button[data-action="export"]');
+
   expect(await controls.count()).toBeGreaterThan(0);
+
   for (const control of await controls.all()) {
     await expect(control).toBeDisabled();
   }

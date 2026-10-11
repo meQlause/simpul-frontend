@@ -35,6 +35,7 @@ test('Non-field errors omit details and preserve E-AUTH-REQUIRED (error-handling
 
 test('An error envelope with an unknown code renders as E-INTERNAL (error-handling §5)', async () => {
   const report = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
   vi.stubGlobal(
     'fetch',
     vi.fn().mockResolvedValue(

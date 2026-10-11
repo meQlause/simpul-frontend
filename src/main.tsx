@@ -20,6 +20,7 @@ import './styles/settings.css';
 import './styles/channels.css';
 
 const root = document.getElementById('root');
+
 if (!root) {
   throw new Error('Missing application root');
 }

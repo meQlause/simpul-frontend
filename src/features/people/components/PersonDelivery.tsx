@@ -7,6 +7,7 @@ import { peopleCopy as copy } from '../people.copy';
 export function PersonDelivery() {
   const query = useSettingsQuery();
   const state = useScreenState(query, false);
+
   if (!query.data) {
     return (
       <ScreenState
@@ -17,8 +18,10 @@ export function PersonDelivery() {
       />
     );
   }
+
   const settings = query.data.data;
   const zone = settings.timezone === 'Asia/Jakarta' ? 'WIB' : settings.timezone;
+
   return (
     <section className="drawer-section">
       <div className="drawer-section-heading">

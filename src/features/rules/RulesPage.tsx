@@ -5,6 +5,7 @@ import { useRules } from './rules.api';
 export function RulesPage() {
   const query = useRules();
   const state = useScreenState(query, query.data?.data.length === 0);
+
   return (
     <ScreenState
       state={state}

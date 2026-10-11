@@ -15,6 +15,7 @@ function validationFields(error: unknown): Record<string, string> {
   if (!(error instanceof ApiError) || error.code !== 'E-VALIDATION') {
     return {};
   }
+
   return Object.fromEntries(
     error.details.flatMap((detail) => {
       if (
@@ -25,8 +26,10 @@ function validationFields(error: unknown): Record<string, string> {
       ) {
         return [];
       }
+
       const message =
         'message' in detail && typeof detail.message === 'string' ? detail.message : copy.invalid;
+
       return [[detail.field, message]];
     }),
   );
@@ -34,6 +37,7 @@ function validationFields(error: unknown): Record<string, string> {
 
 function focusInvalid(form: HTMLFormElement, errors: Record<string, string>) {
   const control = form.elements.namedItem(Object.keys(errors)[0]);
+
   if (control instanceof HTMLElement) {
     control.focus();
   }
@@ -44,6 +48,7 @@ function readPersonForm(form: HTMLFormElement, personId: string, eligible: Perso
   const input = Object.fromEntries(
     [...data.entries()].filter(([key, value]) => key === 'roleName' || value !== ''),
   );
+
   return personInputSchema(
     personId,
     eligible.map((candidate) => candidate.id),
@@ -57,22 +62,29 @@ function usePersonForm(person: Person, eligible: Person[], onSaved: () => void) 
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [failed, setFailed] = useState(false);
+
   function showErrors(form: HTMLFormElement, fields: Record<string, string>) {
     setErrors(fields);
     focusInvalid(form, fields);
   }
+
   function clearErrors() {
     setFailed(false);
     setErrors({});
   }
+
   async function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
+
     if (mutation.isPending) {
       return;
     }
+
     const form = event.currentTarget;
+
     clearErrors();
     const parsed = readPersonForm(form, person.id, eligible);
+
     if (!parsed.success) {
       const fields = Object.fromEntries(
         parsed.error.issues.map((issue) => [
@@ -80,17 +92,22 @@ function usePersonForm(person: Person, eligible: Person[], onSaved: () => void) 
           issue.path[0] === 'roleName' ? copy.invalidRole : copy.invalid,
         ]),
       );
+
       showErrors(form, fields);
+
       return;
     }
+
     try {
       await mutation.mutateAsync(parsed.data).then(onSaved);
     } catch (error) {
       const fields = validationFields(error);
+
       setFailed(Object.keys(fields).length === 0);
       showErrors(form, fields);
     }
   }
+
   return { submit, errors, failed, pending: mutation.isPending };
 }
 
@@ -108,9 +125,11 @@ export function PersonDrawer({
   const close = () => {
     void navigate('/people');
   };
+
   const eligible = people.filter((candidate) => candidate.id !== person.id);
   const { submit, errors, failed, pending } = usePersonForm(person, eligible, onSaved);
   const [backupId, setBackupId] = useState(person.backup?.id ?? '');
+
   return (
     <Drawer
       title={person.name}
