@@ -125,6 +125,8 @@ function PageDrawers({ page }: { page: ReturnType<typeof useChannelPage> }) {
     enabled: Boolean(page.drawerId && page.drawerId !== 'new'),
   });
 
+  const drawerState = useScreenState(detail, false);
+
   if (!page.connection) {
     return null;
   }
@@ -136,7 +138,7 @@ function PageDrawers({ page }: { page: ReturnType<typeof useChannelPage> }) {
           key={page.drawerId}
           id={page.drawerId}
           channel={detail.data}
-          state={detail.isError ? 'error' : 'loading'}
+          state={drawerState}
           connection={page.connection}
           onRetry={() => {
             void detail.refetch();
@@ -171,7 +173,7 @@ function PageDrawers({ page }: { page: ReturnType<typeof useChannelPage> }) {
 function SetupDrawer(props: {
   id: string;
   channel?: Channel;
-  state: 'loading' | 'error';
+  state: ReturnType<typeof useScreenState>;
   connection: Connection;
   onRetry: () => void;
   onClose: () => void;
