@@ -246,3 +246,79 @@ test('Channels acceptance 12: verifying a different bot empties the password fie
   await expect(page.locator('#bot-check-result')).toContainText('E-TG-CREDENTIAL-BOT-MISMATCH');
   await expect(page.getByLabel('Replacement bot token', { exact: true })).toHaveValue('');
 });
+
+test('Channels credential re-entry uses the token submitted to Verify even if the DOM changes during its response', async ({
+  page,
+}) => {
+  await page.getByRole('button', { name: 'Manage Telegram connection', exact: true }).click();
+  const field = page.getByLabel('Replacement bot token', { exact: true });
+  await page.route(/\/telegram\/connections\/verify$/, async (route) => {
+    await field.evaluate((element) => {
+      (element as HTMLInputElement).value = 'changed-during-verification';
+    });
+    await route.fallback();
+  });
+  await field.fill('verified-re-entry-token');
+  await page.getByRole('button', { name: 'Verify', exact: true }).click();
+  await expect(field).toHaveValue('');
+  await field.fill('verified-re-entry-token');
+  await expect(page.getByRole('button', { name: 'Save connection', exact: true })).toBeEnabled();
+});
+
+async function credentialVersion(page: Page) {
+  const response = await page.request.get(backend.baseUrl + '/api/v1/telegram/connections');
+  return (await response.json()).data[0].credentialVersion as number;
+}
+async function verifyReplacement(page: Page, token: string) {
+  await page.getByRole('button', { name: 'Manage Telegram connection', exact: true }).click();
+  const field = page.getByLabel('Replacement bot token', { exact: true });
+  await field.fill(token);
+  await page.getByRole('button', { name: 'Verify', exact: true }).click();
+  await expect(field).toHaveValue('');
+  return field;
+}
+async function rotateReplacement(page: Page, token: string) {
+  const field = await verifyReplacement(page, token);
+  await expect(page.getByRole('button', { name: 'Save connection', exact: true })).toBeDisabled();
+  await field.fill('a-different-token-for-the-same-bot');
+  await expect(page.getByRole('button', { name: 'Save connection', exact: true })).toBeDisabled();
+  await field.fill(token);
+  await page.getByRole('button', { name: 'Save connection', exact: true }).click();
+  await Promise.all([
+    page.waitForResponse(
+      (response) =>
+        response.url().endsWith('/api/v1/telegram/connections') &&
+        response.request().method() === 'GET',
+    ),
+    page.waitForResponse(
+      (response) =>
+        response.url().endsWith('/api/v1/channels') && response.request().method() === 'GET',
+    ),
+    page
+      .getByRole('dialog', { name: 'Save connection', exact: true })
+      .getByRole('button', { name: 'Save connection', exact: true })
+      .click(),
+  ]);
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+}
+async function expectNoCredential(page: Page, token: string) {
+  expect(
+    await page.evaluate(() => ({ local: localStorage.length, session: sessionStorage.length })),
+  ).toEqual({ local: 0, session: 0 });
+  expect(await page.content()).not.toContain(token);
+}
+test('Channels acceptance 13: a successful credential rotation leaves storage empty and no token in page HTML', async ({
+  page,
+}) => {
+  const token = 'browser-rotated-token';
+  const version = await credentialVersion(page);
+  await rotateReplacement(page, token);
+  expect(await credentialVersion(page)).toBe(version + 1);
+  await expectNoCredential(page, token);
+  await page.reload();
+  await expect(page.locator('[data-component="ConnectionCard"]')).toContainText(
+    'Simpul workspace bot',
+  );
+  await expect(page.getByRole('button', { name: 'Operations', exact: true })).toBeVisible();
+  await expectNoCredential(page, token);
+});

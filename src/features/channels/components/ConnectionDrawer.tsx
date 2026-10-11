@@ -119,16 +119,11 @@ function useCredentialForm(
     setVerified('');
     setMatches(false);
     try {
-      const checked = await channelRequest(
-        '/telegram/connections/verify',
-        credentialCheckSchema,
-        'POST',
-        { botToken: field.value },
-      );
+      const checked = await verifyToken(field.value);
       if (checked.sameBotAsStored === false) {
         setResult(copy.mismatch);
       } else {
-        setVerified(await digest(field.value));
+        setVerified(checked.fingerprint);
         setResult('@' + checked.botUsername);
       }
     } catch (error) {
@@ -152,17 +147,16 @@ function useCredentialForm(
     }
     setPending(true);
     try {
-      await channelRequest(
-        '/telegram/connections/' + connection.id + '/credentials',
-        connectionSchema,
-        { method: 'PUT', key: confirmation },
-        {
-          botToken: field.value,
-          connectionName: name.trim(),
-          expectedCredentialVersion: connection.credentialVersion,
-        },
-      );
-      onSaved();
+      const saved = await rotateToken({
+        botToken: field.value,
+        verified,
+        connection,
+        name,
+        key: confirmation,
+      });
+      if (saved) {
+        onSaved();
+      }
     } catch (error) {
       setResult(setupError(error));
     } finally {
@@ -239,4 +233,37 @@ function ConnectionFooter({
       </button>
     </>
   );
+}
+
+async function verifyToken(botToken: string) {
+  const fingerprint = await digest(botToken);
+  const checked = await channelRequest(
+    '/telegram/connections/verify',
+    credentialCheckSchema,
+    'POST',
+    { botToken },
+  );
+  return { ...checked, fingerprint };
+}
+async function rotateToken(input: {
+  botToken: string;
+  verified: string;
+  connection: Connection;
+  name: string;
+  key: string;
+}) {
+  if ((await digest(input.botToken)) !== input.verified) {
+    return false;
+  }
+  await channelRequest(
+    '/telegram/connections/' + input.connection.id + '/credentials',
+    connectionSchema,
+    { method: 'PUT', key: input.key },
+    {
+      botToken: input.botToken,
+      connectionName: input.name.trim(),
+      expectedCredentialVersion: input.connection.credentialVersion,
+    },
+  );
+  return true;
 }
