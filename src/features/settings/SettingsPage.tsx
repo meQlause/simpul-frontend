@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import { ScreenState } from '../../shared/ui/ScreenState';
 import { useScreenState } from '../../shared/useScreenState';
 import { useSettings, useSettingsWorkspace } from './settings.api';
@@ -10,6 +10,7 @@ export function SettingsPage() {
   const query = useSettings();
   const workspace = useSettingsWorkspace();
   const [saved, setSaved] = useState(false);
+  const mailToast: unknown = useLocation().state?.toast;
   const state = useScreenState(query, false);
 
   if (!query.data) {
@@ -50,9 +51,9 @@ export function SettingsPage() {
           setSaved(true);
         }}
       />
-      {saved && (
+      {(saved || typeof mailToast === 'string') && (
         <p role="status" className="toast" data-component="Toast" data-variant="default">
-          {copy.saved}
+          {saved ? copy.saved : String(mailToast)}
         </p>
       )}
       {[

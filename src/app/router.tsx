@@ -6,7 +6,7 @@ import { RulesPage } from '../features/rules';
 import { PeoplePage } from '../features/people';
 import { ChannelsPage } from '../features/channels';
 import { AuditPage } from '../features/audit';
-import { SettingsPage } from '../features/settings';
+import { MailDrawer, SettingsPage } from '../features/settings';
 import { VocabularyDrawer } from '../features/vocabulary';
 import { OnboardingDrawer } from '../features/onboarding';
 import { RecipientPreviewDrawer } from '../features/recipient-preview';
@@ -60,6 +60,15 @@ export function AppRoutes() {
               <>
                 <SettingsPage />
                 <RecipientPreviewDrawer />
+              </>
+            }
+          />
+          <Route
+            path="/settings/mail"
+            element={
+              <>
+                <SettingsPage />
+                <MailDrawer />
               </>
             }
           />

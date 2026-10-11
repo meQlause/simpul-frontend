@@ -32,3 +32,16 @@ export const workspaceSchema = schema.object({
     workspace: schema.object({ name: schema.string(), timezone: schema.string() }),
   }),
 });
+
+export const mailSchema = schema.object({
+  data: schema
+    .object({
+      host: schema.string(),
+      port: schema.number(),
+      username: schema.string(),
+      fromAddress: schema.string(),
+      passwordPresent: schema.boolean(),
+    })
+    .nullable(),
+  pendingDigestItems: schema.number().optional(),
+});
