@@ -58,7 +58,7 @@ export function WorkTable({
         </select>
       </div>
       <div className="table-wrap">
-        <table className="data-table">
+        <table className="data-table work-table">
           <thead>
             <tr>
               {copy.columns.map((column) => (
