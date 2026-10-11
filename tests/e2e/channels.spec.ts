@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page, type Route } from '@playwright/test';
 import { connectBackend, startBackend } from './helpers/backend';
 
 let backend: Awaited<ReturnType<typeof startBackend>>;
@@ -322,3 +322,116 @@ test('Channels acceptance 13: a successful credential rotation leaves storage em
   await expect(page.getByRole('button', { name: 'Operations', exact: true })).toBeVisible();
   await expectNoCredential(page, token);
 });
+
+async function trackSessionPolls(page: Page, answer: (route: Route) => Promise<void>) {
+  let calls = 0;
+  await page.route(/\/telegram\/connection-sessions\//, async (route) => {
+    calls += 1;
+    await answer(route);
+  });
+  return () => calls;
+}
+async function generateIdentificationCode(page: Page) {
+  await page.clock.install();
+  await addGroup(page, 'Poll candidate', '-1009100000000');
+  await page.getByText('Identify with a connection code instead', { exact: true }).click();
+  await page.getByRole('button', { name: 'Get connection code', exact: true }).click();
+  const command = page.getByLabel('Connection command', { exact: true });
+  await expect(command).toHaveValue(/\/simpul_connect /);
+  return command.inputValue();
+}
+async function sendIdentificationCommand(page: Page, command: string, chatId: string) {
+  const response = await page.request.get(backend.baseUrl + '/api/v1/telegram/connections');
+  const connection = (await response.json()).data[0];
+  const receipt = await page.request.post(
+    backend.baseUrl + '/api/v1/webhooks/telegram/' + connection.id,
+    {
+      headers: { 'X-Telegram-Bot-Api-Secret-Token': Buffer.alloc(32, 8).toString('base64url') },
+      data: {
+        update_id: Date.now(),
+        message: {
+          message_id: Date.now(),
+          date: Math.floor(Date.now() / 1000),
+          from: { id: 1, is_bot: false, first_name: 'Tester' },
+          chat: { id: Number(chatId), type: 'supergroup', title: 'Identified browser group' },
+          text: command,
+        },
+      },
+    },
+  );
+  expect(receipt.ok()).toBe(true);
+}
+test('The connection-code poll stops on identified and starts no monitoring', async ({ page }) => {
+  const calls = await trackSessionPolls(page, (route) => route.fallback());
+  const command = await generateIdentificationCode(page);
+  await expect.poll(calls).toBe(1);
+  await sendIdentificationCommand(page, command, '-1009100000001');
+  await expect
+    .poll(async () => {
+      await page.clock.fastForward(10000);
+      return page.getByLabel('Telegram Chat ID', { exact: true }).inputValue();
+    })
+    .toBe('-1009100000001');
+  await expect(page.getByText('Identified browser group', { exact: true })).toBeVisible();
+  const stopped = calls();
+  await page.clock.fastForward(60000);
+  expect(calls()).toBe(stopped);
+  await expect(
+    page.getByRole('button', { name: 'Activate monitoring', exact: true }),
+  ).toBeDisabled();
+  const groups = await page.request.get(backend.baseUrl + '/api/v1/channels');
+  expect(
+    (await groups.json()).data.some(
+      (group: { providerChatId: string }) => group.providerChatId === '-1009100000001',
+    ),
+  ).toBe(false);
+});
+test('The connection-code poll stops on expired and preserves the typed Chat ID', async ({
+  page,
+}) => {
+  let expired = false;
+  const calls = await trackSessionPolls(page, async (route) => {
+    if (!expired) {
+      await route.fallback();
+      return;
+    }
+    await route.fulfill({
+      json: {
+        data: {
+          id: 'expired-session',
+          state: 'expired',
+          expiresAt: new Date().toISOString(),
+          candidate: null,
+        },
+      },
+    });
+  });
+  await generateIdentificationCode(page);
+  await expect.poll(calls).toBe(1);
+  expired = true;
+  await page.clock.fastForward(10000);
+  await expect(page.locator('#channel-setup-error')).toContainText('E-TG-SESSION-EXPIRED');
+  const stopped = calls();
+  await page.clock.fastForward(60000);
+  expect(calls()).toBe(stopped);
+  await expect(page.getByLabel('Telegram Chat ID', { exact: true })).toHaveValue('-1009100000000');
+  await expect(
+    page.getByRole('button', { name: 'Get connection code', exact: true }),
+  ).toBeEnabled();
+});
+for (const close of ['button', 'Escape']) {
+  test('The connection-code poll stops when the drawer closes using ' + close, async ({ page }) => {
+    const calls = await trackSessionPolls(page, (route) => route.fallback());
+    await generateIdentificationCode(page);
+    await expect.poll(calls).toBe(1);
+    if (close === 'Escape') {
+      await page.keyboard.press('Escape');
+    } else {
+      await page.getByRole('button', { name: 'Close channel setup', exact: true }).click();
+    }
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    const stopped = calls();
+    await page.clock.fastForward(60000);
+    expect(calls()).toBe(stopped);
+  });
+}
