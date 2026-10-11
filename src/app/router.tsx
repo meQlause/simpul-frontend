@@ -7,6 +7,7 @@ import { PeoplePage } from '../features/people';
 import { ChannelsPage } from '../features/channels';
 import { AuditPage } from '../features/audit';
 import { SettingsPage } from '../features/settings';
+import { VocabularyDrawer } from '../features/vocabulary';
 import { ScreenState } from '../shared/ui/ScreenState';
 import { SignInPage } from '../features/auth';
 import { SessionGuard } from './SessionGuard';
@@ -28,6 +29,15 @@ export function AppRoutes() {
           <Route path="/channels/*" element={<ChannelsPage />} />
           <Route path="/audit" element={<AuditPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route
+            path="/settings/vocabulary"
+            element={
+              <>
+                <SettingsPage />
+                <VocabularyDrawer />
+              </>
+            }
+          />
           <Route path="*" element={<ScreenState state="not-found" />} />
         </Route>
       </Route>
