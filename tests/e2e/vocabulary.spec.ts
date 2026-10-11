@@ -66,3 +66,22 @@ test('Vocabulary acceptance 5–7: live preview, forbidden fields, and fixed ext
   );
   await expect(page.getByTestId('external-template').locator('input, textarea')).toHaveCount(0);
 });
+
+test('The category form shows the ID prefix under Category name, read-only once the category has work', async ({
+  page,
+}) => {
+  const drawer = page.getByRole('dialog');
+
+  await drawer.getByRole('button', { name: 'Order', exact: true }).click();
+
+  const name = drawer.getByLabel('Category name', { exact: true });
+  const prefix = drawer.getByLabel('ID prefix', { exact: true });
+
+  await expect(prefix).toHaveAttribute('readonly', '');
+  const under = await name.evaluate(
+    (node, other) => (node.compareDocumentPosition(other) & 4) !== 0,
+    await prefix.elementHandle(),
+  );
+
+  expect(under).toBe(true);
+});

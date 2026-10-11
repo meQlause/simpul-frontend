@@ -136,4 +136,31 @@ test.describe('changing a rule', () => {
     await expect(page.locator('.directory-table tbody tr')).toHaveCount(9);
     await expect(tab(page, 'Paused')).toContainText('5');
   });
+
+  test('The rule drawer has an Event select under Category and saves eventType', async ({
+    page,
+  }) => {
+    await page.goto('/rules/new');
+
+    const drawer = page.getByRole('dialog');
+    const category = drawer.locator('select[name="categoryId"]');
+    const event = drawer.locator('select[name="eventType"]');
+
+    const under = await category.evaluate(
+      (node, other) => (node.compareDocumentPosition(other) & 4) !== 0,
+      await event.elementHandle(),
+    );
+
+    expect(under).toBe(true);
+    await event.selectOption({ label: 'Blocked' });
+    await drawer.getByRole('button', { name: 'Save rule', exact: true }).click();
+    await expect(page.getByText('Rule saved.', { exact: true })).toBeVisible();
+
+    const response = await page.request.get(`${backend?.baseUrl}/api/v1/rules`);
+    const body = (await response.json()) as { data: { name: string; eventType: string }[] };
+
+    expect(body.data.find((rule) => rule.name === 'Order, notify the owner')?.eventType).toBe(
+      'blocker',
+    );
+  });
 });
