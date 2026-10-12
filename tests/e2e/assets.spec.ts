@@ -1,3 +1,6 @@
+import { createHash } from 'node:crypto';
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
 
 const HOSTS_ALLOWED = ['127.0.0.1', 'localhost'];
@@ -48,4 +51,34 @@ test('every visible text node uses DM Sans or Manrope', async ({ page }) => {
   });
 
   expect(families.every((family) => ['DM Sans', 'Manrope'].includes(family))).toBe(true);
+});
+
+// fidelity §8: the app ships the very file the mockup uses, byte for byte; a file the mockup
+// does not reference is not an asset of the page and is not shipped.
+test('every asset the mockup uses is shipped sha256-equal', () => {
+  const root = resolve(import.meta.dirname, '../../..');
+  const baseline = JSON.parse(
+    readFileSync(resolve(import.meta.dirname, '../fidelity/baseline/assets.json'), 'utf8'),
+  ) as Record<string, string>;
+  const mockupSources = ['index.html', 'app.js', 'styles.css']
+    .map((file) => readFileSync(resolve(root, file), 'utf8'))
+    .join(' ');
+
+  for (const [name, hash] of Object.entries(baseline)) {
+    const used = mockupSources.includes(`assets/${name}`);
+    const shipped = resolve(root, 'frontend/public/assets', name);
+
+    if (!used) {
+      expect(existsSync(shipped), `${name} is not used by the mockup`).toBe(false);
+      continue;
+    }
+
+    expect(createHash('sha256').update(readFileSync(shipped)).digest('hex')).toBe(hash);
+  }
+});
+
+test('the favicon is the shipped brand mark', () => {
+  const html = readFileSync(resolve(import.meta.dirname, '../../index.html'), 'utf8');
+
+  expect(html).toContain('href="/assets/simpul-mark.png"');
 });
