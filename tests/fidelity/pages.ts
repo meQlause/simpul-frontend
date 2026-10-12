@@ -2,6 +2,7 @@
 // and a driver for the interaction the mockup view is captured after.
 import type { Locator, Page } from '@playwright/test';
 import type { Region } from './compare.ts';
+import { connectedWorkspace, pendingWorkspace, STRING } from '../e2e/helpers/database';
 
 export type AppView = {
   view: string;
@@ -113,6 +114,37 @@ async function mockupPeople(page: Page, backendUrl: string) {
 
     await route.fulfill({ json: { ...real, data } });
   });
+}
+
+// The mockup's page is scrolled by its own focus handling: put the heading where it ends up.
+async function settleHeading(page: Page) {
+  // Only at 900px does the mockup end up scrolled; its demo panels under the card give it room
+  // to scroll further than this page can, so the same room is added here.
+  if (page.viewportSize()?.width !== 900) {
+    await page.evaluate(() => window.scrollTo(0, 0));
+
+    return;
+  }
+
+  await page.evaluate(() => {
+    const spacer = document.createElement('div');
+
+    spacer.style.height = '400px';
+    document.body.append(spacer);
+    const heading = document.querySelector('h1');
+
+    if (heading) {
+      window.scrollBy(0, heading.getBoundingClientRect().top - 200);
+    }
+  });
+}
+
+// A refusal the way the backend words it: the code only, the page writes the sentence.
+function refused(code: string) {
+  return {
+    status: 422,
+    json: { error: { code, message: '', details: [], requestId: 'fidelity' } },
+  };
 }
 
 // A group saved by one view would be a duplicate in the next: each run uses a chat ID of its own.
@@ -367,6 +399,83 @@ export const appViews: AppView[] = [
     ...checkedGroup((verification) => {
       verification.expiresAt = '2026-10-10T03:00:00Z';
     }),
+  },
+  {
+    view: 'database.setup',
+    path: '/',
+    prepare: async (page) => {
+      await pendingWorkspace(page);
+    },
+  },
+  {
+    view: 'database.notice-not-accepted',
+    path: '/setup/database',
+    prepare: async (page) => {
+      await pendingWorkspace(page);
+    },
+    steps: async (page) => {
+      await page.getByLabel('Connection string', { exact: true }).fill(STRING);
+      await page.getByRole('button', { name: 'Connect database', exact: true }).click();
+      await page.evaluate(() => window.scrollTo(0, 0));
+    },
+  },
+  {
+    view: 'database.check-failed',
+    // The mockup's "Demo only" line under the form is not built (FD-02): content below shifts.
+    tolerance: 0.15,
+    path: '/setup/database',
+    prepare: async (page) => {
+      await pendingWorkspace(page, { put: () => Promise.resolve(refused('E-DB-VECTOR-MISSING')) });
+    },
+    steps: async (page) => {
+      await page.getByLabel('I understand that data availability is our responsibility.').check();
+      await page.getByLabel('Connection string', { exact: true }).fill(STRING);
+      await page.getByRole('button', { name: 'Connect database', exact: true }).click();
+      await page.getByText(/extension is not available/).waitFor();
+      await settleHeading(page);
+    },
+  },
+  {
+    view: 'database.connecting',
+    path: '/setup/database',
+    prepare: async (page) => {
+      await pendingWorkspace(page, { put: () => new Promise(() => undefined) });
+    },
+    steps: async (page) => {
+      await page.getByLabel('I understand that data availability is our responsibility.').check();
+      await page.getByLabel('Connection string', { exact: true }).fill(STRING);
+      await page.getByRole('button', { name: 'Connect database', exact: true }).click();
+      await page.evaluate(() => window.scrollTo(0, 0));
+    },
+  },
+  {
+    view: 'database.unavailable',
+    path: '/',
+    prepare: async (page) => {
+      await connectedWorkspace(page);
+      await page.route(/\/api\/v1\/overview(\?|$)/, (route) =>
+        route.fulfill({ status: 503, json: refused('E-DB-UNAVAILABLE').json }),
+      );
+    },
+  },
+  {
+    view: 'settings.database.connected',
+    path: '/settings/database',
+    prepare: async (page) => connectedWorkspace(page),
+  },
+  {
+    view: 'settings.database.update-refused',
+    path: '/settings/database',
+    prepare: async (page) => {
+      await connectedWorkspace(page, () => refused('E-DB-WORKSPACE-MISMATCH'));
+    },
+    steps: async (page) => {
+      const drawer = page.getByRole('dialog');
+
+      await drawer.getByLabel('Connection string', { exact: true }).fill(STRING);
+      await drawer.getByRole('button', { name: 'Update connection', exact: true }).click();
+      await drawer.getByText(/does not contain/).waitFor();
+    },
   },
   { view: 'audit.ready', path: '/audit' },
   {

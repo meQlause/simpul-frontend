@@ -1564,3 +1564,6 @@ dialog.drawer.trace-drawer #dialog-content {
 .drawer-section-content .field > span {
   font-weight: 400;
 }
+#database-form .field > label {
+  font-weight: 400;
+}

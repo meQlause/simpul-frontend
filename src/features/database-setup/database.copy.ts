@@ -18,7 +18,7 @@ export const databaseCopy = {
   calloutTitle: 'Database',
   calloutDescription: 'Where this workspace’s data is stored.',
   view: 'View',
-  drawerEyebrow: 'SIMPUL / DATABASE',
+  drawerEyebrow: 'SETTINGS / DATABASE',
   drawerTitle: 'Database',
   drawerDescription: 'Where this workspace’s data is stored.',
   storedSection: 'Stored in',

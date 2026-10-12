@@ -97,8 +97,14 @@ test('Database setup acceptance 5: the drawer shows host, port, name and status,
   await page.goto('/settings/database');
   const drawer = page.getByRole('dialog');
 
-  for (const text of ['db.pointstar.example', '5432', 'simpul', 'Connected']) {
-    await expect(drawer.getByText(text, { exact: true }).first()).toBeVisible();
+  await expect(drawer.getByText('Connected', { exact: true })).toBeVisible();
+
+  for (const [label, value] of [
+    ['Host', 'db.pointstar.example'],
+    ['Port', '5432'],
+    ['Database name', 'simpul'],
+  ]) {
+    await expect(drawer.getByLabel(label, { exact: true })).toHaveValue(value);
   }
 
   await drawer.getByLabel('Connection string', { exact: true }).fill(STRING);

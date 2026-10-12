@@ -1,13 +1,17 @@
+import { Icon } from '../../shared/ui/Icon';
 import { databaseCopy as copy } from './database.copy';
 
 export function AvailabilityNotice() {
   return (
     <div className="notice" role="note" data-component="Notice">
-      <div>
+      <Icon name="shield" />
+      <span>
         <strong>{copy.noticeTitle}</strong>
-        <p>{copy.noticeBody}</p>
-        <p>{copy.noticeOutage}</p>
-      </div>
+        <br />
+        {copy.noticeBody}
+        <br />
+        {copy.noticeOutage}
+      </span>
     </div>
   );
 }

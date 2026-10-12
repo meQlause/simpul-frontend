@@ -1,3 +1,4 @@
+import { Icon } from '../../shared/ui/Icon';
 import { useRef, useState } from 'react';
 import type { SubmitEvent } from 'react';
 import { ApiError } from '../../shared/api/error';
@@ -19,6 +20,8 @@ type Props = {
   onConnected: () => void;
   placeholder?: string;
   submitLabel?: string;
+  // The submit button lives elsewhere (a drawer footer) and targets this form by its id.
+  externalSubmit?: boolean;
 };
 
 function refusal(values: FormData, firstConnect: boolean) {
@@ -82,39 +85,55 @@ export function DatabaseConnectionForm(props: Props) {
       <OfflineControls>
         {props.firstConnect && (
           <>
-            <label className="channel-consent">
-              <input type="checkbox" name="availabilityAck" aria-describedby="database-ack-error" />
-              <span>{copy.acknowledge}</span>
-            </label>
+            <div className="field">
+              <label className="channel-consent">
+                <input
+                  type="checkbox"
+                  name="availabilityAck"
+                  aria-describedby="database-ack-error"
+                />
+                <span>{copy.acknowledge}</span>
+              </label>
+            </div>
             <p id="database-ack-error" role="alert" className="channel-error">
               {problem.ack}
             </p>
           </>
         )}
-        <label className="field" htmlFor="database-string">
-          {copy.field}
-        </label>
-        <input
-          id="database-string"
-          ref={field}
-          name="connectionString"
-          type="password"
-          autoComplete="off"
-          placeholder={props.placeholder}
-          aria-invalid={Boolean(problem.string)}
-          aria-describedby="database-string-hint database-string-error"
-        />
-        <small id="database-string-hint">{copy.hint}</small>
+        <div className="field">
+          <label htmlFor="database-string">{copy.field}</label>
+          <input
+            id="database-string"
+            ref={field}
+            name="connectionString"
+            type="password"
+            autoComplete="off"
+            placeholder={props.placeholder}
+            aria-invalid={Boolean(problem.string)}
+            aria-describedby="database-string-hint database-string-error"
+          />
+          <small id="database-string-hint" className="muted text-small">
+            {copy.hint}
+          </small>
+        </div>
         <p id="database-string-error" role="alert" className="channel-error">
           {problem.string}
         </p>
         <p role="alert" className="channel-error">
           {problem.failure}
         </p>
-        <button className="button button-primary auth-submit" type="submit" disabled={pending}>
-          {props.submitLabel ?? copy.connect}
-        </button>
-        {pending && <p role="status">{copy.connecting}</p>}
+        {!props.externalSubmit && (
+          <button className="button button-primary auth-submit" type="submit" disabled={pending}>
+            {props.submitLabel ?? copy.connect}
+            <Icon name="arrow-right" />
+          </button>
+        )}
+        {pending && (
+          <p role="status" className="drawer-inline-note">
+            <Icon name="clock" />
+            {copy.connecting}
+          </p>
+        )}
       </OfflineControls>
     </form>
   );
