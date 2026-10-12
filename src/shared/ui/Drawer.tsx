@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 export function Drawer({
   title,
@@ -22,9 +22,21 @@ export function Drawer({
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
 
+  // What had focus when the drawer was first drawn: the control that opened it.
+  const [opener] = useState(() => document.activeElement);
+
   useEffect(() => {
     dialog.current?.showModal();
-  }, []);
+
+    // The drawer is unmounted when its route closes: hand focus back to what opened it.
+    return () => {
+      setTimeout(() => {
+        if (opener instanceof HTMLElement && opener.isConnected) {
+          opener.focus({ preventScroll: true });
+        }
+      }, 0);
+    };
+  }, [opener]);
 
   return (
     <dialog
