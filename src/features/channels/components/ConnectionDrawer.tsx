@@ -1,5 +1,7 @@
 import { useRef, useState, type RefObject } from 'react';
 import { Drawer } from '../../../shared/ui/Drawer';
+import { DrawerIdentity, DrawerSection } from '../../../shared/ui/DrawerParts';
+import { Icon } from '../../../shared/ui/Icon';
 import { OfflineControls } from '../../../shared/ui/OfflineControls';
 import { useOnline } from '../../../shared/useOnline';
 import { channelRequest } from '../channels.api';
@@ -37,9 +39,17 @@ export function ConnectionDrawer({
       onClose={onClose}
       footer={<ConnectionFooter form={form} returning={returning} onClose={onClose} />}
     >
+      <DrawerIdentity
+        icon="telegram"
+        title={`@${connection.botUsername.replace(/^@/, '')}`}
+        description={`Shared connection · ${connection.groups.length} groups`}
+      />
       <OfflineControls>
-        <section className="drawer-section" data-component="DrawerSection">
-          <h3 data-role="section-title">Connection details</h3>
+        <DrawerSection
+          number="01"
+          title="Connection details"
+          description="The credential is stored separately and never shown again."
+        >
           <label className="field" data-component="Field" data-variant="default" data-size="drawer">
             Connection name
             <input
@@ -71,6 +81,7 @@ export function ConnectionDrawer({
               void form.verify();
             }}
           >
+            <Icon name="check-circle" />
             Verify
           </button>
           <p
@@ -81,12 +92,14 @@ export function ConnectionDrawer({
           >
             {form.result}
           </p>
-        </section>
+        </DrawerSection>
         <SharedGroups connection={connection} />
       </OfflineControls>
       {form.confirmation && (
         <ChannelConfirmation
+          eyebrow="UPDATE SHARED CONNECTION"
           title="Save connection"
+          description="Changing this connection applies to every group below."
           label="Save connection"
           pending={form.pending}
           onClose={() => form.setConfirmation('')}
@@ -94,7 +107,6 @@ export function ConnectionDrawer({
             void form.rotate();
           }}
         >
-          <p>Changing this connection applies to every group below.</p>
           <p>{connection.groups.map((group) => group.displayName).join(', ')}</p>
         </ChannelConfirmation>
       )}
@@ -200,11 +212,14 @@ function useCredentialForm(
 
 function SharedGroups({ connection }: { connection: Connection }) {
   return (
-    <section className="drawer-section" data-component="DrawerSection">
-      <h3 data-role="section-title">Shared by these groups</h3>
-      <p>Changing this connection applies to every group below.</p>
+    <DrawerSection
+      number="02"
+      title="Shared by these groups"
+      description="Changing this connection applies to every group below."
+    >
       {connection.groups.map((group) => (
         <div className="drawer-check-row" key={group.channelId}>
+          <Icon name="telegram" />
           <div>
             <strong>{group.displayName}</strong>
             <small>{group.providerChatId}</small>
@@ -212,7 +227,7 @@ function SharedGroups({ connection }: { connection: Connection }) {
           <span className="badge gray">{group.connectionStatus}</span>
         </div>
       ))}
-    </section>
+    </DrawerSection>
   );
 }
 

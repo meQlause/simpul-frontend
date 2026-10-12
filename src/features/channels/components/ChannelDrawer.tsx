@@ -91,19 +91,18 @@ export function ChannelDrawer({
       </OfflineControls>
       {activationKey && (
         <ChannelConfirmation
+          eyebrow="ACTIVATE MONITORING"
           title={'Start monitoring ' + setup.input.displayName + '?'}
+          description={`New messages in this ${setup.input.class} group will start to be read and routed by your rules.`}
+          chatId={setup.input.providerChatId}
+          detail={`@${connection.botUsername.replace(/^@/, '')} · ${setup.input.class === 'external' ? 'External' : 'Internal'} audience`}
           label="Activate monitoring"
           pending={setup.pending}
           onClose={() => setActivationKey('')}
           onConfirm={() => {
             void setup.activate(activationKey).then(() => setActivationKey(''));
           }}
-        >
-          <p>{setup.input.providerChatId}</p>
-          <p>
-            @{connection.botUsername} · {setup.input.class === 'external' ? 'External' : 'Internal'}
-          </p>
-        </ChannelConfirmation>
+        />
       )}
     </Drawer>
   );

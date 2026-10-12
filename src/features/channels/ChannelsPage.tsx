@@ -32,16 +32,18 @@ export function ChannelsPage() {
       {page.message && <p role="status">{page.message}</p>}
       {page.pause && (
         <ChannelConfirmation
+          eyebrow="PAUSE MONITORING"
           title={'Pause ' + page.pause.displayName + '?'}
+          description="New messages and notifications for this group will stop. Other groups sharing the bot stay active."
+          chatId={page.pause.providerChatId}
+          detail={`@${page.connection?.botUsername.replace(/^@/, '')} · ${page.pause.class === 'external' ? 'External' : 'Internal'} audience`}
           label="Pause group"
           pending={page.pending}
           onClose={() => page.setPause(null)}
           onConfirm={() => {
             void page.confirmPause();
           }}
-        >
-          <p>{page.pause.providerChatId}</p>
-        </ChannelConfirmation>
+        />
       )}
     </>
   );

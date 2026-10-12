@@ -110,6 +110,90 @@ async function mockupPeople(page: Page, backendUrl: string) {
   });
 }
 
+// A group saved by one view would be a duplicate in the next: each run uses a chat ID of its own.
+let groupCounter = 0;
+
+function nextGroup() {
+  groupCounter += 1;
+
+  return { name: 'Sales & Order', chatId: `-100123456${String(groupCounter).padStart(4, '0')}` };
+}
+
+// Sends the two messages the readiness check waits for, as Telegram would.
+async function sendProof(page: Page, backendUrl: string, group: { name: string; chatId: string }) {
+  const list = await page.request.get(`${backendUrl}/api/v1/telegram/connections`);
+  const connection = ((await list.json()) as { data: { id: string }[] }).data[0];
+  const session = await page.request.post(
+    `${backendUrl}/api/v1/telegram/connections/${connection.id}/sessions`,
+    { data: { purpose: 'receive_check' } },
+  );
+  const command = ((await session.json()) as { data: { command: string } }).data.command;
+
+  for (const text of [command, 'A new ordinary check message']) {
+    await page.request.post(`${backendUrl}/api/v1/webhooks/telegram/${connection.id}`, {
+      headers: { 'X-Telegram-Bot-Api-Secret-Token': Buffer.alloc(32, 8).toString('base64url') },
+      data: {
+        update_id: Date.now(),
+        message: {
+          message_id: Date.now(),
+          date: Math.floor(Date.now() / 1000),
+          from: { id: 1, is_bot: false, first_name: 'Tester' },
+          chat: { id: Number(group.chatId), type: 'supergroup', title: group.name },
+          text,
+        },
+      },
+    });
+  }
+}
+
+// The new group's setup drawer after its checks ran; `patch` shapes the verification answer.
+function checkedGroup(patch?: (verification: Json) => void) {
+  let backend = '';
+  let group = nextGroup();
+
+  return {
+    prepare: async (page: Page, backendUrl: string) => {
+      backend = backendUrl;
+      group = nextGroup();
+
+      if (!patch) {
+        return;
+      }
+
+      await page.route(/\/channels\/[^/]+\/verify$/, async (route) => {
+        // The page reaches the backend through the harness; ask it the same way, directly.
+        const response = await page.request.post(
+          `${backend}${new URL(route.request().url()).pathname}`,
+          { data: route.request().postDataJSON() ?? {} },
+        );
+        const body = (await response.json()) as Json;
+        const target = (body.data ?? body) as Json;
+
+        patch(target);
+        await route.fulfill({ status: response.status(), json: body });
+      });
+    },
+    steps: async (page: Page) => {
+      await page.getByRole('button', { name: 'Add Telegram channel' }).click();
+      await page.getByLabel('Display name', { exact: true }).fill(group.name);
+      await page.getByLabel('Telegram Chat ID', { exact: true }).fill(group.chatId);
+      await page.getByRole('button', { name: 'Check group', exact: true }).click();
+      await page.getByRole('button', { name: 'Recheck', exact: true }).waitFor();
+
+      if (!patch) {
+        await sendProof(page, backend, group);
+        await page.getByRole('button', { name: 'Recheck', exact: true }).click();
+        await page.getByText('Last checked just now').waitFor();
+      }
+
+      await page
+        .locator('.drawer-check-row')
+        .first()
+        .evaluate((row) => row.scrollIntoView({ block: 'center' }));
+    },
+  };
+}
+
 // The mockup opens a drawer from a script, which leaves focus-visible on: use the keyboard.
 async function openByKeyboard(page: Page, trigger: Locator) {
   // Without scrolling: focusing a far-right action would shift the table behind the drawer.
@@ -214,7 +298,8 @@ export const appViews: AppView[] = [
   {
     view: 'channels.add',
     path: '/channels',
-    steps: (page) => openByKeyboard(page, page.getByRole('button', { name: 'Add Telegram group' })),
+    steps: (page) =>
+      openByKeyboard(page, page.getByRole('button', { name: 'Add Telegram channel' })),
   },
   {
     view: 'channels.connection',
@@ -233,6 +318,24 @@ export const appViews: AppView[] = [
           .first()
           .getByRole('button', { name: /^Pause / }),
       ),
+  },
+  { view: 'channels.verified', path: '/channels', ...checkedGroup() },
+  {
+    view: 'channels.needs-action',
+    path: '/channels',
+    ...checkedGroup((verification) => {
+      const checks = verification.checks as Json[];
+
+      checks[3] = { ...checks[3], status: 'fail', action: 'Disable privacy mode in BotFather' };
+      verification.activationReady = false;
+    }),
+  },
+  {
+    view: 'channels.expired',
+    path: '/channels',
+    ...checkedGroup((verification) => {
+      verification.expiresAt = '2026-10-10T03:00:00Z';
+    }),
   },
   { view: 'audit.ready', path: '/audit' },
   { view: 'settings.ready', path: '/settings' },
