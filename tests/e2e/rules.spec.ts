@@ -115,7 +115,9 @@ test.describe('changing a rule', () => {
 
     await page.getByRole('switch', { name: 'Activate Low stock, prepare the next step' }).click();
 
-    await expect(page.getByRole('status')).toHaveText('Your changes were not saved. Try again.');
+    await expect(
+      page.getByRole('status').filter({ hasText: 'Your changes were not saved.' }),
+    ).toHaveText('Your changes were not saved. Try again.');
     await expect(
       page.getByRole('switch', { name: 'Activate Low stock, prepare the next step' }),
     ).toHaveAttribute('aria-checked', 'false');
@@ -131,7 +133,9 @@ test.describe('changing a rule', () => {
     await drawer.locator('select[name="categoryId"]').selectOption({ label: 'Returns' });
     await drawer.getByRole('button', { name: 'Save rule', exact: true }).click();
 
-    await expect(page.getByRole('status')).toHaveText('Rule saved.');
+    await expect(page.getByRole('status').filter({ hasText: 'Rule saved.' })).toHaveText(
+      'Rule saved.',
+    );
     await expect(page).toHaveURL(/\/rules$/);
     await expect(page.locator('.directory-table tbody tr')).toHaveCount(9);
     await expect(tab(page, 'Paused')).toContainText('5');

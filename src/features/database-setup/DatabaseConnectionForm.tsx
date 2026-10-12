@@ -40,7 +40,7 @@ function payload(values: FormData, firstConnect: boolean) {
 }
 
 function useConnect({ firstConnect, onConnected }: Props) {
-  const save = useConnectDatabase();
+  const save = useConnectDatabase(firstConnect);
   const field = useRef<HTMLInputElement>(null);
   const [problem, setProblem] = useState(NONE);
 

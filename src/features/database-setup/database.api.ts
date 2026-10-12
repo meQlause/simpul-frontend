@@ -10,7 +10,9 @@ export function useDatabase() {
   });
 }
 
-export function useConnectDatabase() {
+// A first connect leaves the setup page for `/`; caching the new status would first send it to
+// the drawer. A replacement refreshes the drawer's own data.
+export function useConnectDatabase(firstConnect: boolean) {
   const client = useQueryClient();
 
   return useMutation({
@@ -20,6 +22,10 @@ export function useConnectDatabase() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(input),
       }),
-    onSuccess: (response) => client.setQueryData(queryKeys.page('database'), response),
+    onSuccess: (response) => {
+      if (!firstConnect) {
+        client.setQueryData(queryKeys.page('database'), response);
+      }
+    },
   });
 }
