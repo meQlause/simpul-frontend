@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router';
-import { ScreenState } from '../../shared/ui/ScreenState';
+import { OfflineCard, ScreenState } from '../../shared/ui/ScreenState';
 import { useScreenState } from '../../shared/useScreenState';
 import { databaseCopy, useDatabase } from '../database-setup';
 import { useSettings, useSettingsWorkspace } from './settings.api';
@@ -28,6 +28,13 @@ export function SettingsPage() {
 
   return (
     <section data-component="SettingsPage" data-variant="default">
+      <OfflineCard
+        state={state}
+        shown
+        onRetry={() => {
+          void query.refetch();
+        }}
+      />
       <div className="page-heading" data-component="PageHeading" data-variant="default">
         <div>
           <p className="eyebrow" data-role="eyebrow">

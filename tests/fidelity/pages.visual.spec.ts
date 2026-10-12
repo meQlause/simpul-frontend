@@ -20,6 +20,7 @@ for (const entry of appViews.filter((candidate) => candidate.view.startsWith(onl
       await open(page, backend.baseUrl, {
         path: entry.path,
         width,
+        anonymous: entry.anonymous,
         prepare: () => entry.prepare?.(page, backend.baseUrl) ?? Promise.resolve(),
       });
       await entry.steps?.(page);

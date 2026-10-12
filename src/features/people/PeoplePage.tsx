@@ -1,4 +1,4 @@
-import { ScreenState } from '../../shared/ui/ScreenState';
+import { OfflineCard, ScreenState } from '../../shared/ui/ScreenState';
 import { useScreenState } from '../../shared/useScreenState';
 import { usePeople } from './people.api';
 import { useState } from 'react';
@@ -30,6 +30,13 @@ export function PeoplePage() {
 
   return (
     <section data-component="PeoplePage" data-variant="default">
+      <OfflineCard
+        state={state}
+        shown
+        onRetry={() => {
+          void query.refetch();
+        }}
+      />
       <PeopleList people={people} />
       {saved && (
         <div role="status" className="toast">

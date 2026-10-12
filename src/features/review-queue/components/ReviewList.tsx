@@ -119,32 +119,34 @@ export function ReviewList({ items, counts, total, loadMore, pending }: Props) {
         headline={<strong>{all} updates to review</strong>}
         note="Held safely until their context or destination is clear."
       />
-      <section
-        className="panel directory-panel review-panel"
-        data-component="Panel"
-        data-variant="review"
-      >
-        <DirectoryToolbar
-          tabs={[
-            { key: '', label: 'All updates', count: all },
-            { key: 'unrouted', label: 'Routing gaps', count: counts.unrouted },
-            { key: 'alias', label: 'Names', count: counts.alias },
-            { key: 'category', label: 'Categories', count: counts.category },
-          ]}
-          active={params.get('kind') ?? ''}
-          onTab={(key) => filter('kind', key)}
-          search={params.get('q') ?? ''}
-          onSearch={(value) => filter('q', value)}
-          placeholder="Search updates or channels…"
-          disabled={!online}
-        />
-        <Table items={items} />
-        <DirectoryFooter
-          status={`Showing ${items.length} of ${total} updates`}
-          loadMore={loadMore}
-          pending={pending || !online}
-        />
-      </section>
+      {online && (
+        <section
+          className="panel directory-panel review-panel"
+          data-component="Panel"
+          data-variant="review"
+        >
+          <DirectoryToolbar
+            tabs={[
+              { key: '', label: 'All updates', count: all },
+              { key: 'unrouted', label: 'Routing gaps', count: counts.unrouted },
+              { key: 'alias', label: 'Names', count: counts.alias },
+              { key: 'category', label: 'Categories', count: counts.category },
+            ]}
+            active={params.get('kind') ?? ''}
+            onTab={(key) => filter('kind', key)}
+            search={params.get('q') ?? ''}
+            onSearch={(value) => filter('q', value)}
+            placeholder="Search updates or channels…"
+            disabled={!online}
+          />
+          <Table items={items} />
+          <DirectoryFooter
+            status={`Showing ${items.length} of ${total} updates`}
+            loadMore={loadMore}
+            pending={pending || !online}
+          />
+        </section>
+      )}
       <DirectoryCallout
         icon="shield"
         title="Resolve the configuration, improve the next update"

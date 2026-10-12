@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { z as schema } from 'zod';
 import { getResponse } from '../../shared/api/client';
+import { Icon } from '../../shared/ui/Icon';
 import { AuthShell } from './AuthShell';
 import { authCopy } from './auth.copy';
 import { useSignOut } from './useSignOut';
@@ -43,8 +44,13 @@ export function NoAccess() {
           </div>
         </div>
       )}
-      <button className="button auth-submit" type="button" onClick={() => void signOut()}>
+      <button
+        className="button button-primary auth-submit"
+        type="button"
+        onClick={() => void signOut()}
+      >
         {authCopy.signOut}
+        <Icon name="logout" />
       </button>
     </AuthShell>
   );

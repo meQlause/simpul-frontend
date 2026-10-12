@@ -41,3 +41,16 @@ export function ScreenState({ state, onRetry }: { state: State; onRetry?: () => 
     </section>
   );
 }
+
+// The offline card over a page that stays on screen (its controls are disabled by the page).
+export function OfflineCard({
+  state,
+  shown,
+  onRetry,
+}: {
+  state: string;
+  shown: boolean;
+  onRetry: () => void;
+}) {
+  return shown && state === 'offline' ? <ScreenState state="offline" onRetry={onRetry} /> : null;
+}

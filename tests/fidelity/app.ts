@@ -68,13 +68,17 @@ async function settle(page: Page) {
 export async function open(
   page: Page,
   baseUrl: string,
-  target: { path: string; width: number; prepare?: () => Promise<void> },
+  target: { path: string; width: number; prepare?: () => Promise<void>; anonymous?: boolean },
 ) {
-  const { path, width, prepare } = target;
+  const { path, width, prepare, anonymous } = target;
 
   await page.setViewportSize({ width, height: HEIGHT });
   await page.clock.setFixedTime(FROZEN);
-  await connectBackend(page, baseUrl);
+
+  if (!anonymous) {
+    await connectBackend(page, baseUrl);
+  }
+
   // Routes added after the backend hook take precedence over it.
   await prepare?.();
   await page.goto(path);

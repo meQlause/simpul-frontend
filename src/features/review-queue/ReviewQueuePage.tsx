@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { PageHeading } from '../../shared/ui/Directory';
-import { ScreenState } from '../../shared/ui/ScreenState';
+import { OfflineCard, ScreenState } from '../../shared/ui/ScreenState';
 import { useScreenState } from '../../shared/useScreenState';
 import { useReviewQueue } from './review-queue.api';
 import { reviewCopy as copy } from './review-queue.copy';
@@ -27,6 +27,13 @@ export function ReviewQueuePage() {
 
   return (
     <section data-component="ReviewQueuePage" data-variant="default">
+      <OfflineCard
+        state={state}
+        shown={Boolean(query.data)}
+        onRetry={() => {
+          void query.refetch();
+        }}
+      />
       <PageHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
       {query.data && state !== 'empty' ? (
         <ReviewList
