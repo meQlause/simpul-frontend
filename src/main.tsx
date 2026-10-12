@@ -23,6 +23,7 @@ import './styles/channels.css';
 import './styles/rules.css';
 import './styles/onboarding.css';
 import './styles/recipient-preview.css';
+import './styles/audit-trace.css';
 import './styles/parity.css';
 
 const root = document.getElementById('root');

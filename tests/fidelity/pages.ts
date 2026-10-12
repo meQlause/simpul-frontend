@@ -338,5 +338,11 @@ export const appViews: AppView[] = [
     }),
   },
   { view: 'audit.ready', path: '/audit' },
+  {
+    view: 'audit.trace',
+    path: '/audit',
+    steps: (page) =>
+      openByKeyboard(page, page.locator('tbody tr').first().locator('button, a').first()),
+  },
   { view: 'settings.ready', path: '/settings' },
 ];

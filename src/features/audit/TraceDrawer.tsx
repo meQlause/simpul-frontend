@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { ApiError } from '../../shared/api/error';
 import { Drawer } from '../../shared/ui/Drawer';
 import { ScreenState } from '../../shared/ui/ScreenState';
-import { auditCopy as copy, kindCopy, type Kind } from './audit.copy';
+import { auditCopy as copy } from './audit.copy';
 import { usePauseRule, useTrace } from './audit.api';
 import type { Trace } from './audit.schema';
-import { TraceBody } from './TraceBody';
+import { Icon } from '../../shared/ui/Icon';
+import { TraceBody, TraceHeader } from './TraceBody';
 
 export function TraceDrawer({ id }: { id: string }) {
   const navigate = useNavigate();
@@ -62,9 +63,13 @@ function TraceFallback({
 }
 
 function TraceView({ trace, onClose }: { trace: Trace; onClose: () => void }) {
-  const meta = kindCopy[trace.kind as Kind];
+  const dialog = useRef<HTMLDialogElement>(null);
   const [toast, setToast] = useState('');
   const pause = usePauseRule();
+
+  useEffect(() => {
+    dialog.current?.showModal();
+  }, []);
 
   function togglePause() {
     if (!trace.rule) {
@@ -81,58 +86,81 @@ function TraceView({ trace, onClose }: { trace: Trace; onClose: () => void }) {
   }
 
   return (
-    <Drawer
-      title={trace.title}
-      eyebrow={copy.trace.eyebrow}
-      description={meta.subline}
-      closeLabel={copy.trace.close}
-      onClose={onClose}
-      footer={
-        <>
-          <Neighbours trace={trace} />
-          {trace.kind === 'queue' && (
-            <Link className="button" to="/queue">
-              {copy.trace.review}
-            </Link>
-          )}
-          <button className="button" onClick={onClose}>
-            {copy.trace.close}
-          </button>
-        </>
-      }
+    <dialog
+      ref={dialog}
+      className="drawer trace-drawer"
+      aria-labelledby="drawer-title"
+      data-component="Drawer"
+      data-variant="trace"
+      onCancel={(event) => {
+        event.preventDefault();
+        onClose();
+      }}
     >
-      <TraceBody trace={trace} pending={pause.isPending} onPause={togglePause} />
+      <button className="icon-button dialog-close" aria-label={copy.trace.close} onClick={onClose}>
+        <Icon name="close" />
+      </button>
+      <div id="dialog-content">
+        <div className="audit-trace">
+          <TraceHeader trace={trace} />
+          <TraceBody trace={trace} pending={pause.isPending} onPause={togglePause} />
+          <footer className="trace-drawer-footer">
+            <button className="button" onClick={onClose}>
+              {copy.trace.close}
+            </button>
+            <Neighbours trace={trace} />
+            <TraceAction trace={trace} />
+          </footer>
+        </div>
+      </div>
       {toast && (
         <p role="status" className="toast visible">
           {toast}
         </p>
       )}
-    </Drawer>
+    </dialog>
   );
+}
+
+function TraceAction({ trace }: { trace: Trace }) {
+  if (trace.rule) {
+    return (
+      <Link className="button button-primary" to={`/rules/${trace.rule.id}`}>
+        Edit rule
+        <Icon name="arrow-up-right" />
+      </Link>
+    );
+  }
+
+  return trace.kind === 'queue' ? (
+    <Link className="button button-primary" to="/queue">
+      {copy.trace.review}
+    </Link>
+  ) : null;
 }
 
 function Neighbours({ trace }: { trace: Trace }) {
   const { previousId, nextId, position, total } = trace.neighbours;
 
   return (
-    <span className="trace-neighbours">
+    <span className="trace-record-navigation">
       {previousId ? (
         <Link className="icon-button" to={`/audit/${previousId}`} aria-label={copy.trace.previous}>
-          {'<'}
+          <Icon name="chevron-left" />
         </Link>
       ) : (
         <button className="icon-button" disabled aria-label={copy.trace.previous}>
-          {'<'}
+          <Icon name="chevron-left" />
         </button>
       )}
       <span>{`${position} / ${total}`}</span>
       {nextId ? (
         <Link className="icon-button" to={`/audit/${nextId}`} aria-label={copy.trace.next}>
-          {'>'}
+          <Icon name="chevron-right" />
         </Link>
       ) : (
         <button className="icon-button" disabled aria-label={copy.trace.next}>
-          {'>'}
+          <Icon name="chevron-right" />
         </button>
       )}
     </span>
