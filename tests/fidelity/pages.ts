@@ -345,4 +345,26 @@ export const appViews: AppView[] = [
       openByKeyboard(page, page.locator('tbody tr').first().locator('button, a').first()),
   },
   { view: 'settings.ready', path: '/settings' },
+  {
+    view: 'settings.mail.empty',
+    path: '/settings',
+    steps: (page) => openByKeyboard(page, page.getByRole('link', { name: /^Configure/ })),
+  },
+  {
+    view: 'settings.mail.saved',
+    path: '/settings',
+    steps: async (page) => {
+      await page.getByRole('link', { name: /^Configure/ }).click();
+      const drawer = page.getByRole('dialog');
+
+      await drawer.getByLabel('Mail server host').fill('smtp.pointstar.example');
+      await drawer.getByLabel('Port').fill('587');
+      await drawer.getByLabel('Username').fill('simpul@pointstar.example');
+      await drawer.getByLabel('Password').fill('secret');
+      await drawer.getByLabel('Sender address').fill('simpul@pointstar.example');
+      await drawer.getByRole('button', { name: /^Save/ }).click();
+      await page.getByRole('dialog').waitFor({ state: 'detached' });
+      await openByKeyboard(page, page.getByRole('link', { name: /^Configure/ }));
+    },
+  },
 ];

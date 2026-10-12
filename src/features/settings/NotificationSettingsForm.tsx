@@ -145,33 +145,35 @@ export function NotificationSettingsForm({
           <use href="#i-shield" />
         </svg>
       </div>
-      <fieldset className="offline-controls panel-body" disabled={!online}>
-        <SettingsFields settings={settings} errors={errors} />
-        <div className="notice">
-          <svg className="icon" aria-hidden="true">
-            <use href="#i-clock" />
-          </svg>
-          <span>
-            {copy.noticeStart} {settings.holdSeconds}
-            {copy.noticeEnd}
-          </span>
-        </div>
-        {failed && (
-          <p role="alert" className="channel-error">
-            {copy.failed}
-          </p>
-        )}
-        <div className="form-actions">
-          <button
-            className="button button-primary"
-            type="submit"
-            disabled={pending || !online}
-            data-component="Button"
-            data-variant="primary"
-            data-role="button-label"
-          >
-            {copy.save}
-          </button>
+      <fieldset className="offline-controls" disabled={!online}>
+        <div className="panel-body">
+          <SettingsFields settings={settings} errors={errors} />
+          <div className="notice">
+            <svg className="icon" aria-hidden="true">
+              <use href="#i-clock" />
+            </svg>
+            <span>
+              {copy.noticeStart} {settings.holdSeconds}
+              {copy.noticeEnd}
+            </span>
+          </div>
+          {failed && (
+            <p role="alert" className="channel-error">
+              {copy.failed}
+            </p>
+          )}
+          <div className="form-actions">
+            <button
+              className="button button-primary"
+              type="submit"
+              disabled={pending || !online}
+              data-component="Button"
+              data-variant="primary"
+              data-role="button-label"
+            >
+              {copy.save}
+            </button>
+          </div>
         </div>
       </fieldset>
     </form>

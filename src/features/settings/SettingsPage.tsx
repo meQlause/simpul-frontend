@@ -41,6 +41,9 @@ export function SettingsPage() {
           </p>
         </div>
         <Link className="button" to="/settings/onboarding">
+          <svg className="icon" aria-hidden="true">
+            <use href="#i-play" />
+          </svg>
           {copy.onboarding}
         </Link>
       </div>
