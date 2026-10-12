@@ -64,6 +64,7 @@ kbd {
   margin: 0 3px;
 }
 .icon-button {
+  padding: 1px 6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;

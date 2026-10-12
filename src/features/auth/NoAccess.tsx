@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { z as schema } from 'zod';
 import { getResponse } from '../../shared/api/client';
 import { Icon } from '../../shared/ui/Icon';
+import { avatarTone } from '../work';
 import { AuthShell } from './AuthShell';
 import { authCopy } from './auth.copy';
 import { useSignOut } from './useSignOut';
@@ -37,7 +38,9 @@ export function NoAccess() {
       <div className="auth-signed eyebrow">{authCopy.signedInAs}</div>
       {person && (
         <div className="drawer-person">
-          <span className="avatar">{initialsOf(person.name)}</span>
+          <span className={`avatar ${avatarTone(initialsOf(person.name))}`}>
+            {initialsOf(person.name)}
+          </span>
           <div>
             <strong>{person.name}</strong>
             <small>{person.roleName}</small>

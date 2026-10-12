@@ -1,3 +1,4 @@
+import { DrawerSection } from '../../../shared/ui/DrawerParts';
 import { usePeople } from '../../people';
 import { useScreenState } from '../../../shared/useScreenState';
 import { ScreenState } from '../../../shared/ui/ScreenState';
@@ -34,45 +35,49 @@ export function AliasesTab({
           </div>
         ))}
       </div>
-      <h3>Link an everyday name</h3>
-      <p>Aliases resolve a person; routing still follows their role.</p>
-      {people.data ? (
-        <form id="vocabulary-form" onSubmit={form.submit} noValidate>
-          <VocabularyField name="alias" label="Name or alias" error={form.errors.alias}>
-            <input
-              id="vocab-alias"
-              name="alias"
-              maxLength={80}
-              disabled={form.disabled}
-              aria-invalid={!!form.errors.alias}
-              aria-describedby={form.errors.alias ? 'vocab-error-alias' : undefined}
-            />
-          </VocabularyField>
-          <VocabularyField name="personId" label="Person" error={form.errors.personId}>
-            <select
-              id="vocab-personId"
-              name="personId"
-              disabled={form.disabled}
-              aria-invalid={!!form.errors.personId}
-              aria-describedby={form.errors.personId ? 'vocab-error-personId' : undefined}
-            >
-              {people.data.data.map((person) => (
-                <option key={person.id} value={person.id}>
-                  {person.name}
-                </option>
-              ))}
-            </select>
-          </VocabularyField>
-          {form.failed && <p role="alert">{copy.failed}</p>}
-        </form>
-      ) : (
-        <ScreenState
-          state={state}
-          onRetry={() => {
-            void people.refetch();
-          }}
-        />
-      )}
+      <DrawerSection
+        number="01"
+        title="Link an everyday name"
+        description="Aliases resolve a person; routing still follows their role."
+      >
+        {people.data ? (
+          <form id="vocabulary-form" onSubmit={form.submit} noValidate>
+            <VocabularyField name="alias" label="Name or alias" error={form.errors.alias}>
+              <input
+                id="vocab-alias"
+                name="alias"
+                maxLength={80}
+                disabled={form.disabled}
+                aria-invalid={!!form.errors.alias}
+                aria-describedby={form.errors.alias ? 'vocab-error-alias' : undefined}
+              />
+            </VocabularyField>
+            <VocabularyField name="personId" label="Person" error={form.errors.personId}>
+              <select
+                id="vocab-personId"
+                name="personId"
+                disabled={form.disabled}
+                aria-invalid={!!form.errors.personId}
+                aria-describedby={form.errors.personId ? 'vocab-error-personId' : undefined}
+              >
+                {people.data.data.map((person) => (
+                  <option key={person.id} value={person.id}>
+                    {person.name}
+                  </option>
+                ))}
+              </select>
+            </VocabularyField>
+            {form.failed && <p role="alert">{copy.failed}</p>}
+          </form>
+        ) : (
+          <ScreenState
+            state={state}
+            onRetry={() => {
+              void people.refetch();
+            }}
+          />
+        )}
+      </DrawerSection>
     </>
   );
 }

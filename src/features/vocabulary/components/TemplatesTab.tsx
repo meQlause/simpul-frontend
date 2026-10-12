@@ -1,3 +1,4 @@
+import { DrawerSection } from '../../../shared/ui/DrawerParts';
 import { useState } from 'react';
 import type { Vocabulary } from '../vocabulary.schema';
 import { templateInput } from '../vocabulary.schema';
@@ -31,9 +32,11 @@ export function TemplatesTab({
 
   return (
     <>
-      <section className="drawer-section">
-        <h3>Internal update template</h3>
-        <p>Only approved summary fields can be used.</p>
+      <DrawerSection
+        number="01"
+        title="Internal update template"
+        description="Only approved summary fields can be used."
+      >
         <form id="vocabulary-form" onSubmit={form.submit} noValidate>
           <VocabularyField name="body" label="Template" error={form.errors.body}>
             <textarea
@@ -59,16 +62,20 @@ export function TemplatesTab({
           </div>
           {form.failed && <p role="alert">{copy.failed}</p>}
         </form>
-      </section>
-      <section className="drawer-section" data-testid="external-template">
-        <h3>External group template</h3>
-        <p>Sensitive internal fields are never available here.</p>
-        <div className="message-preview">
-          <small>Approved · Read only</small>
-          <p>{preview(templates.external.body, templates.sample)}</p>
+      </DrawerSection>
+      <DrawerSection
+        number="02"
+        title="External group template"
+        description="Sensitive internal fields are never available here."
+      >
+        <div data-testid="external-template">
+          <div className="message-preview">
+            <small>Approved · Read only</small>
+            <p>{preview(templates.external.body, templates.sample)}</p>
+          </div>
+          <p className="drawer-inline-note">Cost, margin and internal notes are excluded.</p>
         </div>
-        <p>Cost, margin and internal notes are excluded.</p>
-      </section>
+      </DrawerSection>
     </>
   );
 }

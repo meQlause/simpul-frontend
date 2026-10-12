@@ -112,9 +112,9 @@ export function DatabaseConnectionForm(props: Props) {
             aria-invalid={Boolean(problem.string)}
             aria-describedby="database-string-hint database-string-error"
           />
-          <small id="database-string-hint" className="muted text-small">
+          <span id="database-string-hint" className="muted text-small">
             {copy.hint}
-          </small>
+          </span>
         </div>
         <p id="database-string-error" role="alert" className="channel-error">
           {problem.string}

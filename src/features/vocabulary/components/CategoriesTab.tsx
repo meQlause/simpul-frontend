@@ -1,3 +1,4 @@
+import { DrawerSection } from '../../../shared/ui/DrawerParts';
 import type { Category } from '../vocabulary.schema';
 import { categoryInput } from '../vocabulary.schema';
 import { useVocabularyForm } from '../useVocabularyForm';
@@ -47,14 +48,16 @@ function CategoryForm({ selected, onSaved }: { selected?: Category; onSaved: () 
   });
 
   return (
-    <section className="drawer-section" data-component="DrawerSection" data-variant="category">
-      <h3>{selected ? 'Edit ' + selected.name : 'Add a category'}</h3>
-      <p>Description and examples make the label useful; they never choose a recipient.</p>
+    <DrawerSection
+      number="01"
+      title={selected ? 'Edit ' + selected.name : 'Add a category'}
+      description="Description and examples make the label useful; they never choose a recipient."
+    >
       <form id="vocabulary-form" onSubmit={form.submit} noValidate>
         <CategoryFields selected={selected} errors={form.errors} disabled={form.disabled} />
         {form.failed && <p role="alert">{copy.failed}</p>}
       </form>
-    </section>
+    </DrawerSection>
   );
 }
 
@@ -91,6 +94,7 @@ function CategoryFields({
           value: item.idPrefix ?? '',
           readOnly: item.prefixInUse,
           max: 3,
+          hint: copy.prefixError,
         },
         {
           name: 'description',
@@ -123,9 +127,9 @@ function CategoryFields({
             aria-describedby={errors[field.name] ? 'vocab-error-' + field.name : undefined}
             disabled={disabled}
           />
+          {field.hint && <small>{field.hint}</small>}
         </VocabularyField>
       ))}
-      <small>{copy.prefixError}</small>
     </>
   );
 }

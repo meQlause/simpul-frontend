@@ -680,7 +680,7 @@ dialog.drawer.trace-drawer #dialog-content {
   border-color: #e7d9b0;
   color: #9b8345;
 }
-.is-held > p {
+.trace-outcome-hero.is-held > p {
   color: #a09573;
 }
 .is-held .trace-path {
@@ -1565,5 +1565,11 @@ dialog.drawer.trace-drawer #dialog-content {
   font-weight: 400;
 }
 #database-form .field > label {
+  font-weight: 400;
+}
+.form-grid .field > label {
+  font-weight: 400;
+}
+.drawer-section-content .field > label {
   font-weight: 400;
 }

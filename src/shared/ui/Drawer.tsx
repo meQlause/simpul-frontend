@@ -43,23 +43,25 @@ export function Drawer({
           <use href="#i-close" />
         </svg>
       </button>
-      <div id="dialog-content" className="drawer-screen">
-        <header className="drawer-screen-header">
-          <div className="eyebrow" data-role="eyebrow">
-            {eyebrow}
-          </div>
-          <h2 id="drawer-title" className="detail-title" data-role="title">
-            {title}
-          </h2>
-          <p data-role="description">{description}</p>
-        </header>
-        <div className="drawer-screen-body">{children}</div>
-        {/* The mockup's "demo workspace" note occupied this band; the band stays so every drawer
+      <div id="dialog-content">
+        <div className="drawer-screen">
+          <header className="drawer-screen-header">
+            <div className="eyebrow" data-role="eyebrow">
+              {eyebrow}
+            </div>
+            <h2 id="drawer-title" className="detail-title" data-role="title">
+              {title}
+            </h2>
+            <p data-role="description">{description}</p>
+          </header>
+          <div className="drawer-screen-body">{children}</div>
+          {/* The mockup's "demo workspace" note occupied this band; the band stays so every drawer
             keeps the proportions it was drawn with. */}
-        <div className="drawer-demo-note" aria-hidden="true">
-          &nbsp;
+          <div className="drawer-demo-note" aria-hidden="true">
+            &nbsp;
+          </div>
+          <footer className="drawer-screen-footer">{footer}</footer>
         </div>
-        <footer className="drawer-screen-footer">{footer}</footer>
       </div>
     </dialog>
   );

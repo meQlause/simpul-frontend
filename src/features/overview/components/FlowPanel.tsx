@@ -17,12 +17,7 @@ function FlowWires() {
   );
 }
 
-function Note({
-  position,
-  name,
-  text,
-  time,
-}: Record<'position' | 'name' | 'text' | 'time', string>) {
+function Note({ position, name, text }: Record<'position' | 'name' | 'text', string>) {
   return (
     <div className={`flow-note note-${position}`}>
       <span className={position === 'top' ? 'channel-mini' : 'channel-mini pale'}>
@@ -32,7 +27,6 @@ function Note({
         <b>{name}</b>
         <span>{text}</span>
       </div>
-      <span className="message-time">{time}</span>
     </div>
   );
 }
@@ -57,18 +51,8 @@ function FlowMap() {
     <div className="flow-map">
       <FlowWires />
       <div className="flow-inputs">
-        <Note
-          position="top"
-          name="Operations Group"
-          text="“Mrs. Sri’s payment is confirmed.”"
-          time="09.41"
-        />
-        <Note
-          position="bottom"
-          name="Warehouse Team"
-          text="“Ready for the afternoon delivery.”"
-          time="09.42"
-        />
+        <Note position="top" name="Operations Group" text="“Mrs. Sri’s payment is confirmed.”" />
+        <Note position="bottom" name="Warehouse Team" text="“Ready for the afternoon delivery.”" />
       </div>
       <div className="flow-center">
         <div className="orbit orbit-one" />
