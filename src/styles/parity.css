@@ -1573,3 +1573,23 @@ dialog.drawer.trace-drawer #dialog-content {
 .drawer-section-content .field > label {
   font-weight: 400;
 }
+.feed-item a.text-button {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 0;
+  margin-top: 6px;
+  font-size: 8px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #91a07e;
+}
+.feed-item a.text-button .icon {
+  width: 11px;
+  height: 11px;
+}
+@media (max-width: 760px) {
+  .message-preview {
+    padding: 18px;
+  }
+}

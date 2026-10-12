@@ -28,7 +28,7 @@ export function ImpactPreview({
   selected: string;
 }) {
   return (
-    <section className="drawer-impact">
+    <section className="drawer-impact" data-testid="rule-impact">
       <div className="drawer-impact-title">
         <svg className="icon" aria-hidden="true">
           <use href="#i-activity" />

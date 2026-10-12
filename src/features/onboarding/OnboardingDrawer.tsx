@@ -194,7 +194,11 @@ function WizardFooter({
 
 function OnboardingProgress({ step }: { step: number }) {
   return (
-    <ol className="onboarding-progress" aria-label={copy.progress}>
+    <ol
+      className="onboarding-progress"
+      aria-label={copy.progress}
+      data-testid="onboarding-progress"
+    >
       {copy.steps.map((label, index) => {
         const number = index + STEP.people;
 

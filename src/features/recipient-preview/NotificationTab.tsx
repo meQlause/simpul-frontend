@@ -23,7 +23,7 @@ export function NotificationTab({ notification }: { notification: Notification |
   }
 
   return (
-    <div className="message-preview telegram-preview">
+    <div className="message-preview telegram-preview" data-testid="message-preview">
       <div className="message-sender">
         <Icon name="telegram" />
         {copy.header(notification.recipientLabel)}

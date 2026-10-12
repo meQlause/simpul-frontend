@@ -16,7 +16,7 @@ export function ClarificationTab({ clarification }: { clarification: Clarificati
 
   return (
     <>
-      <div className="message-preview telegram-preview">
+      <div className="message-preview telegram-preview" data-testid="message-preview">
         <div className="message-sender">
           <Icon name="telegram" />
           Simpul · In the original group

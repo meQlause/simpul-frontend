@@ -55,7 +55,7 @@ function Hero({ trace }: { trace: Trace }) {
   const lastStep = { routing: 'Delivered', work: 'Updated', queue: 'Held', digest: 'Digest' }[kind];
 
   return (
-    <section className={`trace-outcome-hero ${held ? 'is-held' : ''}`}>
+    <section className={`trace-outcome-hero ${held ? 'is-held' : ''}`} data-testid="trace-hero">
       <div className="trace-hero-top">
         <span className="trace-hero-icon">
           <Icon name={KIND_ICONS[kind]} />
@@ -337,7 +337,7 @@ function FlowSteps({
   const kind = trace.kind as Kind;
 
   return (
-    <ol className="rich-decision-trace">
+    <ol className="rich-decision-trace" data-testid="trace-steps">
       <ContextStep trace={trace} />
       <Step
         number={2}
