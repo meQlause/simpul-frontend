@@ -1,9 +1,12 @@
 import { Link } from 'react-router';
 import { Drawer } from '../../../shared/ui/Drawer';
+import { DrawerSection } from '../../../shared/ui/DrawerParts';
+import { Icon } from '../../../shared/ui/Icon';
 import { ScreenState } from '../../../shared/ui/ScreenState';
 import { useScreenState } from '../../../shared/useScreenState';
 import { useReviewItem } from '../review-queue.api';
 import { reviewCopy as copy } from '../review-queue.copy';
+import { elapsed } from '../../work';
 import { reviewAction } from './ReviewList';
 import type { ReviewItem } from '../review-queue.schema';
 import { MappingForm } from './MappingForm';
@@ -42,20 +45,14 @@ export function ReviewDrawer({
           {item && (
             <Link className="button button-primary" to={reviewAction(item)}>
               {copy.kinds[item.kind].action}
+              <Icon name="arrow-right" />
             </Link>
           )}
         </>
       }
     >
       {item ? (
-        <>
-          <h3>Useful information. One missing connection.</h3>
-          <p>{copy.kinds[item.kind].reason}</p>
-          <h3>The detected update</h3>
-          <p>{item.channel.displayName}</p>
-          <p>{item.detail}</p>
-          <p>This item has not triggered a notification. Raw chat remains restricted.</p>
-        </>
+        <ReviewBody item={item} />
       ) : (
         <ScreenState
           state={state}
@@ -70,4 +67,68 @@ export function ReviewDrawer({
 
 function canMap(item: ReviewItem | undefined, mapping: boolean) {
   return mapping && item !== undefined && item.kind !== 'unrouted';
+}
+
+const NEXT_STEP = {
+  unrouted: 'Define the condition and recipient, then check the impact before saving.',
+  alias: 'Choose the person this name refers to. The mapping applies to future references.',
+  category: 'Choose the category that best describes this update.',
+} as const;
+
+function ReviewBody({ item }: { item: ReviewItem }) {
+  const kind = copy.kinds[item.kind];
+
+  return (
+    <>
+      <section className="drawer-review-hero">
+        <span className="trace-hero-icon">
+          <Icon name={kind.icon} />
+        </span>
+        <h3>
+          Useful information.
+          <br />
+          One missing connection.
+        </h3>
+        <p>{kind.reason}</p>
+        <div>
+          <span className="badge amber">{kind.badge}</span>
+          <span>{elapsed(item.detectedAt, 'active')}</span>
+        </div>
+      </section>
+      <DrawerSection
+        number="01"
+        title="The detected update"
+        description="A safe summary from its source conversation."
+      >
+        <div className="trace-source">
+          <span className="directory-icon">
+            <Icon name="telegram" />
+          </span>
+          <div>
+            <span className="trace-label">{item.channel.displayName}</span>
+            <p>{item.detail}</p>
+          </div>
+        </div>
+      </DrawerSection>
+      <DrawerSection
+        number="02"
+        title="Your next step"
+        description="Resolve the configuration gap, once."
+      >
+        <div className="drawer-next-action">
+          <span className="drawer-identity-icon">
+            <Icon name={kind.icon} />
+          </span>
+          <div>
+            <h3>{kind.action}</h3>
+            <p>{NEXT_STEP[item.kind]}</p>
+          </div>
+        </div>
+      </DrawerSection>
+      <div className="drawer-inline-note">
+        <Icon name="shield" />
+        This item has not triggered a notification. Raw chat remains restricted.
+      </div>
+    </>
+  );
 }

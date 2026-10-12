@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Drawer } from '../../../shared/ui/Drawer';
+import { Icon } from '../../../shared/ui/Icon';
 import { ScreenState } from '../../../shared/ui/ScreenState';
 import { useScreenState } from '../../../shared/useScreenState';
 import { useOnline } from '../../../shared/useOnline';
@@ -30,6 +31,7 @@ export function WorkDrawer({
       eyebrow={'WORK DETAILS / ' + displayId}
       description={copy.details}
       closeLabel="Close details"
+      covered={closing}
       onClose={onClose}
       footer={
         <>
@@ -81,6 +83,7 @@ function WorkAction({
   if (item.canClose) {
     return (
       <button className="button button-primary" disabled={!online} onClick={onCloseWork}>
+        <Icon name="check" />
         Close work
       </button>
     );

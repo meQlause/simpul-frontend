@@ -1,45 +1,19 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { useWork } from '../../work';
+import { avatarTone, elapsed, initialsOf, statusColor, useWork } from '../../work';
 import { Icon } from '../../../shared/ui/Icon';
 import { useOnline } from '../../../shared/useOnline';
 
-const SECOND = 1000;
-const SECONDS_PER_MINUTE = 60;
-const MINUTES_PER_HOUR = 60;
-const MINUTE = SECOND * SECONDS_PER_MINUTE;
-const HOUR = MINUTE * MINUTES_PER_HOUR;
 const ROWS = 5;
-const COLORS: Record<string, string> = { stalled: 'amber', active: 'blue', completed: 'green' };
-const AVATARS: Record<string, string> = { BS: 'sand', RA: 'lavender' };
 
 type Item = NonNullable<ReturnType<typeof useWork>['data']>['pages'][number]['data'][number];
 
-const plural = (count: number, unit: string) => `${count} ${unit}${count === 1 ? '' : 's'}`;
-const initials = (name: string) =>
-  name
-    .split(' ')
-    .map((part) => part[0])
-    .join('');
-
-function elapsed(instant: string, status: string) {
-  const age = Math.max(0, Date.now() - Date.parse(instant));
-
-  if (status === 'stalled') {
-    return `No update for ${plural(Math.round(age / HOUR), 'hour')}`;
-  }
-
-  return age < HOUR
-    ? `${plural(Math.round(age / MINUTE), 'minute')} ago`
-    : `${plural(Math.round(age / HOUR), 'hour')} ago`;
-}
-
 function Owner({ item }: { item: Item }) {
-  const letters = item.owner ? initials(item.owner.name) : '';
+  const letters = item.owner ? initialsOf(item.owner.name) : '';
 
   return (
     <div className="person">
-      <span className={`avatar ${AVATARS[letters] ?? 'mint'}`}>{letters}</span>
+      <span className={`avatar ${avatarTone(letters)}`}>{letters}</span>
       <div>
         {item.owner?.name.split(' ')[0]}
         <div className="muted text-small">{item.owner?.team}</div>
@@ -72,7 +46,7 @@ function Row({ item }: { item: Item }) {
         <div className="text-small muted">{item.summary}</div>
       </td>
       <td>
-        <span className={`badge ${COLORS[item.status] ?? 'gray'}`}>
+        <span className={`badge ${statusColor(item.status)}`}>
           {item.status[0].toUpperCase() + item.status.slice(1)}
         </span>
       </td>

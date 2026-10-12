@@ -21,11 +21,16 @@ test('Needs review acceptance 1–2 and 6: seven rows, counted tabs, names filte
 }) => {
   await expect(page.getByRole('row')).toHaveCount(8);
 
-  for (const name of ['All updates 7', 'Routing gaps 4', 'Names 2', 'Categories 1']) {
-    await expect(page.getByRole('tab', { name, exact: true })).toBeVisible();
+  for (const name of [
+    /^All updates\s*7$/,
+    /^Routing gaps\s*4$/,
+    /^Names\s*2$/,
+    /^Categories\s*1$/,
+  ]) {
+    await expect(page.getByRole('button', { name })).toBeVisible();
   }
 
-  await page.getByRole('tab', { name: 'Names 2', exact: true }).click();
+  await page.getByRole('button', { name: /^Names\s*2$/ }).click();
   await expect(page).toHaveURL(/kind=alias/);
   await expect(page.getByRole('row')).toHaveCount(3);
   await expect(
@@ -46,7 +51,8 @@ test('Needs review acceptance 3–4: mapping Pak Bud preselects Budi and refresh
   await row.getByRole('link', { name: 'Link name', exact: true }).click();
   const drawer = page.getByRole('dialog');
 
-  await expect(drawer.getByText('DETECTED NAME · Pak Bud', { exact: true })).toBeVisible();
+  await expect(drawer.getByText('DETECTED NAME', { exact: true })).toBeVisible();
+  await expect(drawer.getByText('Pak Bud', { exact: true })).toBeVisible();
   await expect(drawer.getByLabel('Team member').locator('option:checked')).toHaveText(
     'Budi Santoso',
   );

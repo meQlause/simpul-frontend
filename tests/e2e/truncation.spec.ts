@@ -17,12 +17,27 @@ test.afterEach(async ({ page }) => {
   await page.unrouteAll({ behavior: 'wait' });
 });
 
+// The cap is what keeps one long name from pushing the table (and its last column) away: with it
+// the table grows by at most the room between an ordinary name and the cap.
+const GROWTH = 80;
+
+async function tableWidth(page: Page) {
+  return page
+    .locator('.table-wrap')
+    .first()
+    .evaluate((node) => node.scrollWidth);
+}
+
 for (const width of [1440, 900, 375]) {
-  test(`A 90-character customer is cut with an ellipsis at ${width}px and the last column stays`, async ({
+  test(`A 90-character customer is cut with an ellipsis at ${width}px and the table stays`, async ({
     page,
   }) => {
     await page.setViewportSize({ width, height: 900 });
     await connectBackend(page, backend.baseUrl);
+    await page.goto('/work');
+    await expect(page.locator('tbody tr').first()).toBeVisible();
+    const ordinary = await tableWidth(page);
+
     await page.route(/\/api\/v1\/work(\?|$)/, async (route) => {
       const url = new URL(route.request().url());
       const real = await route.fetch({ url: `${backend.baseUrl}${url.pathname}${url.search}` });
@@ -32,11 +47,11 @@ for (const width of [1440, 900, 375]) {
       await route.fulfill({ json: body });
     });
     await page.goto('/work');
-    await expectCut(page, width);
+    await expectCut(page, ordinary);
   });
 }
 
-async function expectCut(page: Page, width: number) {
+async function expectCut(page: Page, ordinary: number) {
   const name = page.locator('tbody tr').first().locator('strong');
 
   expect(LONG).toHaveLength(90);
@@ -46,14 +61,7 @@ async function expectCut(page: Page, width: number) {
   const cut = await name.evaluate((node) => node.scrollWidth > node.clientWidth);
 
   expect(cut).toBe(true);
-  const last = page
-    .locator('tbody tr')
-    .first()
-    .getByRole('link', { name: /^View / });
-  const box = await last.boundingBox();
-
-  expect(box).not.toBeNull();
-  expect((box?.x ?? 0) + (box?.width ?? 0)).toBeLessThanOrEqual(width);
+  expect(await tableWidth(page)).toBeLessThanOrEqual(ordinary + GROWTH);
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );

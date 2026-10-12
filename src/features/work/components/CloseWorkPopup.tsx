@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { Icon } from '../../../shared/ui/Icon';
 import { useOnline } from '../../../shared/useOnline';
 import { ApiError } from '../../../shared/api/error';
 import { useWorkChange } from '../work.api';
@@ -18,10 +20,10 @@ export function CloseWorkPopup({
   const reasonField = useRef<HTMLTextAreaElement>(null);
   const [error, setError] = useState('');
   const mutation = useWorkChange(displayId);
-  const online = useOnline();
 
   useEffect(() => {
     dialog.current?.showModal();
+    reasonField.current?.focus();
   }, []);
 
   function submit(form: HTMLFormElement) {
@@ -46,10 +48,11 @@ export function CloseWorkPopup({
     });
   }
 
-  return (
+  // Rendered on the body, not inside the drawer's own <dialog>: the drawer's rules must not reach it.
+  return createPortal(
     <dialog
       ref={dialog}
-      className="popup confirmation-popup"
+      className="confirmation-popup"
       aria-label="Close work"
       data-component="ConfirmPopup"
       data-variant="work"
@@ -58,48 +61,26 @@ export function CloseWorkPopup({
         onClose();
       }}
     >
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          submit(event.currentTarget);
-        }}
-      >
-        <h2>Close work</h2>
-        <label className="field">
-          Close as
-          <select name="closure" disabled={!online || mutation.isPending}>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
-            <option value="outside_chat">Moved outside chat</option>
-          </select>
-        </label>
-        <label className="field">
-          Closure reason
-          <textarea
-            ref={reasonField}
-            name="reason"
-            aria-invalid={!!error}
-            aria-describedby={error ? 'closure-error' : undefined}
-            disabled={!online || mutation.isPending}
-            maxLength={300}
-          />
-        </label>
-        {error && (
-          <p id="closure-error" role="alert">
-            {error}
-          </p>
-        )}
-        <CloseFailure error={error} failure={mutation.error} />
-        <footer>
-          <button type="button" className="button" disabled={mutation.isPending} onClick={onClose}>
-            Back
-          </button>
-          <button className="button button-primary" disabled={!online || mutation.isPending}>
-            Close work
-          </button>
-        </footer>
-      </form>
-    </dialog>
+      <button className="icon-button dialog-close" aria-label="Close dialog" onClick={onClose}>
+        <Icon name="close" />
+      </button>
+      <div id="dialog-content">
+        <div className="eyebrow">CONFIRM COMPLETION</div>
+        <h2 className="detail-title">Close work item {displayId}</h2>
+        <p className="page-description">
+          Reminders will stop. Add a reason so the decision can be traced.
+        </p>
+        <CloseForm
+          error={error}
+          failure={mutation.error}
+          pending={mutation.isPending}
+          reasonField={reasonField}
+          onSubmit={submit}
+          onBack={onClose}
+        />
+      </div>
+    </dialog>,
+    document.body,
   );
 }
 
@@ -114,4 +95,68 @@ function CloseFailure({ error, failure }: { error: string; failure: Error | null
       : copy.saveError;
 
   return <p role="alert">{message}</p>;
+}
+
+function CloseForm({
+  error,
+  failure,
+  pending,
+  reasonField,
+  onSubmit,
+  onBack,
+}: {
+  error: string;
+  failure: Error | null;
+  pending: boolean;
+  reasonField: React.RefObject<HTMLTextAreaElement | null>;
+  onSubmit: (form: HTMLFormElement) => void;
+  onBack: () => void;
+}) {
+  const online = useOnline();
+
+  return (
+    <form
+      id="complete-form"
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSubmit(event.currentTarget);
+      }}
+    >
+      <label className="field">
+        Close as
+        <select name="closure" disabled={!online || pending}>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+          <option value="outside_chat">Moved outside chat</option>
+        </select>
+      </label>
+      <label className="field">
+        Closure reason
+        <textarea
+          ref={reasonField}
+          name="reason"
+          rows={3}
+          placeholder="Example: the customer received and confirmed the goods."
+          aria-invalid={!!error}
+          aria-describedby={error ? 'closure-error' : undefined}
+          disabled={!online || pending}
+          maxLength={300}
+        />
+      </label>
+      {error && (
+        <p id="closure-error" role="alert">
+          {error}
+        </p>
+      )}
+      <CloseFailure error={error} failure={failure} />
+      <div className="form-actions">
+        <button type="button" className="button" disabled={pending} onClick={onBack}>
+          Back
+        </button>
+        <button className="button button-primary" disabled={!online || pending}>
+          Close work
+        </button>
+      </div>
+    </form>
+  );
 }

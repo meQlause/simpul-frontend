@@ -1041,7 +1041,7 @@ dialog.drawer.enhanced-drawer #dialog-content {
 .drawer-screen {
   display: flex;
   flex-direction: column;
-  min-height: calc(100dvh - 35px);
+  min-height: calc(100dvh - 30px);
 }
 .drawer-screen-header {
   padding-right: 24px;
@@ -1768,49 +1768,31 @@ dialog.drawer.enhanced-drawer #dialog-content {
 
 /* Long customer names are cut on the row and shown whole in the title (FR-UI-16). */
 .job-link {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   min-width: 0;
-  max-width: clamp(7rem, 26vw, 22rem);
+  max-width: min(15rem, 60vw);
 }
 .job-link strong {
   display: block;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* While a confirmation is open the drawer beneath it is not drawn: the mockup replaces one
+   dialog with the other, so the page — not the drawer — shows blurred behind the popup. */
+dialog.drawer.is-covered,
+dialog.drawer.is-covered::backdrop {
+  visibility: hidden;
+}
+
+/* The mockup's panel subtitle wraps to two lines on a narrow screen (it carries a marker the
+   product drops); the header keeps that height so the rows below sit where they do there. */
 @media (max-width: 760px) {
-  .data-table.work-table,
-  .data-table.work-table tbody {
-    display: block;
-    width: 100%;
-    min-width: 0;
-    white-space: normal;
-  }
-  .data-table.work-table thead {
-    display: none;
-  }
-  .data-table.work-table tr {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px 14px;
-    padding: 14px 16px;
-    border-bottom: 1px solid #eef1e9;
-  }
-  .data-table.work-table td,
-  .data-table.work-table td:first-child,
-  .data-table.work-table td:last-child {
-    padding: 0;
-    border: 0;
-  }
-  .data-table.work-table td:first-child {
-    flex-basis: 100%;
-    min-width: 0;
-  }
-  .data-table.work-table td:last-child {
-    margin-left: auto;
-  }
-  .data-table.work-table .job-link {
-    max-width: none;
+  .panel-header .panel-subtitle {
+    min-height: 2lh;
   }
 }

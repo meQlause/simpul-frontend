@@ -18,35 +18,53 @@ export function measure(): Measured {
     return rect.width > 0 && rect.height > 0 && shown;
   };
 
+  const rectOf = (element: Element): Rect => {
+    const rect = element.getBoundingClientRect();
+
+    return {
+      x: Math.round(rect.x),
+      y: Math.round(rect.y),
+      width: Math.round(rect.width),
+      height: Math.round(rect.height),
+    };
+  };
+
+  // Elements the product drops or rewrites on purpose (fidelity.md §11) are masked in the app run.
+  const named: [string, string][] = [
+    ['sidebar', '.sidebar'],
+    ['topbar', '.topbar'],
+    ['content', '#page-content'],
+    ['drawer', '#detail-dialog[open]'],
+    ['heading-actions', '.heading-actions'],
+    ['avatar-stack', '.avatar-stack'],
+    ['preview-states', '.mockup-states'],
+    ['state-copy', '.screen-state > p'],
+    ['state-action', '.screen-state > .button'],
+  ];
+  const marker = /\b(demo|sample|simulate)\b/i;
   const regionsOf = (): Record<string, Rect> => {
     const regions: Record<string, Rect> = {};
 
-    for (const [name, selector] of [
-      ['sidebar', '.sidebar'],
-      ['topbar', '.topbar'],
-      ['content', '#page-content'],
-      ['drawer', '#detail-dialog[open]'],
-      // Elements the product drops or changes on purpose (fidelity.md §11): masked in the app run.
-      ['heading-actions', '.heading-actions'],
-      ['avatar-stack', '.avatar-stack'],
-      ['sample-note', '.section-title .text-small'],
-      ['demo-label', '.demo-label'],
-      ['preview-states', '.mockup-states'],
-      ['state-copy', '.screen-state > p'],
-      ['state-action', '.screen-state > .button'],
-    ]) {
+    for (const [name, selector] of named) {
       const element = document.querySelector(selector);
-      const rect = element && isVisible(element) ? element.getBoundingClientRect() : null;
 
-      if (rect) {
-        regions[name] = {
-          x: Math.round(rect.x),
-          y: Math.round(rect.y),
-          width: Math.round(rect.width),
-          height: Math.round(rect.height),
-        };
+      if (element && isVisible(element)) {
+        regions[name] = rectOf(element);
       }
     }
+
+    // Every element whose own text carries a demo marker (FD-02, FD-03, FD-04).
+    const marked = [...document.querySelectorAll('body *')].filter(
+      (element) =>
+        isVisible(element) &&
+        [...element.childNodes].some(
+          (node) => node.nodeType === Node.TEXT_NODE && marker.test(node.textContent ?? ''),
+        ),
+    );
+
+    marked.forEach((element, index) => {
+      regions[`demo-text-${index}`] = rectOf(element);
+    });
 
     return regions;
   };

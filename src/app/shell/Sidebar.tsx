@@ -80,6 +80,9 @@ export function Sidebar({
           <strong>{me?.workspace.name}</strong>
           <small>{me?.workspace.descriptor}</small>
         </span>
+        <svg className="icon" aria-hidden="true">
+          <use href="#i-chevron-down" />
+        </svg>
       </button>
       <div className="nav-label">{shellCopy.workspaceHeading}</div>
       <nav>
@@ -91,7 +94,7 @@ export function Sidebar({
             <NavLink
               className={({ isActive }) => (isActive ? 'nav-item active' : 'nav-item')}
               to={item.path}
-              end
+              end={item.path === '/'}
               onClick={onNavigate}
             >
               <svg className="icon" aria-hidden="true">

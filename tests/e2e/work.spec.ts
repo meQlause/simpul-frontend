@@ -42,17 +42,20 @@ test('Work acceptance 3: stalled detail shows the recorded summary, rhythm and o
   await page.goto('/work/ORD-0091');
   const drawer = page.getByRole('dialog');
 
+  // The mockup writes the rhythm in the update line and the owner as a name over a team.
   for (const text of [
     'Mrs. Sri',
     'Aqua 600 ml · 3 cases',
     'Stalled',
-    'Typical stage rhythm: 12 hours',
-    'Reminder 1',
-    'Budi Santoso · Warehouse',
+    'Budi Santoso',
     'Siti Aminah',
   ]) {
     await expect(drawer.getByText(text, { exact: true })).toBeVisible();
   }
+
+  await expect(drawer).toContainText('Typical stage rhythm: 12 hours');
+  await expect(drawer).toContainText('Reminder 1');
+  await expect(drawer.locator('.drawer-person')).toContainText('Warehouse');
 });
 
 test('Work acceptance 4–6: short reasons do not submit; close and Undo persist', async ({

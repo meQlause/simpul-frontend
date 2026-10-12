@@ -15,7 +15,9 @@ export function TopBar({
 }) {
   const location = useLocation();
   const { attentionCount } = useShellData();
-  const current = navigation.find((item) => item.path === location.pathname);
+  // `/work/ORD-0091` is still the Work page.
+  const section = `/${location.pathname.split('/')[1] ?? ''}`;
+  const current = navigation.find((item) => item.path === section);
 
   return (
     <header className="topbar" data-component="TopBar">
@@ -35,7 +37,7 @@ export function TopBar({
         </button>
         <span>{shellCopy.workspace}</span>
         <span className="breadcrumb-slash">/</span>
-        <strong id="breadcrumb-current">{pageTitles[location.pathname] ?? current?.label}</strong>
+        <strong id="breadcrumb-current">{pageTitles[section] ?? current?.label}</strong>
       </div>
       <div className="topbar-actions">
         <OfflineControls>

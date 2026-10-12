@@ -8,6 +8,7 @@ export function Drawer({
   children,
   footer,
   closeLabel,
+  covered = false,
 }: {
   title: string;
   eyebrow: string;
@@ -16,6 +17,8 @@ export function Drawer({
   children: ReactNode;
   footer: ReactNode;
   closeLabel: string;
+  // A confirmation is open over this drawer: it is kept mounted but not drawn.
+  covered?: boolean;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
 
@@ -26,7 +29,7 @@ export function Drawer({
   return (
     <dialog
       ref={dialog}
-      className="drawer enhanced-drawer"
+      className={covered ? 'drawer enhanced-drawer is-covered' : 'drawer enhanced-drawer'}
       aria-labelledby="drawer-title"
       data-component="Drawer"
       data-variant="default"
@@ -51,6 +54,11 @@ export function Drawer({
           <p data-role="description">{description}</p>
         </header>
         <div className="drawer-screen-body">{children}</div>
+        {/* The mockup's "demo workspace" note occupied this band; the band stays so every drawer
+            keeps the proportions it was drawn with. */}
+        <div className="drawer-demo-note" aria-hidden="true">
+          &nbsp;
+        </div>
         <footer className="drawer-screen-footer">{footer}</footer>
       </div>
     </dialog>

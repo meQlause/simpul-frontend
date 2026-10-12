@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Icon } from '../../../shared/ui/Icon';
 import { exportWork } from '../work.api';
 import { useOnline } from '../../../shared/useOnline';
 import { workCopy as copy } from '../work.copy';
@@ -29,7 +30,7 @@ export function WorkHeading({ filter, onExport }: { filter: string; onExport: ()
   }
 
   return (
-    <header className="page-heading" data-component="PageHeading" data-variant="default">
+    <div className="page-heading" data-component="PageHeading" data-variant="default">
       <div>
         <div className="eyebrow" data-role="eyebrow">
           {copy.eyebrow}
@@ -49,8 +50,9 @@ export function WorkHeading({ filter, onExport }: { filter: string; onExport: ()
           void download();
         }}
       >
+        <Icon name="download" />
         Export summary
       </button>
-    </header>
+    </div>
   );
 }

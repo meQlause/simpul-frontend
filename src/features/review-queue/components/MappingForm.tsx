@@ -2,6 +2,8 @@ import { useEffect, useRef, useState, type SubmitEvent } from 'react';
 import { usePeople } from '../../people';
 import { useVocabulary } from '../../vocabulary';
 import { Drawer } from '../../../shared/ui/Drawer';
+import { DrawerIdentity, DrawerSection } from '../../../shared/ui/DrawerParts';
+import { Icon } from '../../../shared/ui/Icon';
 import { ScreenState } from '../../../shared/ui/ScreenState';
 import { useScreenState } from '../../../shared/useScreenState';
 import { useOnline } from '../../../shared/useOnline';
@@ -13,6 +15,8 @@ import { reviewCopy as copy } from '../review-queue.copy';
 const mappingCopy = {
   alias: {
     title: 'Link a name',
+    heading: 'Make this name recognizable',
+    section: 'Link to the right person',
     field: 'personId',
     detected: 'DETECTED NAME',
     label: 'Team member',
@@ -20,6 +24,8 @@ const mappingCopy = {
   },
   category: {
     title: 'Choose a category',
+    heading: 'Give this update a category',
+    section: 'Choose the right category',
     field: 'categoryId',
     detected: 'DETECTED CATEGORY',
     label: 'Category',
@@ -115,15 +121,27 @@ export function MappingForm({
             type="submit"
             disabled={model.disabled || !model.query.data}
           >
+            <Icon name="check" />
             Save mapping
           </button>
         </>
       }
     >
-      <p>
-        {model.text.detected} · {item.detected.text}
-      </p>
-      <p>{item.detail}</p>
+      <DrawerIdentity
+        icon={item.kind === 'alias' ? 'users' : 'layers'}
+        title={model.text.heading}
+        description={item.channel.displayName}
+        tone="warm"
+        status={<span className="badge amber">Needs review</span>}
+      />
+      <div className="drawer-mapping-source">
+        <span className="trace-label">{model.text.detected}</span>
+        <strong>{item.detected.text}</strong>
+        <p>{item.detail}</p>
+      </div>
+      <div className="drawer-mapping-arrow">
+        <Icon name="arrow-right" />
+      </div>
       {model.query.data ? (
         <MappingFields model={model} />
       ) : (
@@ -149,29 +167,38 @@ function MappingFields({ model }: { model: ReturnType<typeof useMapping> }) {
 
   return (
     <form id="resolve-form" onSubmit={model.submit}>
-      <label className="field">
-        {model.text.label}
-        <select
-          ref={select}
-          name="value"
-          defaultValue={model.suggested ?? model.options[0]?.id}
-          disabled={model.disabled}
-          aria-invalid={!!model.error}
-          aria-describedby={model.error ? 'mapping-error' : undefined}
-        >
-          {model.options.map((option) => (
-            <option key={option.id} value={option.id}>
-              {option.name}
-            </option>
-          ))}
-        </select>
-      </label>
-      {model.error && (
-        <p role="alert" id="mapping-error">
-          {model.error}
-        </p>
-      )}
-      <p>{model.text.note}</p>
+      <DrawerSection
+        number="01"
+        title={model.text.section}
+        description="Your decision applies to similar future updates."
+      >
+        <label className="field">
+          {model.text.label}
+          <select
+            ref={select}
+            name="value"
+            defaultValue={model.suggested ?? model.options[0]?.id}
+            disabled={model.disabled}
+            aria-invalid={!!model.error}
+            aria-describedby={model.error ? 'mapping-error' : undefined}
+          >
+            {model.options.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        {model.error && (
+          <p role="alert" id="mapping-error">
+            {model.error}
+          </p>
+        )}
+        <div className="drawer-inline-note">
+          <Icon name="link" />
+          {model.text.note}
+        </div>
+      </DrawerSection>
     </form>
   );
 }

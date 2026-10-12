@@ -1,96 +1,131 @@
 import { Link } from 'react-router';
+import { DrawerIdentity, DrawerSection } from '../../../shared/ui/DrawerParts';
+import { Icon } from '../../../shared/ui/Icon';
 import type { WorkDetail } from '../work.schema';
 import { workCopy as copy } from '../work.copy';
+import { avatarTone, dayTime, elapsed, initialsOf, statusColor } from '../work.format';
 
-export function WorkContents({ item }: { item: WorkDetail }) {
+function Summary({ item }: { item: WorkDetail }) {
+  const rhythm = item.rhythm;
+
   return (
-    <>
-      <div className="drawer-identity" data-component="DrawerIdentity" data-variant="work">
-        <h3>{item.summary}</h3>
-        <p>
-          {item.displayId} · {item.channel.displayName}
-        </p>
-        <span className="badge">{copy.statuses[item.status]}</span>
-      </div>
-      <div className="drawer-work-summary">
-        <span className="trace-label">LATEST RECORDED UPDATE</span>
-        <p>{item.latestUpdate?.text}</p>
-        {item.rhythm && (
-          <p>
-            <span>Typical stage rhythm: {item.rhythm.typicalHours} hours</span> ·{' '}
-            <span>Reminder {item.rhythm.reminderCount}</span>
-          </p>
-        )}
-      </div>
-      <WorkOwnership item={item} />
-      <WorkTimeline item={item} />
-      {item.closure?.reason && (
-        <div className="notice">
-          <strong>Closure reason</strong>
-          <p>{item.closure.reason}</p>
-        </div>
-      )}
-      <div className="trace-evidence-lock">
-        <h3>Evidence summaries only</h3>
-        <p>{copy.evidence}</p>
-      </div>
-    </>
+    <div className="drawer-work-summary">
+      <span className="trace-label">LATEST RECORDED UPDATE</span>
+      <p>{item.latestUpdate?.text}</p>
+      <span>
+        <Icon name="clock" />
+        {elapsed(item.latestUpdate?.at ?? new Date().toISOString(), item.status)}
+        {rhythm &&
+          ` · Typical stage rhythm: ${rhythm.typicalHours} hours · Reminder ${rhythm.reminderCount}`}
+      </span>
+    </div>
   );
 }
 
-function WorkOwnership({ item }: { item: WorkDetail }) {
+function Ownership({ item }: { item: WorkDetail }) {
+  const owner = item.owner;
+  const letters = owner ? initialsOf(owner.name) : '';
+
   return (
-    <section className="drawer-section" data-component="DrawerSection" data-variant="ownership">
-      <h3>Ownership</h3>
-      <p>Who is responsible for the next step.</p>
+    <DrawerSection
+      number="01"
+      title="Ownership"
+      description="Who is responsible for the next step."
+    >
       <div className="drawer-person">
-        <strong>
-          {item.owner?.name} · {item.owner?.team}
-        </strong>
-        {item.owner && (
-          <Link className="text-button" to={'/people/' + item.owner.id}>
+        <span className={`avatar ${avatarTone(letters)}`}>{letters}</span>
+        <div>
+          <strong>{owner?.name}</strong>
+          <small>{owner?.team}</small>
+        </div>
+        {owner && (
+          <Link className="text-button" to={`/people/${owner.id}`}>
             View role
+            <Icon name="arrow-up-right" />
           </Link>
         )}
       </div>
-      <dl className="trace-facts">
+      <dl className="trace-facts" data-component="TraceFacts" data-variant="default">
         <div>
           <dt>Backup</dt>
-          <dd>{item.owner?.backupName ?? 'Workspace admin'}</dd>
+          <dd>{owner?.backupName ?? 'Workspace admin'}</dd>
         </div>
         <div>
           <dt>Next step</dt>
           <dd>{item.nextStep}</dd>
         </div>
       </dl>
-    </section>
+    </DrawerSection>
   );
 }
 
-function WorkTimeline({ item }: { item: WorkDetail }) {
+function Timeline({ item }: { item: WorkDetail }) {
+  const done = item.status === 'completed';
+
   return (
-    <section className="drawer-section" data-component="DrawerSection" data-variant="timeline">
-      <h3>Work timeline</h3>
-      <p>Each change follows the recognized context.</p>
+    <DrawerSection
+      number="02"
+      title="Work timeline"
+      description="Each change follows the recognized context."
+    >
       <div className="timeline drawer-timeline">
         <div className="timeline-item">
+          <span className="timeline-dot" />
           <strong>Context identified</strong>
           <p>
-            <time dateTime={item.timeline.identifiedAt}>{item.timeline.identifiedAt}</time> ·{' '}
-            {item.category}
+            <time dateTime={item.timeline.identifiedAt}>{dayTime(item.timeline.identifiedAt)}</time>{' '}
+            · {item.category}
           </p>
         </div>
         <div className="timeline-item">
+          <span className="timeline-dot" />
           <strong>Routing rule applied</strong>
           <p>{item.timeline.ruleApplied ?? 'No routing while tentative'}</p>
         </div>
         <div className="timeline-item">
-          <strong>
-            {item.status === 'completed' ? 'Work completed' : 'Waiting for the next update'}
-          </strong>
+          <span className="timeline-dot" />
+          <strong>{done ? 'Work completed' : 'Waiting for the next update'}</strong>
           <p>{item.nextStep}</p>
         </div>
       </div>
-    </section>
+    </DrawerSection>
+  );
+}
+
+export function WorkContents({ item }: { item: WorkDetail }) {
+  return (
+    <>
+      <DrawerIdentity
+        icon="package"
+        title={item.summary}
+        description={`${item.displayId} · ${item.channel.displayName}`}
+        tone={item.status === 'stalled' ? 'warm' : ''}
+        status={
+          <span className={`badge ${statusColor(item.status)}`}>{copy.statuses[item.status]}</span>
+        }
+      />
+      <Summary item={item} />
+      <Ownership item={item} />
+      <Timeline item={item} />
+      {item.closure?.reason && (
+        <div className="notice">
+          <Icon name="check-circle" />
+          <span>
+            <strong>Closure reason</strong>
+            <br />
+            {item.closure.reason}
+          </span>
+        </div>
+      )}
+      <div className="trace-evidence-lock">
+        <span>
+          <Icon name="shield" />
+        </span>
+        <div>
+          <h3>Evidence summaries only</h3>
+          <p>{copy.evidence}</p>
+        </div>
+      </div>
+    </>
   );
 }

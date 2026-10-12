@@ -4,7 +4,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import type { Page } from '@playwright/test';
 import { compareImages, TOLERANCE, type Region } from './compare.ts';
-import { maskedRegions } from './allowed.ts';
+import { isMasked } from './allowed.ts';
 import type { Rect } from './measure.ts';
 import { connectBackend } from '../e2e/helpers/backend.ts';
 
@@ -40,9 +40,9 @@ export function regionsOf(view: string, width: number): Record<string, Rect> {
 
 // The §11 regions of a view, measured on the mockup, to skip in a comparison.
 export function masks(view: string, width: number): Region[] {
-  const measured = regionsOf(view, width);
-
-  return maskedRegions.flatMap((name) => (measured[name] ? [measured[name]] : []));
+  return Object.entries(regionsOf(view, width))
+    .filter(([name]) => isMasked(name))
+    .map(([, region]) => region);
 }
 
 async function settle(page: Page) {
@@ -146,7 +146,10 @@ export async function compare(
     );
 
     if (result.ratio > TOLERANCE) {
-      console.log(`DIFF ${target.view}@${target.width}`, JSON.stringify(result.cells));
+      console.log(
+        `DIFF ${target.view}@${target.width} ${(result.ratio * 100).toFixed(2)}%`,
+        JSON.stringify(result.cells.slice(0, 4)),
+      );
     }
 
     return result.ratio;

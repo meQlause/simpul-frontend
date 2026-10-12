@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
+import { PageHeading } from '../../shared/ui/Directory';
 import { ScreenState } from '../../shared/ui/ScreenState';
 import { useScreenState } from '../../shared/useScreenState';
 import { useReviewQueue } from './review-queue.api';
@@ -26,13 +27,7 @@ export function ReviewQueuePage() {
 
   return (
     <section data-component="ReviewQueuePage" data-variant="default">
-      <header className="page-heading">
-        <div>
-          <div className="eyebrow">{copy.eyebrow}</div>
-          <h1 className="page-title">{copy.title}</h1>
-          <p>{copy.description}</p>
-        </div>
-      </header>
+      <PageHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
       {query.data && state !== 'empty' ? (
         <ReviewList
           items={items}
