@@ -1,3 +1,4 @@
+import { Icon } from '../../shared/ui/Icon';
 import { useState } from 'react';
 import { ScreenState } from '../../shared/ui/ScreenState';
 import { previewCopy as copy } from './recipient-preview.copy';
@@ -14,36 +15,41 @@ export function ClarificationTab({ clarification }: { clarification: Clarificati
   }
 
   return (
-    <div className="message-preview telegram-preview">
-      <div className="message-sender">Simpul · In the original group</div>
-      <p>
-        <strong>{copy.clarification.question}</strong>
-        <br />
-        {copy.clarification.help}
-      </p>
-      <div className="clarification-options">
-        {clarification.candidates.map((candidate, index) => (
-          <button
-            key={candidate.displayId}
-            className="button"
-            disabled={choice !== null}
-            onClick={() => setChoice(candidate.displayId)}
-          >
-            {index + 1} · {candidate.label}
+    <>
+      <div className="message-preview telegram-preview">
+        <div className="message-sender">
+          <Icon name="telegram" />
+          Simpul · In the original group
+        </div>
+        <p>
+          <strong>{copy.clarification.question}</strong>
+          <br />
+          {copy.clarification.help}
+        </p>
+        <div className="clarification-options">
+          {clarification.candidates.map((candidate, index) => (
+            <button
+              key={candidate.displayId}
+              className="button"
+              disabled={choice !== null}
+              onClick={() => setChoice(candidate.displayId)}
+            >
+              {index + 1} · {candidate.label}
+            </button>
+          ))}
+          <button className="button" disabled={choice !== null} onClick={() => setChoice('none')}>
+            {copy.clarification.none}
           </button>
-        ))}
-        <button className="button" disabled={choice !== null} onClick={() => setChoice('none')}>
-          {copy.clarification.none}
-        </button>
-      </div>
-      <div className="message-outcome" role="status">
-        {outcomeOf(choice) ||
-          copy.clarification.limits(clarification.perWorkPerDay, clarification.perChannelPerDay)}
+        </div>
+        <div className="message-outcome" role="status">
+          {outcomeOf(choice) ||
+            copy.clarification.limits(clarification.perWorkPerDay, clarification.perChannelPerDay)}
+        </div>
       </div>
       <button className="text-button" onClick={() => setChoice('silence')}>
         {copy.actions.silence}
       </button>
-    </div>
+    </>
   );
 }
 

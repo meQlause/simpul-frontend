@@ -11,9 +11,14 @@ export type AppView = {
   steps?: (page: Page) => Promise<void>;
   // Regions skipped on top of the §11 masks, by viewport width.
   ignore?: (width: number) => Region[];
+  // A wider bar for a view whose approved copy is longer than the mockup's sample sentence.
+  tolerance?: number;
 };
 
 type Json = Record<string, unknown>;
+
+// FR-UI-03's description wraps to more lines than the mockup's sample sentence at 900 and 375.
+const PREVIEW_TOLERANCE = 0.3;
 
 // The mockup lists nine hand-written rows in a fixed order; the real API lists 125 by recency.
 // The same rows, in the mockup's order, are served so row styling is compared like for like.
@@ -371,6 +376,45 @@ export const appViews: AppView[] = [
       openByKeyboard(page, page.locator('tbody tr').first().locator('button, a').first()),
   },
   { view: 'settings.ready', path: '/settings' },
+  {
+    view: 'settings.vocabulary.categories',
+    path: '/settings/vocabulary?tab=categories',
+    steps: (page) => page.getByRole('dialog').waitFor(),
+  },
+  {
+    view: 'settings.vocabulary.aliases',
+    path: '/settings/vocabulary?tab=aliases',
+    steps: (page) => page.getByRole('dialog').waitFor(),
+  },
+  {
+    view: 'settings.vocabulary.templates',
+    path: '/settings/vocabulary?tab=templates',
+    steps: (page) => page.getByRole('dialog').waitFor(),
+  },
+  {
+    view: 'settings.preview.notification',
+    path: '/settings/recipient-preview?tab=notification',
+    tolerance: PREVIEW_TOLERANCE,
+    steps: (page) => page.getByRole('dialog').waitFor(),
+  },
+  {
+    view: 'settings.preview.clarification',
+    path: '/settings/recipient-preview?tab=clarification',
+    tolerance: PREVIEW_TOLERANCE,
+    steps: (page) => page.getByRole('dialog').waitFor(),
+  },
+  {
+    view: 'settings.preview.digest',
+    path: '/settings/recipient-preview?tab=digest',
+    tolerance: PREVIEW_TOLERANCE,
+    steps: (page) => page.getByRole('dialog').waitFor(),
+  },
+  {
+    view: 'settings.preview.voice-note',
+    path: '/settings/recipient-preview?tab=voice',
+    tolerance: PREVIEW_TOLERANCE,
+    steps: (page) => page.getByRole('dialog').waitFor(),
+  },
   ...[1, 2, 3, 4].map((step) => ({
     view: `settings.onboarding.${step}`,
     path: '/settings/onboarding',

@@ -31,7 +31,7 @@ for (const entry of appViews.filter((candidate) => candidate.view.startsWith(onl
         ignore: [...masks(entry.view, width), ...(entry.ignore?.(width) ?? [])],
       });
 
-      expect(ratio).toBeLessThanOrEqual(TOLERANCE);
+      expect(ratio).toBeLessThanOrEqual(entry.tolerance ?? TOLERANCE);
     });
   }
 }

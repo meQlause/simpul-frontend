@@ -1,3 +1,4 @@
+import { Icon } from '../../shared/ui/Icon';
 import { useState } from 'react';
 import { ScreenState } from '../../shared/ui/ScreenState';
 import { previewCopy as copy } from './recipient-preview.copy';
@@ -23,7 +24,10 @@ export function NotificationTab({ notification }: { notification: Notification |
 
   return (
     <div className="message-preview telegram-preview">
-      <div className="message-sender">{copy.header(notification.recipientLabel)}</div>
+      <div className="message-sender">
+        <Icon name="telegram" />
+        {copy.header(notification.recipientLabel)}
+      </div>
       <p>
         <strong>
           {notification.work.displayId} · {notification.work.customer}
