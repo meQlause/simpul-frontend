@@ -27,7 +27,11 @@ export const responseSchema = schema.object({
 export const identitySchema = schema.object({
   data: schema.object({
     person: schema.object({ name: schema.string() }),
-    workspace: schema.object({ name: schema.string(), timezone: schema.string() }),
+    workspace: schema.object({
+      name: schema.string(),
+      timezone: schema.string(),
+      onboardingCompletedAt: schema.string().nullable().optional(),
+    }),
   }),
 });
 

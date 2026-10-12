@@ -95,7 +95,8 @@ for (const path of ['/', '/settings']) {
       await route.fulfill({
         json: {
           data: {
-            messagesUnderstood: { count: 0, trendPercent: null },
+            // Figures present: a Home with nothing at all is its `empty` state.
+            messagesUnderstood: { count: 1, trendPercent: null },
             activeWork: { count: 0, completedToday: 0 },
             updatesDelivered: { count: 0, recipients: 0, topRecipients: [] },
             needsReview: { count: 0, areas: 0, byKind: { unrouted: 0, alias: 0, category: 0 } },

@@ -20,7 +20,7 @@ for (const width of widths) {
       const view = `${route}.ready`;
       const content = regionsOf(view, width).content;
 
-      await open(page, backend.baseUrl, path, width);
+      await open(page, backend.baseUrl, { path, width });
       const image = await capture(page);
       const ratio = await compare(page, {
         view,

@@ -28,7 +28,7 @@ export function ScreenState({ state, onRetry }: { state: State; onRetry?: () => 
       <p data-role="body">
         {state === 'error' && unavailable ? screenStateCopy.databaseUnavailable : copy.description}
       </p>
-      {state === 'error' && (
+      {state !== 'not-found' && onRetry && (
         <button className="button" type="button" onClick={onRetry}>
           {screenStateCopy.retry}
         </button>

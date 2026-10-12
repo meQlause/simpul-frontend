@@ -15,7 +15,6 @@ import './styles/forms.css';
 import './styles/logo.css';
 import './styles/overview.css';
 import './styles/responsive.css';
-import './styles/parity.css';
 import './styles/nav-links.css';
 import './styles/auth.css';
 import './styles/directory.css';
@@ -24,6 +23,7 @@ import './styles/channels.css';
 import './styles/rules.css';
 import './styles/onboarding.css';
 import './styles/recipient-preview.css';
+import './styles/parity.css';
 
 const root = document.getElementById('root');
 

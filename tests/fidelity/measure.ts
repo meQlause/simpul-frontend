@@ -26,6 +26,14 @@ export function measure(): Measured {
       ['topbar', '.topbar'],
       ['content', '#page-content'],
       ['drawer', '#detail-dialog[open]'],
+      // Elements the product drops or changes on purpose (fidelity.md §11): masked in the app run.
+      ['heading-actions', '.heading-actions'],
+      ['avatar-stack', '.avatar-stack'],
+      ['sample-note', '.section-title .text-small'],
+      ['demo-label', '.demo-label'],
+      ['preview-states', '.mockup-states'],
+      ['state-copy', '.screen-state > p'],
+      ['state-action', '.screen-state > .button'],
     ]) {
       const element = document.querySelector(selector);
       const rect = element && isVisible(element) ? element.getBoundingClientRect() : null;

@@ -149,3 +149,15 @@ textarea {
 .amber-dot {
   background: var(--amber);
 }
+
+/* A fieldset cannot disable a link; a disabled region looks and acts the same for links as for
+   buttons (the mockup draws every control as a button). */
+fieldset:disabled a.button {
+  opacity: 0.45;
+  pointer-events: none;
+}
+fieldset:disabled a.text-button,
+fieldset:disabled a.icon-button {
+  opacity: 0.6;
+  pointer-events: none;
+}
