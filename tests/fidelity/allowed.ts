@@ -13,3 +13,16 @@ const allowed = [
 export function isMasked(name: string): boolean {
   return allowed.some((entry) => name === entry.region || name.startsWith(`${entry.region}-`));
 }
+
+// Views compared with a wider bar or with a region skipped, each by an approved §11 row.
+export const exceptions = [
+  { id: 'FD-14', view: 'rules.create-field-error', kind: 'region' },
+  { id: 'FD-15', view: 'settings.preview.notification', kind: 'tolerance' },
+  { id: 'FD-15', view: 'settings.preview.clarification', kind: 'tolerance' },
+  { id: 'FD-15', view: 'settings.preview.digest', kind: 'tolerance' },
+  { id: 'FD-15', view: 'settings.preview.voice-note', kind: 'tolerance' },
+  { id: 'FD-16', view: 'settings.offline', kind: 'tolerance' },
+  { id: 'FD-17', view: 'database.check-failed', kind: 'tolerance' },
+] as const;
+
+export const usedIds = [...new Set([...allowed, ...exceptions].map((entry) => entry.id))];
