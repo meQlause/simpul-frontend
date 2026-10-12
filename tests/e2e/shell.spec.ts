@@ -8,9 +8,11 @@ test('Ctrl K focuses the search field; the skip link moves focus to #page-conten
     await route.fulfill({ json: { data: [] } });
   });
   await page.goto('/work');
-  await page.keyboard.press('Tab');
   const skip = page.getByRole('link', { name: 'Skip to content' });
 
+  await expect(skip).toBeAttached();
+  await page.waitForLoadState('networkidle');
+  await page.keyboard.press('Tab');
   await expect(skip).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.getByRole('main')).toBeFocused();

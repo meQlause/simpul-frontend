@@ -1,7 +1,13 @@
 // In-page measurement of the mockup (and later the app): the text and box signatures of
 // everything visible. Serialised into the page, so it uses nothing from this module.
 
-export type Measured = { texts: string[]; boxes: { classes: string[]; signature: string }[] };
+export type Rect = { x: number; y: number; width: number; height: number };
+
+export type Measured = {
+  texts: string[];
+  boxes: { classes: string[]; signature: string }[];
+  regions: Record<string, Rect>;
+};
 
 export function measure(): Measured {
   const isVisible = (element: Element) => {
@@ -10,6 +16,31 @@ export function measure(): Measured {
     const shown = style.visibility !== 'hidden' && style.display !== 'none';
 
     return rect.width > 0 && rect.height > 0 && shown;
+  };
+
+  const regionsOf = (): Record<string, Rect> => {
+    const regions: Record<string, Rect> = {};
+
+    for (const [name, selector] of [
+      ['sidebar', '.sidebar'],
+      ['topbar', '.topbar'],
+      ['content', '#page-content'],
+      ['drawer', '#detail-dialog[open]'],
+    ]) {
+      const element = document.querySelector(selector);
+      const rect = element && isVisible(element) ? element.getBoundingClientRect() : null;
+
+      if (rect) {
+        regions[name] = {
+          x: Math.round(rect.x),
+          y: Math.round(rect.y),
+          width: Math.round(rect.width),
+          height: Math.round(rect.height),
+        };
+      }
+    }
+
+    return regions;
   };
 
   const hasOwnText = (element: Element) =>
@@ -54,5 +85,7 @@ export function measure(): Measured {
       signature: boxSignature(getComputedStyle(element)),
     }));
 
-  return { texts, boxes };
+  const regions = regionsOf();
+
+  return { texts, boxes, regions };
 }

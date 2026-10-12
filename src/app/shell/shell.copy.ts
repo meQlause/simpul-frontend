@@ -28,9 +28,21 @@ export const shellCopy = {
   timezone: 'Timezone',
   jakartaTimezone: 'WIB · Asia/Jakarta · UTC+7',
   back: 'Back to workspace',
+  guide: 'Simpul guide',
+  guideEyebrow: 'SIMPUL / QUICK GUIDE',
+  guideTitle: 'Just define the flow.',
+  guideDescription: 'A few clear decisions keep the right information moving.',
+  guideIdentityTitle: 'A quieter way to stay informed',
+  guideIdentityDescription: 'Your team keeps working in everyday conversations.',
+  guideDone: 'Got it',
+  attention: (count: number) => `View ${count} items needing attention`,
+  attentionNone: 'View items needing attention',
   signOut: 'Sign out',
   close: 'Close',
 };
+
+// The breadcrumb names the page, which is not always the navigation label.
+export const pageTitles: Record<string, string> = { '/queue': 'Needs review' };
 
 export const navigation = [
   { path: '/', label: 'Home', icon: 'grid' },

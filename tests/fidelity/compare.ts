@@ -6,8 +6,20 @@ export const TOLERANCE = 0.001;
 // Per-channel difference (0–255) below which two pixels count as equal.
 const CHANNEL_NOISE = 12;
 
-// Runs in the page.
-async function compareInPage([first, second, noise]: [string, string, number]): Promise<number> {
+export type Region = { x: number; y: number; width: number; height: number };
+
+type Cell = { x: number; y: number; pixels: number };
+
+export type Comparison = { ratio: number; cells: Cell[] };
+
+type Job = [string, string, number, Region[], number];
+
+// Edge of the squares `cells` groups differences into, in pixels.
+const CELL = 40;
+
+// Runs in the page. Pixels inside an `ignore` region are skipped on both sides (a mask, §10).
+// `cells` are the busiest 40px squares of difference, for reading a failure.
+async function compareInPage([first, second, noise, ignore, size]: Job): Promise<Comparison> {
   const load = (source: string) =>
     new Promise<HTMLImageElement>((done) => {
       const image = new Image();
@@ -28,34 +40,87 @@ async function compareInPage([first, second, noise]: [string, string, number]): 
     return context.getImageData(0, 0, image.width, image.height);
   };
 
-  const left = await pixels(first);
-  const right = await pixels(second);
+  const [left, right] = await Promise.all([pixels(first), pixels(second)]);
 
   if (left.width !== right.width || left.height !== right.height) {
-    return 1;
+    return { ratio: 1, cells: [] };
   }
 
+  const inside = (column: number, row: number) =>
+    ignore.some(
+      (region) =>
+        column >= region.x &&
+        column < region.x + region.width &&
+        row >= region.y &&
+        row < region.y + region.height,
+    );
+  const differs = (index: number) =>
+    [0, 1, 2].some(
+      // Backdrop blur is rasterised with ±1–2 level noise; that is not a visual difference.
+      (channel) => Math.abs(left.data[index + channel] - right.data[index + channel]) > noise,
+    );
+  const cells = new Map<string, Cell>();
   let different = 0;
+  let counted = 0;
+
+  const visit = (index: number) => {
+    const pixel = index / 4;
+    const column = pixel % left.width;
+    const row = Math.floor(pixel / left.width);
+
+    if (inside(column, row)) {
+      return;
+    }
+
+    counted += 1;
+
+    if (!differs(index)) {
+      return;
+    }
+
+    const key = `${Math.floor(column / size)}:${Math.floor(row / size)}`;
+    const cell = cells.get(key) ?? {
+      x: Math.floor(column / size) * size,
+      y: Math.floor(row / size) * size,
+      pixels: 0,
+    };
+
+    cell.pixels += 1;
+    cells.set(key, cell);
+    different += 1;
+  };
 
   for (let index = 0; index < left.data.length; index += 4) {
-    // Backdrop blur is rasterised with ±1–2 level noise; that is not a visual difference.
-    const same =
-      Math.abs(left.data[index] - right.data[index]) <= noise &&
-      Math.abs(left.data[index + 1] - right.data[index + 1]) <= noise &&
-      Math.abs(left.data[index + 2] - right.data[index + 2]) <= noise;
-
-    different += same ? 0 : 1;
+    visit(index);
   }
 
-  return different / (left.width * left.height);
+  const busiest = [...cells.values()].sort((one, other) => other.pixels - one.pixels);
+
+  return { ratio: counted === 0 ? 0 : different / counted, cells: busiest.slice(0, 12) };
 }
 
 const url = (image: Buffer) => `data:image/png;base64,${image.toString('base64')}`;
 
-export async function diffRatio(page: Page, expected: Buffer, actual: Buffer): Promise<number> {
-  return page.evaluate(compareInPage, [url(expected), url(actual), CHANNEL_NOISE] as [
-    string,
-    string,
-    number,
-  ]);
+export async function compareImages(
+  page: Page,
+  expected: Buffer,
+  actual: Buffer,
+  ignore: Region[] = [],
+): Promise<Comparison> {
+  return page.evaluate(compareInPage, [
+    url(expected),
+    url(actual),
+    CHANNEL_NOISE,
+    ignore,
+    CELL,
+  ] as Job);
+}
+
+export async function diffRatio(
+  page: Page,
+  expected: Buffer,
+  actual: Buffer,
+  ignore: Region[] = [],
+): Promise<number> {
+  return (await compareImages(page, expected, actual, ignore)).ratio;
 }

@@ -1,9 +1,20 @@
+import { Link, useLocation } from 'react-router';
 import { OfflineControls } from '../../shared/ui/OfflineControls';
-import { navigation, shellCopy } from './shell.copy';
+import { navigation, pageTitles, shellCopy } from './shell.copy';
 import { GlobalSearch } from './GlobalSearch';
+import { useShellData } from './shell.api';
 
-export function TopBar({ expanded, onMenu }: { expanded: boolean; onMenu: () => void }) {
+export function TopBar({
+  expanded,
+  onMenu,
+  onGuide,
+}: {
+  expanded: boolean;
+  onMenu: () => void;
+  onGuide: () => void;
+}) {
   const location = useLocation();
+  const { attentionCount } = useShellData();
   const current = navigation.find((item) => item.path === location.pathname);
 
   return (
@@ -24,15 +35,38 @@ export function TopBar({ expanded, onMenu }: { expanded: boolean; onMenu: () => 
         </button>
         <span>{shellCopy.workspace}</span>
         <span className="breadcrumb-slash">/</span>
-        <strong id="breadcrumb-current">{current?.label}</strong>
+        <strong id="breadcrumb-current">{pageTitles[location.pathname] ?? current?.label}</strong>
       </div>
       <div className="topbar-actions">
         <OfflineControls>
           <GlobalSearch />
         </OfflineControls>
+        <span className="topbar-divider" />
+        <button
+          className="icon-button help-button"
+          type="button"
+          aria-label={shellCopy.guide}
+          onClick={onGuide}
+        >
+          <svg className="icon" aria-hidden="true">
+            <use href="#i-help" />
+          </svg>
+        </button>
+        <Link
+          className="icon-button notification-button"
+          to="/queue"
+          aria-label={
+            attentionCount === undefined
+              ? shellCopy.attentionNone
+              : shellCopy.attention(attentionCount)
+          }
+        >
+          <svg className="icon" aria-hidden="true">
+            <use href="#i-bell" />
+          </svg>
+          <span />
+        </Link>
       </div>
     </header>
   );
 }
-
-import { useLocation } from 'react-router';

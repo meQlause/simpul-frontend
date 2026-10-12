@@ -9,7 +9,7 @@ import { pathToFileURL } from 'node:url';
 import { chromium, type Browser, type BrowserContext, type Page } from '@playwright/test';
 import { diffRatio, TOLERANCE } from './compare.ts';
 import { run } from './drive.ts';
-import { measure, type Measured } from './measure.ts';
+import { measure, type Measured, type Rect } from './measure.ts';
 import { views, widths, type View } from './views.ts';
 
 const here = dirname(new URL(import.meta.url).pathname.replace(/^\/(\w:)/, '$1'));
@@ -61,6 +61,7 @@ const KIT = new Set([
 ]);
 
 type Tally = {
+  regions: Record<string, Record<string, Rect>>;
   texts: Record<string, string[]>;
   components: Record<string, Record<string, Record<string, string[]>>>;
 };
@@ -81,6 +82,8 @@ function child<T>(record: Record<string, T>, key: string, make: () => T): T {
 }
 
 function tally(into: Tally, view: string, measured: Measured) {
+  into.regions[view] = measured.regions;
+
   for (const text of measured.texts) {
     push(into.texts, text, view);
   }
@@ -142,6 +145,7 @@ function documents(found: Tally): Record<string, unknown> {
     .map(([key, list]) => [key, list[0]]);
 
   return {
+    'regions.json': sorted(found.regions),
     'text-roles.json': sorted(counts(found.texts)),
     'components.json': sorted(Object.fromEntries(components)),
     'one-offs.json': sorted(Object.fromEntries(oneOffs)),
@@ -337,7 +341,7 @@ async function main() {
     browser,
     comparer: await browser.newPage(),
     check,
-    found: { texts: {}, components: {} },
+    found: { regions: {}, texts: {}, components: {} },
   };
   const problems: string[] = [];
 

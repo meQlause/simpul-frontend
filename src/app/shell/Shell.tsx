@@ -4,10 +4,12 @@ import { TopBar } from './TopBar';
 import { shellCopy } from './shell.copy';
 import { Sidebar } from './Sidebar';
 import { WorkspaceDrawer } from './WorkspaceDrawer';
+import { GuideDrawer } from './GuideDrawer';
 
 export function Shell() {
   const [expanded, setExpanded] = useState(false);
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
 
   return (
     <>
@@ -29,6 +31,9 @@ export function Shell() {
           onMenu={() => {
             setExpanded((open) => !open);
           }}
+          onGuide={() => {
+            setGuideOpen(true);
+          }}
         />
         <main id="page-content" tabIndex={-1}>
           <OfflineControls>
@@ -36,6 +41,13 @@ export function Shell() {
           </OfflineControls>
         </main>
       </div>
+      {guideOpen && (
+        <GuideDrawer
+          onClose={() => {
+            setGuideOpen(false);
+          }}
+        />
+      )}
       {workspaceOpen && (
         <WorkspaceDrawer
           onClose={() => {
