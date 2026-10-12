@@ -1,4 +1,5 @@
 import { execFileSync, spawn, type ChildProcess } from 'node:child_process';
+import { cpSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
 import { expect, type Page } from '@playwright/test';
@@ -24,6 +25,10 @@ export async function startBackend() {
     ],
     { cwd, stdio: 'pipe' },
   );
+  // The compiled fixture reads its migrations from beside itself; tsc does not copy .sql files.
+  cpSync(resolve(cwd, 'drizzle'), resolve(cwd, 'node_modules/.cache/browser-fixture/drizzle'), {
+    recursive: true,
+  });
   const name = `simpul-browser-${randomUUID()}`;
 
   execFileSync(

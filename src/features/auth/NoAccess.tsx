@@ -1,17 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
-import { z as schema } from 'zod';
-import { getResponse } from '../../shared/api/client';
 import { Icon } from '../../shared/ui/Icon';
 import { avatarTone } from '../work';
 import { AuthShell } from './AuthShell';
+import { useSignedInPerson } from './auth.api';
 import { authCopy } from './auth.copy';
 import { useSignOut } from './useSignOut';
-
-const signedInSchema = schema.object({
-  data: schema.object({
-    person: schema.object({ name: schema.string(), roleName: schema.string() }),
-  }),
-});
 
 function initialsOf(name: string) {
   return name
@@ -21,10 +13,7 @@ function initialsOf(name: string) {
 }
 
 export function NoAccess() {
-  const identity = useQuery({
-    queryKey: ['no-access-me'],
-    queryFn: () => getResponse('/me', signedInSchema),
-  });
+  const identity = useSignedInPerson();
   const signOut = useSignOut();
   const person = identity.data?.data.person;
 

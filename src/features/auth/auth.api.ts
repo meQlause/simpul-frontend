@@ -1,6 +1,7 @@
+import { useQuery } from '@tanstack/react-query';
 import { getResponse } from '../../shared/api/client';
 import { ApiError } from '../../shared/api/error';
-import { sessionSchema } from './auth.schema';
+import { sessionSchema, signedInSchema } from './auth.schema';
 import { authCopy } from './auth.copy';
 
 export async function signIn(values: FormData) {
@@ -40,4 +41,12 @@ export async function setPassword(token: string, newPassword: string) {
 
 export async function signOut() {
   await fetch(authUrl('sign-out'), { method: 'POST', credentials: 'include' });
+}
+
+// Who is signed in, for the page that says they have no access.
+export function useSignedInPerson() {
+  return useQuery({
+    queryKey: ['no-access-me'],
+    queryFn: () => getResponse('/me', signedInSchema),
+  });
 }
