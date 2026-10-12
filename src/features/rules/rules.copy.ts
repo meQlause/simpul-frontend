@@ -40,6 +40,7 @@ export const rulesCopy = {
   save: 'Save rule',
   sectionWhen: 'When should this rule apply?',
   sectionWhenHelp: 'Describe the update in everyday language.',
+  namePlaceholder: 'Give this rule a clear name',
   name: 'Rule name',
   category: 'Category',
   event: 'Event',

@@ -1,4 +1,5 @@
 import { useSearchParams } from 'react-router';
+import { DirectoryFooter } from '../../../shared/ui/Directory';
 import { useOnline } from '../../../shared/useOnline';
 import { useToggleRule } from '../rules.api';
 import { rulesCopy as copy } from '../rules.copy';
@@ -63,6 +64,7 @@ export function RuleList({
           onSearch={(value) => setParam('q', value)}
         />
         <RuleTable rules={visible} disabled={!online || toggle.isPending} onToggle={flip} />
+        <DirectoryFooter status={`Showing ${visible.length} of ${rules.length} rules`} />
       </section>
       <p className="directory-note">
         <svg className="icon" aria-hidden="true">

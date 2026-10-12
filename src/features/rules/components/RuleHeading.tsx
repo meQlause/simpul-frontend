@@ -1,38 +1,26 @@
 import { Link } from 'react-router';
+import { DirectoryContext, PageHeading } from '../../../shared/ui/Directory';
+import { Icon } from '../../../shared/ui/Icon';
 import { rulesCopy as copy } from '../rules.copy';
 
 export function RuleHeading({ active }: { active: number }) {
   return (
     <>
-      <header className="page-heading" data-component="PageHeading" data-variant="default">
-        <div>
-          <div className="eyebrow" data-role="eyebrow">
-            {copy.eyebrow}
-          </div>
-          <h1 className="page-title" data-role="title">
-            {copy.title}
-          </h1>
-          <p className="page-description" data-role="description">
-            {copy.description}
-          </p>
-        </div>
+      <PageHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description}>
         <Link className="button button-primary" to="/rules/new">
-          <svg className="icon" aria-hidden="true">
-            <use href="#i-plus" />
-          </svg>
+          <Icon name="plus" />
           {copy.createRule}
         </Link>
-      </header>
-      <div className="directory-context">
-        <svg className="icon" aria-hidden="true">
-          <use href="#i-route" />
-        </svg>
-        <span>
-          <strong>{active} active rules</strong> {copy.context}
-        </span>
-        <span className="context-divider" />
-        <span>{copy.contextSecond}</span>
-      </div>
+      </PageHeading>
+      <DirectoryContext
+        icon="route"
+        headline={
+          <>
+            <strong>{active} active rules</strong> {copy.context}
+          </>
+        }
+        note={copy.contextSecond}
+      />
     </>
   );
 }

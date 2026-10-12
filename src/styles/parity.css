@@ -1558,3 +1558,6 @@ dialog.drawer.trace-drawer #dialog-content {
     transition: none;
   }
 }
+.drawer-section-content .field small:empty {
+  display: none;
+}

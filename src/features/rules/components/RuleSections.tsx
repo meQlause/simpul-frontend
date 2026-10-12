@@ -24,9 +24,10 @@ export function RuleWhen({
       <SectionHeading number="01" title={copy.sectionWhen} description={copy.sectionWhenHelp} />
       <div className="drawer-section-content">
         <label className="field">
-          <span>{copy.name}</span>
+          {copy.name}
           <input
             name="name"
+            placeholder={copy.namePlaceholder}
             required
             maxLength={100}
             defaultValue={defaults.name}
@@ -38,7 +39,7 @@ export function RuleWhen({
           </small>
         </label>
         <label className="field">
-          <span>{copy.category}</span>
+          {copy.category}
           <select
             name="categoryId"
             value={categoryId}
@@ -57,7 +58,7 @@ export function RuleWhen({
           </small>
         </label>
         <label className="field">
-          <span>{copy.event}</span>
+          {copy.event}
           <select
             name="eventType"
             value={eventType}
@@ -76,7 +77,7 @@ export function RuleWhen({
           </small>
         </label>
         <label className="field">
-          <span>{copy.condition}</span>
+          {copy.condition}
           <textarea
             name="conditionText"
             rows={3}
@@ -116,7 +117,7 @@ export function RuleWho({
       <SectionHeading number="02" title={copy.sectionWho} description={copy.sectionWhoHelp} />
       <div className="drawer-section-content">
         <label className="field">
-          <span>{copy.recipient}</span>
+          {copy.recipient}
           <select
             name="recipientRoleId"
             value={recipientRoleId}
@@ -146,7 +147,7 @@ export function RulePast({ mode, errors }: { mode: string; errors: RuleErrors })
       <SectionHeading number="03" title={copy.sectionPast} description={copy.sectionPastHelp} />
       <div className="drawer-section-content">
         <label className="field">
-          <span>{copy.history}</span>
+          {copy.history}
           <select
             name="historyMode"
             defaultValue={mode}

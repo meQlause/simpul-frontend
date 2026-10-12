@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { DrawerIdentity } from '../../../shared/ui/DrawerParts';
+import { Icon } from '../../../shared/ui/Icon';
 import { OfflineControls } from '../../../shared/ui/OfflineControls';
 import { useOnline } from '../../../shared/useOnline';
 import { useEstimate } from '../rules.api';
@@ -9,6 +11,34 @@ import { useRuleForm } from '../useRuleForm';
 import { ImpactPreview } from './ImpactPreview';
 import { RulePast, RuleWhen, RuleWho } from './RuleSections';
 import { RuleShell } from './RuleShell';
+
+function ruleState(rule?: Rule) {
+  if (!rule) {
+    return 'draft';
+  }
+
+  return rule.active ? 'active' : 'paused';
+}
+
+const IDENTITY_STATES = {
+  active: ['Active', 'green'],
+  paused: ['Paused', 'gray'],
+  draft: ['Draft', 'gray'],
+} as const;
+
+function RuleIdentity({ rule }: { rule?: Rule }) {
+  const state = ruleState(rule);
+  const [label, color] = IDENTITY_STATES[state];
+
+  return (
+    <DrawerIdentity
+      icon="route"
+      title={rule?.name ?? 'A clear path for the next update'}
+      description="Conditions → matching rule → recipient"
+      status={<span className={`badge ${color}`}>{label}</span>}
+    />
+  );
+}
 
 export function RuleForm({
   rule,
@@ -60,11 +90,13 @@ export function RuleForm({
             form="rule-form"
             disabled={form.pending || !online}
           >
+            <Icon name="check" />
             {copy.save}
           </button>
         </>
       }
     >
+      <RuleIdentity rule={rule} />
       <form id="rule-form" onSubmit={form.submit} noValidate>
         <OfflineControls>
           <RuleWhen

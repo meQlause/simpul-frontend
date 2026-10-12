@@ -28,7 +28,7 @@ for (const entry of appViews.filter((candidate) => candidate.view.startsWith(onl
         view: entry.view,
         width,
         actual: image,
-        ignore: masks(entry.view, width),
+        ignore: [...masks(entry.view, width), ...(entry.ignore?.(width) ?? [])],
       });
 
       expect(ratio).toBeLessThanOrEqual(TOLERANCE);

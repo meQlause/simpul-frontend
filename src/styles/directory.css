@@ -1796,3 +1796,10 @@ dialog.drawer.is-covered::backdrop {
     min-height: 2lh;
   }
 }
+
+/* COPY-022 drops the word "sample" from "N / M sample operations". The column was drawn around
+   that width; an invisible stand-in keeps the table's columns where the design put them. */
+.directory-table td[data-label='Corrections'] small::after {
+  content: ' sample';
+  visibility: hidden;
+}

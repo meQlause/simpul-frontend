@@ -1,3 +1,4 @@
+import { DirectoryToolbar } from '../../../shared/ui/Directory';
 import { rulesCopy as copy } from '../rules.copy';
 
 export function RuleToolbar({
@@ -15,38 +16,19 @@ export function RuleToolbar({
   onFilter: (value: string) => void;
   onSearch: (value: string) => void;
 }) {
-  const tabs = [
-    ['all', copy.tabs.all],
-    ['active', copy.tabs.active],
-    ['paused', copy.tabs.paused],
-  ] as const;
-
   return (
-    <div className="directory-toolbar">
-      <div className="directory-tabs">
-        {tabs.map(([value, label]) => (
-          <button
-            key={value}
-            className={`directory-tab ${filter === value ? 'active' : ''}`}
-            aria-pressed={filter === value}
-            disabled={!online}
-            onClick={() => onFilter(value)}
-          >
-            {label}
-            <span>{counts[value]}</span>
-          </button>
-        ))}
-      </div>
-      <label className="directory-search">
-        <input
-          type="search"
-          disabled={!online}
-          aria-label={copy.search}
-          placeholder={copy.search}
-          value={search}
-          onChange={(event) => onSearch(event.target.value)}
-        />
-      </label>
-    </div>
+    <DirectoryToolbar
+      tabs={[
+        { key: 'all', label: copy.tabs.all, count: counts.all },
+        { key: 'active', label: copy.tabs.active, count: counts.active },
+        { key: 'paused', label: copy.tabs.paused, count: counts.paused },
+      ]}
+      active={filter}
+      onTab={onFilter}
+      search={search}
+      onSearch={onSearch}
+      placeholder={copy.search}
+      disabled={!online}
+    />
   );
 }

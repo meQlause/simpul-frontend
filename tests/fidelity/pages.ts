@@ -1,6 +1,7 @@
 // How the app reaches each matrix view that is not a Home state: route, optional response shaping
 // and a driver for the interaction the mockup view is captured after.
 import type { Locator, Page } from '@playwright/test';
+import type { Region } from './compare.ts';
 
 export type AppView = {
   view: string;
@@ -8,6 +9,8 @@ export type AppView = {
   // Intercepts responses *after* the backend hook, before the page loads.
   prepare?: (page: Page, backendUrl: string) => Promise<void>;
   steps?: (page: Page) => Promise<void>;
+  // Regions skipped on top of the §11 masks, by viewport width.
+  ignore?: (width: number) => Region[];
 };
 
 type Json = Record<string, unknown>;
@@ -144,6 +147,35 @@ export const appViews: AppView[] = [
       ),
   },
   { view: 'rules.ready', path: '/rules' },
+  {
+    view: 'rules.edit',
+    path: '/rules',
+    steps: (page) =>
+      openByKeyboard(
+        page,
+        page.getByRole('link', { name: 'New orders reach the warehouse', exact: true }),
+      ),
+  },
+  {
+    view: 'rules.create',
+    path: '/rules',
+    steps: (page) => openByKeyboard(page, page.getByRole('link', { name: 'Create rule' })),
+  },
+  {
+    view: 'rules.create-field-error',
+    path: '/rules',
+    steps: async (page) => {
+      await openByKeyboard(page, page.getByRole('link', { name: 'Create rule' }));
+      const drawer = page.getByRole('dialog');
+
+      await drawer.getByLabel('Rule name').fill('');
+      await drawer.getByRole('button', { name: 'Save rule' }).click();
+      await page.mouse.move(0, 0);
+    },
+    // The mockup shows the browser's own validation bubble; the product shows the specified
+    // inline message, which moves everything below the field. Only the part above is compared.
+    ignore: (width) => [{ x: 0, y: 335, width, height: 490 }],
+  },
   { view: 'people.ready', path: '/people' },
   { view: 'channels.ready', path: '/channels' },
   { view: 'audit.ready', path: '/audit' },
