@@ -148,7 +148,7 @@ test.describe('changing who is on leave', () => {
       .selectOption({ label: 'Siti Aminah' });
     await drawer.getByRole('button', { name: 'Save role', exact: true }).click();
 
-    await expect(page.getByRole('status')).toHaveText('Role and backup saved.');
+    await expect(page.locator('.toast')).toHaveText('Role and backup saved.');
 
     await page.goto('/settings/recipient-preview');
 

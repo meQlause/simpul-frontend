@@ -90,6 +90,26 @@ async function mockupQueue(page: Page, backendUrl: string) {
   });
 }
 
+const PEOPLE_ORDER = ['Siti Aminah', 'Budi Santoso', 'Rina Anggraini', 'Andi Pratama'];
+
+// The mockup lists its four people in the order they were written; the API lists them by name.
+async function mockupPeople(page: Page, backendUrl: string) {
+  const response = await page.request.get(`${backendUrl}/api/v1/people?limit=100`);
+  const real = (await response.json()) as { data: Json[] } & Json;
+  const named = PEOPLE_ORDER.flatMap((name) => real.data.filter((person) => person.name === name));
+  const data = [...named, ...real.data.filter((person) => !named.includes(person))];
+
+  await page.route(/\/api\/v1\/people(\?|$)/, async (route) => {
+    if (route.request().method() !== 'GET') {
+      await route.fallback();
+
+      return;
+    }
+
+    await route.fulfill({ json: { ...real, data } });
+  });
+}
+
 // The mockup opens a drawer from a script, which leaves focus-visible on: use the keyboard.
 async function openByKeyboard(page: Page, trigger: Locator) {
   // Without scrolling: focusing a far-right action would shift the table behind the drawer.
@@ -176,7 +196,14 @@ export const appViews: AppView[] = [
     // inline message, which moves everything below the field. Only the part above is compared.
     ignore: (width) => [{ x: 0, y: 335, width, height: 490 }],
   },
-  { view: 'people.ready', path: '/people' },
+  { view: 'people.ready', path: '/people', prepare: mockupPeople },
+  {
+    view: 'people.role',
+    path: '/people',
+    prepare: mockupPeople,
+    steps: (page) =>
+      openByKeyboard(page, page.locator('tbody tr').first().getByRole('button').first()),
+  },
   { view: 'channels.ready', path: '/channels' },
   { view: 'audit.ready', path: '/audit' },
   { view: 'settings.ready', path: '/settings' },

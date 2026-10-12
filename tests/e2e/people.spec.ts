@@ -28,9 +28,11 @@ test('People acceptance 1–2: four role holders and Budi’s responsibility are
     has: page.getByRole('button', { name: 'Budi Santoso', exact: true }),
   });
 
-  for (const name of ['Warehouse Lead', 'Reports to Siti Aminah', 'Siti Aminah', 'Available']) {
+  for (const name of ['Warehouse Lead', 'Reports to Siti Aminah', 'Available']) {
     await expect(budi.getByText(name, { exact: true })).toBeVisible();
   }
+
+  await expect(budi.locator('.backup-person')).toHaveText('SASiti Aminah');
 
   await expect(page.getByRole('button', { name: 'Mr. Hendra', exact: true })).toHaveCount(0);
 });

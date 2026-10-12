@@ -7,6 +7,8 @@ import type { Person } from '../people.schema';
 import { personInputSchema } from '../people.schema';
 import { useSavePerson } from '../people.api';
 import { peopleCopy as copy } from '../people.copy';
+import { Icon } from '../../../shared/ui/Icon';
+import { initials, personColour } from './PersonRow';
 import { PersonFields } from './PersonFields';
 import { PersonDelivery } from './PersonDelivery';
 import { useOnline } from '../../../shared/useOnline';
@@ -111,6 +113,27 @@ function usePersonForm(person: Person, eligible: Person[], onSaved: () => void) 
   return { submit, errors, failed, pending: mutation.isPending };
 }
 
+function PersonHero({ person }: { person: Person }) {
+  const handle = person.identities.find((identity) => identity.provider === 'telegram')?.handle;
+  const available = person.availability === 'available';
+
+  return (
+    <div className="drawer-person-hero">
+      <span className={`avatar ${personColour(person)}`}>{initials(person.name)}</span>
+      <div>
+        <strong>{person.name}</strong>
+        <p>
+          {copy.telegram}
+          {handle && ` · ${handle}`}
+        </p>
+      </div>
+      <span className={`badge ${available ? 'green' : 'gray'}`}>
+        {available ? copy.available : copy.leave}
+      </span>
+    </div>
+  );
+}
+
 export function PersonDrawer({
   person,
   people,
@@ -153,15 +176,13 @@ export function PersonDrawer({
             form="person-form"
             disabled={pending || !online}
           >
+            <Icon name="check" />
             {copy.save}
           </button>
         </>
       }
     >
-      <div className="drawer-person-hero">
-        <strong>{person.name}</strong>
-        <p>{person.role?.name}</p>
-      </div>
+      <PersonHero person={person} />
       <form id="person-form" onSubmit={submit} noValidate>
         <OfflineControls>
           <PersonFields
@@ -171,13 +192,19 @@ export function PersonDrawer({
             onBackup={setBackupId}
           />
           <div className="drawer-handoff">
-            <span className="drawer-handoff-person">{person.name.split(' ')[0]}</span>
-            <span aria-hidden="true">→</span>
+            <span className="drawer-handoff-person">
+              <Icon name="users" />
+              {person.name.split(' ')[0]}
+            </span>
+            <Icon name="arrow-right" />
             <span className="drawer-handoff-person">
               {eligible.find((candidate) => candidate.id === backupId)?.name}
             </span>
           </div>
-          <div className="drawer-inline-note">{copy.backupNote}</div>
+          <div className="drawer-inline-note">
+            <Icon name="shield" />
+            {copy.backupNote}
+          </div>
         </OfflineControls>
       </form>
       <PersonDelivery />

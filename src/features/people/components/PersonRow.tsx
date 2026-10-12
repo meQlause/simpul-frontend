@@ -1,6 +1,20 @@
 import { useNavigate } from 'react-router';
+import { Icon } from '../../../shared/ui/Icon';
 import type { Person } from '../people.schema';
 import { peopleCopy as copy } from '../people.copy';
+
+// "Mr. Hendra" is "H": the mockup drops the title before taking the first letters.
+export const initials = (name: string) =>
+  name
+    .replace('Mr. ', '')
+    .split(' ')
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join('');
+
+const COLOURS: Record<string, string> = { Warehouse: 'sand', Sales: 'lavender' };
+
+export const personColour = (person: Person) => COLOURS[person.role?.team ?? ''] ?? 'mint';
 
 export function PersonRow({ person }: { person: Person }) {
   const navigate = useNavigate();
@@ -26,10 +40,16 @@ export function PersonRow({ person }: { person: Person }) {
         )}
       </td>
       <td data-label={copy.backup}>
-        <div className="backup-person">{person.backup?.name}</div>
+        <div className="backup-person">
+          <span className="backup-avatar">{initials(person.backup?.name ?? '')}</span>
+          {person.backup?.name}
+        </div>
       </td>
       <td data-label={copy.columns[3]}>
-        <span className="directory-recipient">{copy.telegram}</span>
+        <span className="directory-recipient">
+          <Icon name="telegram" />
+          {copy.telegram}
+        </span>
         <small>{copy.according}</small>
       </td>
       <td data-label={copy.availability}>
@@ -40,6 +60,7 @@ export function PersonRow({ person }: { person: Person }) {
       <td className="directory-actions">
         <button className="button button-small" onClick={open}>
           {copy.edit}
+          <Icon name="chevron-right" />
         </button>
       </td>
     </tr>
@@ -48,17 +69,12 @@ export function PersonRow({ person }: { person: Person }) {
 
 function PersonIdentity({ person, onOpen }: { person: Person; onOpen: () => void }) {
   const handle = person.identities.find((identity) => identity.provider === 'telegram')?.handle;
-  const colours: Record<string, string> = { Warehouse: 'sand', Sales: 'lavender' };
-  const colour = colours[person.role?.team ?? ''] ?? 'mint';
+  const colour = personColour(person);
 
   return (
     <div className="directory-identity">
       <span className={`avatar ${colour}`} data-component="Avatar" data-variant={colour}>
-        {person.name
-          .split(' ')
-          .map((part) => part[0])
-          .slice(0, 2)
-          .join('')}
+        {initials(person.name)}
       </span>
       <div>
         <button className="directory-title" onClick={onOpen} title={person.name}>
