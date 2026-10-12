@@ -13,6 +13,15 @@ export const channelsCopy = {
     needs_action: 'Needs action',
   },
   languages: { auto: 'Auto', en: 'English', id: 'Indonesian' },
+  checkHelp: [
+    'Verified bot matches the workspace connection',
+    'Confirmed Telegram group or supergroup',
+    'No administrator rights required for ordinary message access',
+    'Disable privacy mode in BotFather; re-add the bot if needed',
+    'Dedicated Simpul webhook; never overwrite another application',
+    'Send a new non-command check message in the target group',
+    'Installed only during the activation you approve',
+  ],
   checkTitles: [
     'Bot identity valid',
     'Group available',

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Icon } from '../../../shared/ui/Icon';
 import type { Verification } from '../channels.schema';
 import { channelsCopy as copy } from '../channels.copy';
 
@@ -21,6 +22,8 @@ export function useFreshVerification(verification: Verification | null) {
   return Boolean(verification?.activationReady && Date.parse(verification.expiresAt) > now);
 }
 
+const ICONS = { pass: 'check-circle', pending: 'clock', fail: 'alert' } as const;
+
 export function Checklist({ verification }: { verification: Verification | null }) {
   return (
     <div data-testid="channel-checklist" data-variant="channel">
@@ -37,9 +40,10 @@ export function Checklist({ verification }: { verification: Verification | null 
             data-component="CheckRow"
             data-variant={status}
           >
+            <Icon name={ICONS[status]} />
             <div>
               <strong>{title}</strong>
-              <small>{check?.message}</small>
+              <small>{check?.message || copy.checkHelp[index]}</small>
             </div>
             <span className={'badge ' + colors[status]}>{labels[status]}</span>
           </div>

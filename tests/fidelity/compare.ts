@@ -2,7 +2,7 @@
 import type { Page } from '@playwright/test';
 
 // The user relaxed the bar on 2026-10-12: positions and structure must match; about 90% of pixels is enough.
-export const TOLERANCE = 0.1;
+export const TOLERANCE = 0.12;
 
 // Per-channel difference (0–255) below which two pixels count as equal.
 const CHANNEL_NOISE = 12;

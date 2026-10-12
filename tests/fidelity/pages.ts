@@ -205,6 +205,35 @@ export const appViews: AppView[] = [
       openByKeyboard(page, page.locator('tbody tr').first().getByRole('button').first()),
   },
   { view: 'channels.ready', path: '/channels' },
+  {
+    view: 'channels.configure',
+    path: '/channels',
+    steps: (page) =>
+      openByKeyboard(page, page.locator('tbody tr').first().locator('.directory-title')),
+  },
+  {
+    view: 'channels.add',
+    path: '/channels',
+    steps: (page) => openByKeyboard(page, page.getByRole('button', { name: 'Add Telegram group' })),
+  },
+  {
+    view: 'channels.connection',
+    path: '/channels',
+    steps: (page) =>
+      openByKeyboard(page, page.getByRole('button', { name: 'Manage Telegram connection' })),
+  },
+  {
+    view: 'channels.pause',
+    path: '/channels',
+    steps: (page) =>
+      openByKeyboard(
+        page,
+        page
+          .locator('tbody tr')
+          .first()
+          .getByRole('button', { name: /^Pause / }),
+      ),
+  },
   { view: 'audit.ready', path: '/audit' },
   { view: 'settings.ready', path: '/settings' },
 ];

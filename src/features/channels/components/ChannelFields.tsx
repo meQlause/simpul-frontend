@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Icon } from '../../../shared/ui/Icon';
 import type { GroupInput } from '../useChannelSetup';
 import { channelsCopy as copy } from '../channels.copy';
 
@@ -37,9 +38,7 @@ export function ChannelFields({
   }, [error, nameInvalid, chatInvalid]);
 
   return (
-    <section className="drawer-section" data-component="DrawerSection">
-      <h3 data-role="section-title">Identify the group</h3>
-      <p>Choose the audience before any monitoring starts.</p>
+    <>
       <label className="field" data-component="Field" data-variant="default" data-size="drawer">
         Display name
         <input
@@ -81,12 +80,11 @@ export function ChannelFields({
           </small>
         )}
       </label>
-      <ChannelAudience input={input} onChange={onChange} />
-    </section>
+    </>
   );
 }
 
-function ChannelAudience({
+export function ChannelAudience({
   input,
   onChange,
 }: {
@@ -129,6 +127,7 @@ function ChannelAudience({
         </label>
       </div>
       <div className="drawer-policy-preview">
+        <Icon name="shield" />
         <div>
           <strong>
             {input.class === 'external'

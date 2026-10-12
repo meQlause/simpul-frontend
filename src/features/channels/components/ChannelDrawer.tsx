@@ -1,11 +1,13 @@
 import { useCallback, useState } from 'react';
 import type { Channel, Connection, CodeSession } from '../channels.schema';
 import { Drawer } from '../../../shared/ui/Drawer';
+import { DrawerIdentity, DrawerSection } from '../../../shared/ui/DrawerParts';
+import { Icon } from '../../../shared/ui/Icon';
 import { OfflineControls } from '../../../shared/ui/OfflineControls';
 import { useOnline } from '../../../shared/useOnline';
 import { useChannelSetup } from '../useChannelSetup';
 import { channelsCopy as copy } from '../channels.copy';
-import { ChannelFields } from './ChannelFields';
+import { ChannelAudience, ChannelFields } from './ChannelFields';
 import { Checklist, useFreshVerification } from './Checklist';
 import { ConnectionCode } from './ConnectionCode';
 import { ChannelConfirmation } from './ChannelConfirmation';
@@ -60,24 +62,31 @@ export function ChannelDrawer({
       <ChannelIdentity saved={Boolean(channel)} name={setup.input.displayName} />
       <OfflineControls>
         <WorkspaceBot connection={connection} onManage={onManage} />
-        <ChannelFields
-          input={setup.input}
-          onChange={setup.setInput}
-          saved={Boolean(setup.channel)}
-          error={setup.error}
-        />
-        {!setup.channel && (
-          <details>
-            <summary>Identify with a connection code instead</summary>
-            <ConnectionCode
-              connectionId={connection.id}
-              purpose="identify_group"
-              onCandidate={candidate}
-              onError={setup.setError}
-            />
-          </details>
-        )}
-        <GroupMetadata channel={setup.channel} candidate={metadata} />
+        <DrawerSection
+          number="02"
+          title="Identify the group"
+          description="Choose the audience before any monitoring starts."
+        >
+          <ChannelFields
+            input={setup.input}
+            onChange={setup.setInput}
+            saved={Boolean(setup.channel)}
+            error={setup.error}
+          />
+          {!setup.channel && (
+            <details className="setup-alternative">
+              <summary>Identify with a connection code instead</summary>
+              <ConnectionCode
+                connectionId={connection.id}
+                purpose="identify_group"
+                onCandidate={candidate}
+                onError={setup.setError}
+              />
+            </details>
+          )}
+          <GroupMetadata channel={setup.channel} candidate={metadata} />
+          <ChannelAudience input={setup.input} onChange={setup.setInput} />
+        </DrawerSection>
         <ChannelReadiness setup={setup} connection={connection} />
       </OfflineControls>
       {activationKey && (
@@ -136,6 +145,7 @@ function ChannelFooter({
         disabled={!fresh || !setup.consent || setup.pending || !online}
         onClick={onActivate}
       >
+        <Icon name="play" />
         Activate monitoring
       </button>
     </>
@@ -144,22 +154,26 @@ function ChannelFooter({
 
 function ChannelIdentity({ saved, name }: { saved: boolean; name: string }) {
   return (
-    <div className="drawer-identity" data-component="DrawerIdentity" data-variant="default">
-      <strong>{name || 'Your next conversation source'}</strong>
-      <span className="badge green">{saved ? 'Configure group' : 'New group'}</span>
-      <p>Telegram groups &amp; supergroups only</p>
-    </div>
+    <DrawerIdentity
+      icon="telegram"
+      title={name || 'Your next conversation source'}
+      description="Telegram groups & supergroups only"
+      status={<span className="badge green">{saved ? 'Configure group' : 'New group'}</span>}
+    />
   );
 }
 
 function WorkspaceBot({ connection, onManage }: { connection: Connection; onManage: () => void }) {
   return (
-    <section className="drawer-section" data-component="DrawerSection">
-      <h3 data-role="section-title">Use your workspace bot</h3>
-      <p>Reuse one connection across your Telegram groups.</p>
+    <DrawerSection
+      number="01"
+      title="Use your workspace bot"
+      description="Reuse one connection across your Telegram groups."
+    >
       <div className="channel-bot-reference">
+        <Icon name="link" />
         <div>
-          <strong>@{connection.botUsername}</strong>
+          <strong>@{connection.botUsername.replace(/^@/, '')}</strong>
           <small>Token stored separately · Never required for each group</small>
         </div>
         <button
@@ -172,7 +186,11 @@ function WorkspaceBot({ connection, onManage }: { connection: Connection; onMana
           Manage
         </button>
       </div>
-    </section>
+      <div className="drawer-inline-note">
+        <Icon name="help" />
+        Add this bot to your Telegram group and disable its privacy mode in BotFather.
+      </div>
+    </DrawerSection>
   );
 }
 
@@ -185,9 +203,11 @@ function ChannelReadiness({ setup, connection }: { setup: Setup; connection: Con
   }
 
   return (
-    <section className="drawer-section" data-component="DrawerSection">
-      <h3 data-role="section-title">Verify before you activate</h3>
-      <p>A bot connection and group monitoring are separate states.</p>
+    <DrawerSection
+      number="03"
+      title="Verify before you activate"
+      description="A bot connection and group monitoring are separate states."
+    >
       <Checklist verification={setup.verification} />
       <div className="channel-check-actions">
         <button
@@ -200,6 +220,7 @@ function ChannelReadiness({ setup, connection }: { setup: Setup; connection: Con
             void setup.run('verify');
           }}
         >
+          <Icon name="refresh" />
           {label}
         </button>
       </div>
@@ -214,10 +235,11 @@ function ChannelReadiness({ setup, connection }: { setup: Setup; connection: Con
       {setup.verification?.activationReady && (
         <p className="setup-freshness">Last checked just now · Valid for 10 minutes</p>
       )}
-      <p className="drawer-inline-note" data-component="InlineNote">
+      <div className="drawer-inline-note" data-component="InlineNote">
+        <Icon name="clock" />
         History starts when monitoring is activated. Earlier Telegram group messages cannot be
         fetched by a new Bot API connection.
-      </p>
+      </div>
       <label className="channel-consent">
         <input
           type="checkbox"
@@ -226,7 +248,7 @@ function ChannelReadiness({ setup, connection }: { setup: Setup; connection: Con
         />
         <span>{copy.consent}</span>
       </label>
-    </section>
+    </DrawerSection>
   );
 }
 
