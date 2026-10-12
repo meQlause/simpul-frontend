@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router';
+import { Icon } from '../../shared/ui/Icon';
 import { Drawer } from '../../shared/ui/Drawer';
 import { ScreenState } from '../../shared/ui/ScreenState';
 import { useOnline } from '../../shared/useOnline';
@@ -185,6 +186,7 @@ function WizardFooter({
       </button>
       <button type="button" className="button button-primary" disabled={disabled} onClick={onNext}>
         {step === LAST_STEP ? copy.finish : copy.next}
+        {step !== LAST_STEP && <Icon name="arrow-right" />}
       </button>
     </>
   );

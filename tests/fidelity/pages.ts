@@ -194,6 +194,32 @@ function checkedGroup(patch?: (verification: Json) => void) {
   };
 }
 
+// Walks the wizard like the mockup's capture does: a different backup for everyone, then Continue.
+function onboardingAt(step: number) {
+  return async (page: Page) => {
+    const dialog = page.getByRole('dialog');
+
+    await dialog.waitFor();
+    await dialog.locator('select').evaluateAll((selects) => {
+      selects.forEach((select) => {
+        const field = select.closest('label')?.textContent ?? '';
+        const option = [...(select as HTMLSelectElement).options].find(
+          (entry) => entry.value && !field.startsWith(entry.textContent ?? '#'),
+        );
+
+        if (option) {
+          (select as HTMLSelectElement).value = option.value;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      });
+    });
+
+    for (let reached = 1; reached < step; reached += 1) {
+      await dialog.getByRole('button', { name: /^(Continue|Finish)/ }).click();
+    }
+  };
+}
+
 // The mockup opens a drawer from a script, which leaves focus-visible on: use the keyboard.
 async function openByKeyboard(page: Page, trigger: Locator) {
   // Without scrolling: focusing a far-right action would shift the table behind the drawer.
@@ -345,6 +371,11 @@ export const appViews: AppView[] = [
       openByKeyboard(page, page.locator('tbody tr').first().locator('button, a').first()),
   },
   { view: 'settings.ready', path: '/settings' },
+  ...[1, 2, 3, 4].map((step) => ({
+    view: `settings.onboarding.${step}`,
+    path: '/settings/onboarding',
+    steps: onboardingAt(step),
+  })),
   {
     view: 'settings.mail.empty',
     path: '/settings',
