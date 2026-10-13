@@ -49,4 +49,18 @@ export const channelsCopy = {
   privateChat: 'E-TG-CHAT-TYPE-UNSUPPORTED · Only Telegram groups and supergroups are supported.',
   saveFailed: 'Your changes were not saved. Try again.',
   tokenRequired: 'Enter the bot token.',
+  steps: [
+    'Add the bot to your group',
+    'Send the code in the group',
+    'Send any normal message',
+    'Confirm and activate',
+  ],
+  stepStatus: { done: 'Done', now: 'Now', next: 'Next' },
+  generate: 'Generate code',
+  copyCommand: 'Copy',
+  waitingCode: 'Waiting for the code…',
+  waitingMessage: 'Waiting for a message…',
+  found: 'Found: ',
+  received: 'Message received',
+  retry: 'Try again',
 };

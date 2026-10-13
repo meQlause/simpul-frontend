@@ -64,6 +64,7 @@ export const sessionSchema = schema.object({
     .object({ providerChatId: schema.string(), title: schema.string(), chatType: schema.string() })
     .nullable()
     .optional(),
+  receivedAt: schema.string().nullable().optional(),
 });
 
 export const credentialCheckSchema = schema.object({
