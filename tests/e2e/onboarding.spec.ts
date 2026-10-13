@@ -128,6 +128,78 @@ test.describe('reading the onboarding steps', () => {
   });
 });
 
+test.describe('listing groups in step 2', () => {
+  let backend: Awaited<ReturnType<typeof startBackend>>;
+
+  test.beforeAll(async () => {
+    test.setTimeout(120000);
+    backend = await startBackend();
+  });
+  test.afterAll(() => backend?.stop());
+  test.afterEach(async ({ page }) => {
+    await page.unrouteAll({ behavior: 'wait' });
+  });
+  test.beforeEach(async ({ page }) => {
+    await connectBackend(page, backend.baseUrl);
+  });
+
+  test('Onboarding AC27: step 2 lists each group by name, class and status, with no chat ID', async ({
+    page,
+  }) => {
+    await page.goto('/settings/onboarding');
+    const drawer = page.getByRole('dialog');
+
+    await setAllBackups(drawer);
+    await drawer.getByRole('button', { name: 'Continue', exact: true }).click();
+    await expect(
+      drawer.getByRole('heading', { name: 'Step 2 of 4 · Telegram groups' }),
+    ).toBeVisible();
+
+    const groups = (await (await page.request.get(backend.baseUrl + '/api/v1/channels')).json())
+      .data as {
+      displayName: string;
+      providerChatId: string;
+      providerChatTitle: string | null;
+      class: string;
+      connectionStatus: string;
+    }[];
+
+    for (const group of groups) {
+      const name = group.providerChatTitle ?? group.displayName;
+      const groupRow = drawer.locator('.drawer-check-row').filter({ hasText: name });
+
+      await expect(groupRow).toContainText(group.class + ' · ' + group.connectionStatus);
+      await expect(groupRow).not.toContainText(group.providerChatId);
+    }
+  });
+
+  test('Onboarding AC27: a group with a Telegram title is listed by that title', async ({
+    page,
+  }) => {
+    await page.route(/\/api\/v1\/channels$/, async (route) => {
+      const body = await (await page.request.get(backend.baseUrl + '/api/v1/channels')).json();
+      const data = body.data.map((group: { displayName: string }) =>
+        group.displayName === 'Operations' ? { ...group, providerChatTitle: 'Ops floor' } : group,
+      );
+
+      await route.fulfill({ json: { data } });
+    });
+    await page.goto('/settings/onboarding');
+    const drawer = page.getByRole('dialog');
+
+    await setAllBackups(drawer);
+    await drawer.getByRole('button', { name: 'Continue', exact: true }).click();
+    await drawer.getByRole('button', { name: 'Continue', exact: true }).click();
+
+    await expect(
+      drawer.locator('.drawer-check-row').filter({ hasText: 'Ops floor' }),
+    ).toBeVisible();
+    await expect(drawer.locator('.drawer-check-row').filter({ hasText: 'Operations' })).toHaveCount(
+      0,
+    );
+  });
+});
+
 test.describe('finishing onboarding', () => {
   let backend: Awaited<ReturnType<typeof startBackend>> | undefined;
 

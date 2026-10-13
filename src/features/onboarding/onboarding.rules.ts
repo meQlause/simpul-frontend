@@ -9,7 +9,7 @@ export type Channel = ChannelCheck & {
   id: string;
   displayName: string;
   class: string;
-  providerChatId: string;
+  providerChatTitle: string | null;
 };
 
 export type Rule = { id: string; name: string; weeklyEstimate: number; active: boolean };

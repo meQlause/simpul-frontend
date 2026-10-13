@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import { onboardingCopy as copy } from './onboarding.copy';
 import { isReady, type Channel, type PersonRow, type Rule } from './onboarding.rules';
+import { channelName } from '../channels';
 
 export function PeopleStep({
   rows,
@@ -46,9 +47,9 @@ export function GroupsStep({ channels }: { channels: Channel[] }) {
         {channels.map((channel) => (
           <div className="drawer-check-row" key={channel.id}>
             <div>
-              <strong>{channel.displayName}</strong>
+              <strong>{channelName(channel)}</strong>
               <small>
-                {channel.class} · {channel.providerChatId} · {channel.connectionStatus}
+                {channel.class} · {channel.connectionStatus}
               </small>
             </div>
             <span className={`badge ${isReady(channel) ? 'green' : 'gray'}`}>
