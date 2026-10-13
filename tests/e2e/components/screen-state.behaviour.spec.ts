@@ -106,6 +106,8 @@ for (const path of ['/', '/settings']) {
             digestTime: '08:30',
             holdSeconds: 60,
             timezone: 'Asia/Jakarta',
+            contextWindowMinutes: 30,
+            contextMaxMessages: 10,
           },
         },
       });

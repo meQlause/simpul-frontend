@@ -85,6 +85,8 @@ const SETTINGS = {
   digestTime: '08:30',
   holdSeconds: 60,
   timezone: 'Asia/Jakarta',
+  contextWindowMinutes: 30,
+  contextMaxMessages: 10,
 };
 
 // A connected own-database workspace with the Settings page's own data.

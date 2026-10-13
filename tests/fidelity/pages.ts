@@ -2,6 +2,7 @@
 import { connectedWorkspace, pendingWorkspace, STRING } from '../e2e/helpers/database';
 import {
   AUTH_TOLERANCE,
+  SETTINGS_TOLERANCE,
   SHELL_TOLERANCE,
   PREVIEW_TOLERANCE,
   checkedGroup,
@@ -328,7 +329,7 @@ export const appViews: AppView[] = [
     steps: (page) =>
       openByKeyboard(page, page.locator('tbody tr').first().locator('button, a').first()),
   },
-  { view: 'settings.ready', path: '/settings' },
+  { view: 'settings.ready', path: '/settings', tolerance: SETTINGS_TOLERANCE },
   {
     view: 'settings.vocabulary.categories',
     path: '/settings/vocabulary?tab=categories',

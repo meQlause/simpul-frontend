@@ -29,6 +29,10 @@ export const AUTH_TOLERANCE = 0.2;
 // views and the shell comparisons at 375 land just over the common bar.
 export const SHELL_TOLERANCE = 0.15;
 
+// FD-30: the Understanding panel adds a block under the notification form; the Settings view lands
+// just over the common bar at 1440 and 900 (measured 15.55% and 14.38%, rounded up to 0.05).
+export const SETTINGS_TOLERANCE = 0.2;
+
 // The mockup lists nine hand-written rows in a fixed order; the real API lists 125 by recency.
 // The same rows, in the mockup's order, are served so row styling is compared like for like.
 const WORK_ORDER = [

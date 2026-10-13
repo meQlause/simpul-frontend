@@ -95,3 +95,61 @@ test('Settings acceptance 5: offline disables every field and Save settings', as
 
   await expect(page.getByRole('button', { name: 'Save settings', exact: true })).toBeDisabled();
 });
+
+const contextHint =
+  "When a message is unclear, Simpul reads the group's recent messages to understand it. 0 turns this off: Simpul then reads only the message itself, and asks the group when that is not enough.";
+
+test('SRS §6.7 (FR-UI-21): the Understanding panel shows the context window and cap, their hint, and no message-text switch', async ({
+  page,
+}) => {
+  await expect(page.locator('[data-component="UnderstandingPanel"]')).toBeVisible();
+  await expect(
+    page
+      .locator('[data-component="UnderstandingPanel"]')
+      .getByText('Understanding', { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByLabel('Conversation context window (minutes)', { exact: true }),
+  ).toHaveValue('30');
+  await expect(page.getByLabel('Context messages', { exact: true })).toHaveValue('10');
+  await expect(page.getByText(contextHint, { exact: true })).toBeVisible();
+  await expect(page.getByText('Show message text', { exact: false })).toHaveCount(0);
+});
+
+test('SRS §6.7 (FR-UI-21): 181 is refused before any write; 0 saves and survives a reload', async ({
+  page,
+}) => {
+  let writes = 0;
+
+  page.on('request', (request) => {
+    if (request.method() === 'PUT') {
+      writes += 1;
+    }
+  });
+  const windowField = page.getByLabel('Conversation context window (minutes)', { exact: true });
+
+  await windowField.fill('181');
+  await page.getByRole('button', { name: 'Save settings', exact: true }).click();
+  expect(writes).toBe(0);
+
+  await windowField.fill('0');
+  await page.getByRole('button', { name: 'Save settings', exact: true }).click();
+  await expect(page.getByRole('status')).toHaveText('Workspace settings saved.');
+  await page.reload();
+  await expect(
+    page.getByLabel('Conversation context window (minutes)', { exact: true }),
+  ).toHaveValue('0');
+});
+
+test('SRS §6.7 (FR-UI-21): offline disables both Understanding fields', async ({
+  page,
+  context,
+}) => {
+  await expect(page.getByLabel('Context messages', { exact: true })).toBeVisible();
+  await context.setOffline(true);
+
+  await expect(
+    page.getByLabel('Conversation context window (minutes)', { exact: true }),
+  ).toBeDisabled();
+  await expect(page.getByLabel('Context messages', { exact: true })).toBeDisabled();
+});

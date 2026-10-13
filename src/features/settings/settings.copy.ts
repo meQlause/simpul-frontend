@@ -11,6 +11,11 @@ export const settingsCopy = {
   budget: 'Notifications per person / hour',
   digest: 'Daily digest',
   budgetHint: 'Additional updates are combined into a digest.',
+  understanding: 'Understanding',
+  contextWindow: 'Conversation context window (minutes)',
+  contextMessages: 'Context messages',
+  contextHint:
+    "When a message is unclear, Simpul reads the group's recent messages to understand it. 0 turns this off: Simpul then reads only the message itself, and asks the group when that is not enough.",
   noticeStart: 'Non-critical updates during quiet hours wait until morning. A',
   noticeEnd: '-second hold allows time for message corrections.',
   save: 'Save settings',

@@ -33,6 +33,7 @@ export const exceptions = [
   { id: 'FD-19', view: 'database.check-failed', kind: 'tolerance' },
   { id: 'FD-19', view: 'database.connecting', kind: 'tolerance' },
   { id: 'FD-20', view: 'settings.onboarding.4', kind: 'tolerance' },
+  { id: 'FD-30', view: 'settings.ready', kind: 'tolerance' },
   { id: 'FD-24', view: 'database.unavailable', kind: 'tolerance' },
   { id: 'FD-24', view: 'settings.mail.saved', kind: 'tolerance' },
 ] as const;
