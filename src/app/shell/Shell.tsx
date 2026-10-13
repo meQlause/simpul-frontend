@@ -18,9 +18,6 @@ export function Shell() {
       </a>
       <Sidebar
         expanded={expanded}
-        onWorkspace={() => {
-          setWorkspaceOpen(true);
-        }}
         onNavigate={() => {
           setExpanded(false);
         }}
@@ -33,6 +30,9 @@ export function Shell() {
           }}
           onGuide={() => {
             setGuideOpen(true);
+          }}
+          onWorkspace={() => {
+            setWorkspaceOpen(true);
           }}
         />
         <main id="page-content" tabIndex={-1}>

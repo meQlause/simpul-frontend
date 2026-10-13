@@ -786,7 +786,9 @@ dialog.confirmation-popup {
 dialog.confirmation-popup[open] {
   animation: confirmation-enter 0.16s ease-out;
 }
-body:has(#detail-dialog[open]) {
+/* While a drawer or popup is open the page behind it does not scroll: one scrollbar, the
+   drawer's. The mockup keyed this to its own dialog id. */
+html:has(dialog[open]) {
   overflow: hidden;
 }
 @keyframes drawer-enter {
@@ -908,6 +910,51 @@ dialog::backdrop {
   text-decoration: underline;
   color: #d4e8b6;
   white-space: nowrap;
+}
+/* FD-23: an error is a toast that stays until it is dismissed (error-handling §5). */
+.toast-error {
+  align-items: flex-start;
+  max-width: min(520px, calc(100vw - 30px));
+  background: #4b2a24;
+  color: #f8ece8;
+  line-height: 1.6;
+}
+.toast-error > .icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  color: #f2a493;
+}
+.toast-error .toast-dismiss {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  margin: 1px -6px 0 4px;
+  padding: 3px;
+  border-radius: 6px;
+  color: inherit;
+  opacity: 0.75;
+}
+.toast-error .toast-dismiss:hover,
+.toast-error .toast-dismiss:focus-visible {
+  opacity: 1;
+}
+.toast-error .toast-dismiss .icon {
+  width: 14px;
+  height: 14px;
+}
+/* Inside a drawer the toast centres on the drawer, above its sticky footer; in a popup or on a
+   page without the sidebar it centres on the window. */
+dialog.drawer .toast.visible {
+  left: auto;
+  right: calc(min(610px, 100vw) / 2);
+  bottom: 96px;
+  transform: translate(50%, 0);
+}
+dialog.confirmation-popup .toast.visible,
+.auth-view .toast.visible {
+  left: 50%;
 }
 @media (max-width: 1050px) {
   .heading-actions .button {
@@ -1038,13 +1085,18 @@ dialog.drawer.enhanced-drawer {
 dialog.drawer.enhanced-drawer #dialog-content {
   padding-top: 5px;
 }
+/* FD-20: a float narrows the flex screen beside it, so the mockup's body and footer stop 32px
+   short of the right edge. A margin box of no width keeps the button where it is without that. */
+dialog.drawer.enhanced-drawer .dialog-close {
+  margin-left: -100px;
+}
 .drawer-screen {
   display: flex;
   flex-direction: column;
   min-height: calc(100dvh - 30px);
 }
 .drawer-screen-header {
-  padding-right: 24px;
+  padding-right: 56px;
   margin-bottom: 23px;
 }
 .drawer-screen-header .eyebrow {
@@ -1208,7 +1260,10 @@ dialog.drawer.enhanced-drawer #dialog-content {
   padding: 12px 13px;
   border-color: #dfe8d4;
   border-radius: 8px;
-  background: #fff;
+  background-color: #fff;
+}
+.drawer-section-content .field select {
+  padding-right: 38px;
 }
 .drawer-section-content .field small {
   font-size: 9px;
@@ -1408,31 +1463,61 @@ dialog.drawer.enhanced-drawer #dialog-content {
   color: #a3b095;
   margin-top: 5px;
 }
+/* FD-21: the hand-off is its own card below the select, both people named in full. */
 .drawer-handoff {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
   align-items: center;
-  gap: 11px;
-  padding: 14px;
+  gap: 12px;
+  margin: 12px 0 0;
+  padding: 14px 16px;
+  list-style: none;
   background: #f0f5e9;
   border: 1px solid #e1ead5;
-  border-radius: 8px;
+  border-radius: 9px;
   font-size: 10px;
   color: #87a073;
-}
-.drawer-handoff > .icon {
-  width: 15px;
-  height: 15px;
-  flex-shrink: 0;
-  color: #a4b892;
 }
 .drawer-handoff-person {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 10px;
+  min-width: 0;
 }
-.drawer-handoff-person .icon {
-  width: 14px;
-  height: 14px;
+.drawer-handoff-person > span:last-child {
+  min-width: 0;
+}
+.drawer-handoff-person strong {
+  display: block;
+  font-size: 11px;
+  color: #708d5d;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.drawer-handoff-person small {
+  display: block;
+  font-size: 9px;
+  color: #a3b194;
+  margin-top: 4px;
+}
+.drawer-handoff-person.is-empty {
+  color: #a3b194;
+}
+.drawer-handoff-arrow {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e1ead5;
+  border-radius: 50%;
+  background: #fff;
+  color: #87a073;
+}
+.drawer-handoff-arrow .icon {
+  width: 13px;
+  height: 13px;
 }
 .drawer-check-row {
   display: flex;

@@ -2,7 +2,7 @@ import { Link, NavLink } from 'react-router';
 import { shellCopy, navigation } from './shell.copy';
 import { useShellData } from './shell.api';
 
-function initials(name?: string) {
+export function initials(name?: string) {
   return (
     name
       ?.split(' ')
@@ -39,15 +39,7 @@ function QuietCard({ onNavigate }: { onNavigate: () => void }) {
   );
 }
 
-export function Sidebar({
-  expanded,
-  onNavigate,
-  onWorkspace,
-}: {
-  expanded: boolean;
-  onNavigate: () => void;
-  onWorkspace: () => void;
-}) {
+export function Sidebar({ expanded, onNavigate }: { expanded: boolean; onNavigate: () => void }) {
   const { me, workCount, attentionCount } = useShellData();
 
   return (
@@ -72,18 +64,6 @@ export function Sidebar({
           <span className="brand-period">.</span>
         </span>
       </Link>
-      <button className="workspace" type="button" onClick={onWorkspace} disabled={!me}>
-        <span className="workspace-logo" aria-hidden="true">
-          {initials(me?.workspace.name)}
-        </span>
-        <span className="workspace-copy">
-          <strong>{me?.workspace.name}</strong>
-          <small>{me?.workspace.descriptor}</small>
-        </span>
-        <svg className="icon" aria-hidden="true">
-          <use href="#i-chevron-down" />
-        </svg>
-      </button>
       <div className="nav-label">{shellCopy.workspaceHeading}</div>
       <nav>
         {navigation.map((item) => (

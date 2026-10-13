@@ -1,7 +1,10 @@
 .auth-view #page-content {
   position: relative;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   min-height: 100vh;
+  padding-bottom: 32px;
 }
 .auth-view #page-content:before,
 .auth-view #page-content:after {
@@ -31,7 +34,8 @@
   grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
   width: min(980px, 100%);
   min-height: 580px;
-  margin: 56px auto 0;
+  /* Centred in the viewport (FD-19); the mockup pins it 56px from the top. */
+  margin: auto;
   border: 1px solid #dae5d4;
   border-radius: 16px;
   background: #fff;

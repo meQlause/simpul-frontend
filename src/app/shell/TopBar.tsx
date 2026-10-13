@@ -3,18 +3,21 @@ import { OfflineControls } from '../../shared/ui/OfflineControls';
 import { navigation, pageTitles, shellCopy } from './shell.copy';
 import { GlobalSearch } from './GlobalSearch';
 import { useShellData } from './shell.api';
+import { initials } from './Sidebar';
 
 export function TopBar({
   expanded,
   onMenu,
   onGuide,
+  onWorkspace,
 }: {
   expanded: boolean;
   onMenu: () => void;
   onGuide: () => void;
+  onWorkspace: () => void;
 }) {
   const location = useLocation();
-  const { attentionCount } = useShellData();
+  const { me, attentionCount } = useShellData();
   // `/work/ORD-0091` is still the Work page.
   const section = `/${location.pathname.split('/')[1] ?? ''}`;
   const current = navigation.find((item) => item.path === section);
@@ -68,6 +71,20 @@ export function TopBar({
           </svg>
           <span />
         </Link>
+        <span className="topbar-divider" />
+        {/* FD-24: the workspace switcher sits at the top right, not in the sidebar. */}
+        <button className="workspace" type="button" onClick={onWorkspace} disabled={!me}>
+          <span className="workspace-logo" aria-hidden="true">
+            {initials(me?.workspace.name)}
+          </span>
+          <span className="workspace-copy">
+            <strong>{me?.workspace.name}</strong>
+            <small>{me?.workspace.descriptor}</small>
+          </span>
+          <svg className="icon" aria-hidden="true">
+            <use href="#i-chevron-down" />
+          </svg>
+        </button>
       </div>
     </header>
   );
