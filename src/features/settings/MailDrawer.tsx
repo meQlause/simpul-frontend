@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { ErrorToast } from '../../shared/ui/ErrorToast';
 import type { InputHTMLAttributes, SubmitEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { Drawer } from '../../shared/ui/Drawer';
@@ -75,7 +76,7 @@ function useMailSave() {
     }
   }
 
-  return { failure, invalid, pending: save.isPending, submit };
+  return { failure, setFailure, invalid, pending: save.isPending, submit };
 }
 
 type Mail = NonNullable<ReturnType<typeof useMail>['data']>['data'];
@@ -195,20 +196,18 @@ function MailFields({
 
 function MailFooter({
   failure,
+  onDismiss,
   pending,
   onClose,
 }: {
   failure: string;
+  onDismiss: () => void;
   pending: boolean;
   onClose: () => void;
 }) {
   return (
     <>
-      {failure && (
-        <p role="alert" className="channel-error drawer-error">
-          {failure}
-        </p>
-      )}
+      <ErrorToast message={failure} onClose={onDismiss} />
       <button type="button" className="button" onClick={onClose}>
         {copy.cancel}
       </button>
@@ -223,7 +222,7 @@ export function MailDrawer() {
   const navigate = useNavigate();
   const query = useMail();
   const state = useScreenState(query, false);
-  const { failure, invalid, pending, submit } = useMailSave();
+  const { failure, setFailure, invalid, pending, submit } = useMailSave();
   const close = () => void navigate('/settings');
 
   return (
@@ -233,7 +232,14 @@ export function MailDrawer() {
       description={copy.mailDescription}
       closeLabel={copy.close}
       onClose={close}
-      footer={<MailFooter failure={failure} pending={pending || !query.data} onClose={close} />}
+      footer={
+        <MailFooter
+          failure={failure}
+          onDismiss={() => setFailure('')}
+          pending={pending || !query.data}
+          onClose={close}
+        />
+      }
     >
       {query.data ? (
         <form id="mail-form" onSubmit={submit}>

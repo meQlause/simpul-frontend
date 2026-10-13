@@ -2,6 +2,7 @@ import { useState, type SubmitEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { ApiError } from '../../../shared/api/error';
 import { Drawer } from '../../../shared/ui/Drawer';
+import { ErrorToast } from '../../../shared/ui/ErrorToast';
 import { OfflineControls } from '../../../shared/ui/OfflineControls';
 import type { Person } from '../people.schema';
 import { personInputSchema } from '../people.schema';
@@ -110,7 +111,36 @@ function usePersonForm(person: Person, eligible: Person[], onSaved: () => void) 
     }
   }
 
-  return { submit, errors, failed, pending: mutation.isPending };
+  return { submit, errors, failed, setFailed, pending: mutation.isPending };
+}
+
+function HandoffStep({ person, note }: { person: Person; note: string }) {
+  return (
+    <li className="drawer-handoff-person">
+      <span className={`avatar ${personColour(person)}`}>{initials(person.name)}</span>
+      <span>
+        <strong>{person.name}</strong>
+        <small>{note}</small>
+      </span>
+    </li>
+  );
+}
+
+// Who is contacted, in order: the person, then the backup the select names right now.
+function Handoff({ person, backup }: { person: Person; backup?: Person }) {
+  return (
+    <ol className="drawer-handoff" aria-label={copy.handoffLabel}>
+      <HandoffStep person={person} note={copy.handoffFirst} />
+      <li className="drawer-handoff-arrow" aria-hidden="true">
+        <Icon name="arrow-right" />
+      </li>
+      {backup ? (
+        <HandoffStep person={backup} note={copy.handoffBackup} />
+      ) : (
+        <li className="drawer-handoff-person is-empty">{copy.noBackup}</li>
+      )}
+    </ol>
+  );
 }
 
 function PersonHero({ person }: { person: Person }) {
@@ -150,7 +180,7 @@ export function PersonDrawer({
   };
 
   const eligible = people.filter((candidate) => candidate.id !== person.id);
-  const { submit, errors, failed, pending } = usePersonForm(person, eligible, onSaved);
+  const { submit, errors, failed, setFailed, pending } = usePersonForm(person, eligible, onSaved);
   const [backupId, setBackupId] = useState(person.backup?.id ?? '');
 
   return (
@@ -162,11 +192,7 @@ export function PersonDrawer({
       onClose={close}
       footer={
         <>
-          {failed && (
-            <p role="alert" className="channel-error drawer-error">
-              {copy.saveFailed}
-            </p>
-          )}
+          <ErrorToast message={failed ? copy.saveFailed : ''} onClose={() => setFailed(false)} />
           <button type="button" className="button" onClick={close}>
             {copy.cancel}
           </button>
@@ -191,16 +217,10 @@ export function PersonDrawer({
             errors={errors}
             onBackup={setBackupId}
           />
-          <div className="drawer-handoff">
-            <span className="drawer-handoff-person">
-              <Icon name="users" />
-              {person.name.split(' ')[0]}
-            </span>
-            <Icon name="arrow-right" />
-            <span className="drawer-handoff-person">
-              {eligible.find((candidate) => candidate.id === backupId)?.name}
-            </span>
-          </div>
+          <Handoff
+            person={person}
+            backup={eligible.find((candidate) => candidate.id === backupId)}
+          />
           <div className="drawer-inline-note">
             <Icon name="shield" />
             {copy.backupNote}

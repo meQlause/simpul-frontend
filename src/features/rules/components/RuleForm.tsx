@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ErrorToast } from '../../../shared/ui/ErrorToast';
 import { DrawerIdentity } from '../../../shared/ui/DrawerParts';
 import { Icon } from '../../../shared/ui/Icon';
 import { OfflineControls } from '../../../shared/ui/OfflineControls';
@@ -76,11 +77,10 @@ export function RuleForm({
       onClose={onClose}
       footer={
         <>
-          {form.failed && (
-            <p role="alert" className="channel-error drawer-error">
-              {copy.saveFailed}
-            </p>
-          )}
+          <ErrorToast
+            message={form.failed ? copy.saveFailed : ''}
+            onClose={() => form.setFailed(false)}
+          />
           <button type="button" className="button" onClick={onClose}>
             {copy.cancel}
           </button>

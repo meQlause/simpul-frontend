@@ -38,6 +38,37 @@ export function Drawer({
     };
   }, [opener]);
 
+  // A click on the backdrop lands on the dialog itself, left of its box: it closes like Escape.
+  // Both press and release must be outside, so a selection dragged out of the drawer keeps it.
+  useEffect(() => {
+    const element = dialog.current;
+
+    if (!element) {
+      return;
+    }
+
+    const outside = (event: MouseEvent) =>
+      event.target === element && event.clientX < element.getBoundingClientRect().left;
+    let pressedOutside = false;
+    const press = (event: PointerEvent) => {
+      pressedOutside = outside(event);
+    };
+
+    const release = (event: MouseEvent) => {
+      if (pressedOutside && outside(event)) {
+        onClose();
+      }
+    };
+
+    element.addEventListener('pointerdown', press);
+    element.addEventListener('click', release);
+
+    return () => {
+      element.removeEventListener('pointerdown', press);
+      element.removeEventListener('click', release);
+    };
+  }, [onClose]);
+
   return (
     <dialog
       ref={dialog}

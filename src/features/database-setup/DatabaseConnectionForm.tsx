@@ -1,4 +1,5 @@
 import { Icon } from '../../shared/ui/Icon';
+import { ErrorToast } from '../../shared/ui/ErrorToast';
 import { useRef, useState } from 'react';
 import type { SubmitEvent } from 'react';
 import { ApiError } from '../../shared/api/error';
@@ -74,11 +75,11 @@ function useConnect({ firstConnect, onConnected }: Props) {
     }
   }
 
-  return { problem, pending: save.isPending, submit, field };
+  return { problem, setProblem, pending: save.isPending, submit, field };
 }
 
 export function DatabaseConnectionForm(props: Props) {
-  const { problem, pending, submit, field } = useConnect(props);
+  const { problem, setProblem, pending, submit, field } = useConnect(props);
 
   return (
     <form id="database-form" onSubmit={submit} noValidate data-component="DatabaseConnectionForm">
@@ -119,9 +120,10 @@ export function DatabaseConnectionForm(props: Props) {
         <p id="database-string-error" role="alert" className="channel-error">
           {problem.string}
         </p>
-        <p role="alert" className="channel-error">
-          {problem.failure}
-        </p>
+        <ErrorToast
+          message={problem.failure}
+          onClose={() => setProblem({ ...problem, failure: '' })}
+        />
         {!props.externalSubmit && (
           <button className="button button-primary auth-submit" type="submit" disabled={pending}>
             {props.submitLabel ?? copy.connect}

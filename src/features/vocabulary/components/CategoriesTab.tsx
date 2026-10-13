@@ -1,4 +1,5 @@
 import { DrawerSection } from '../../../shared/ui/DrawerParts';
+import { ErrorToast } from '../../../shared/ui/ErrorToast';
 import type { Category } from '../vocabulary.schema';
 import { categoryInput } from '../vocabulary.schema';
 import { useVocabularyForm } from '../useVocabularyForm';
@@ -55,7 +56,10 @@ function CategoryForm({ selected, onSaved }: { selected?: Category; onSaved: () 
     >
       <form id="vocabulary-form" onSubmit={form.submit} noValidate>
         <CategoryFields selected={selected} errors={form.errors} disabled={form.disabled} />
-        {form.failed && <p role="alert">{copy.failed}</p>}
+        <ErrorToast
+          message={form.failed ? copy.failed : ''}
+          onClose={() => form.setFailed(false)}
+        />
       </form>
     </DrawerSection>
   );

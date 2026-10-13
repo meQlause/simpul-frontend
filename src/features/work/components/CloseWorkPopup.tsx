@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { ErrorToast } from '../../../shared/ui/ErrorToast';
 import { createPortal } from 'react-dom';
 import { Icon } from '../../../shared/ui/Icon';
 import { useOnline } from '../../../shared/useOnline';
@@ -73,6 +74,7 @@ export function CloseWorkPopup({
         <CloseForm
           error={error}
           failure={mutation.error}
+          onDismiss={mutation.reset}
           pending={mutation.isPending}
           reasonField={reasonField}
           onSubmit={submit}
@@ -84,7 +86,15 @@ export function CloseWorkPopup({
   );
 }
 
-function CloseFailure({ error, failure }: { error: string; failure: Error | null }) {
+function CloseFailure({
+  error,
+  failure,
+  onDismiss,
+}: {
+  error: string;
+  failure: Error | null;
+  onDismiss: () => void;
+}) {
   if (error || !failure) {
     return null;
   }
@@ -94,7 +104,7 @@ function CloseFailure({ error, failure }: { error: string; failure: Error | null
       ? failure.message
       : copy.saveError;
 
-  return <p role="alert">{message}</p>;
+  return <ErrorToast message={message} onClose={onDismiss} />;
 }
 
 function CloseForm({
@@ -104,9 +114,11 @@ function CloseForm({
   reasonField,
   onSubmit,
   onBack,
+  onDismiss,
 }: {
   error: string;
   failure: Error | null;
+  onDismiss: () => void;
   pending: boolean;
   reasonField: React.RefObject<HTMLTextAreaElement | null>;
   onSubmit: (form: HTMLFormElement) => void;
@@ -148,7 +160,7 @@ function CloseForm({
           {error}
         </p>
       )}
-      <CloseFailure error={error} failure={failure} />
+      <CloseFailure error={error} failure={failure} onDismiss={onDismiss} />
       <div className="form-actions">
         <button type="button" className="button" disabled={pending} onClick={onBack}>
           Back

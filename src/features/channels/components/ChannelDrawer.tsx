@@ -5,7 +5,8 @@ import { DrawerIdentity, DrawerSection } from '../../../shared/ui/DrawerParts';
 import { Icon } from '../../../shared/ui/Icon';
 import { OfflineControls } from '../../../shared/ui/OfflineControls';
 import { useOnline } from '../../../shared/useOnline';
-import { useChannelSetup } from '../useChannelSetup';
+import { invalidFields, sentenceOf, useChannelSetup } from '../useChannelSetup';
+import { ErrorToast } from '../../../shared/ui/ErrorToast';
 import { channelsCopy as copy } from '../channels.copy';
 import { ChannelAudience, ChannelFields } from './ChannelFields';
 import { Checklist, useFreshVerification } from './Checklist';
@@ -108,6 +109,12 @@ export function ChannelDrawer({
   );
 }
 
+function shownOnField(setup: Setup) {
+  const fields = invalidFields(setup.input, setup.error);
+
+  return fields.name || fields.chat;
+}
+
 function ChannelFooter({
   setup,
   fresh,
@@ -121,9 +128,10 @@ function ChannelFooter({
 
   return (
     <>
-      <p id="channel-setup-error" role="alert" className="channel-error drawer-error">
-        {setup.error}
-      </p>
+      <ErrorToast
+        message={shownOnField(setup) ? '' : sentenceOf(setup.error)}
+        onClose={() => setup.setError('')}
+      />
       <button
         className="button"
         data-component="Button"

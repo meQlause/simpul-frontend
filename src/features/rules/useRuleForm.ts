@@ -60,5 +60,5 @@ export function useRuleForm({
     await persist(form, parsed.data);
   }
 
-  return { submit, errors, failed, pending: save.isPending };
+  return { submit, errors, failed, setFailed, pending: save.isPending };
 }

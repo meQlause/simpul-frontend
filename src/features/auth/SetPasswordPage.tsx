@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { SubmitEvent } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import { OfflineControls } from '../../shared/ui/OfflineControls';
+import { ErrorToast } from '../../shared/ui/ErrorToast';
 import { AuthShell } from './AuthShell';
 import { setPassword } from './auth.api';
 import { authCopy } from './auth.copy';
@@ -38,11 +39,13 @@ function useSetPassword() {
     }
   }
 
-  return { message, pending, submit };
+  return { message, setMessage, pending, submit };
 }
 
 export function SetPasswordPage() {
-  const { message, pending, submit } = useSetPassword();
+  const { message, setMessage, pending, submit } = useSetPassword();
+  // The mismatch is the confirm field's own; anything else is a toast (error-handling §5).
+  const mismatch = message === authCopy.mismatch;
 
   return (
     <AuthShell
@@ -59,11 +62,22 @@ export function SetPasswordPage() {
           </label>
           <label className="field">
             {authCopy.confirmPassword}
-            <input type="password" name="confirm" autoComplete="new-password" required />
+            <input
+              type="password"
+              name="confirm"
+              aria-label={authCopy.confirmPassword}
+              autoComplete="new-password"
+              required
+              aria-invalid={mismatch}
+              aria-describedby={mismatch ? 'confirm-error' : undefined}
+            />
+            {mismatch && (
+              <small id="confirm-error" role="alert" className="field-error">
+                {message}
+              </small>
+            )}
           </label>
-          <p className="channel-error" role="alert">
-            {message}
-          </p>
+          <ErrorToast message={mismatch ? '' : message} onClose={() => setMessage('')} />
           <button className="button button-primary auth-submit" type="submit" disabled={pending}>
             {authCopy.save}
             <svg className="icon" aria-hidden="true">

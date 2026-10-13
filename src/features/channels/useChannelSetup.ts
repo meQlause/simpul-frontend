@@ -29,6 +29,21 @@ function validate(input: GroupInput) {
   return '';
 }
 
+// What a field shows itself (error-handling §5, field level); everything else is a toast.
+export function invalidFields(input: GroupInput, error: string) {
+  const invalid =
+    error.includes('E-TG-INPUT-INVALID') || error.includes('E-TG-CHAT-TYPE-UNSUPPORTED');
+  const name = invalid && !input.displayName.trim();
+  const chat = invalid && !/^-\d+$/.test(input.providerChatId);
+
+  return { name, chat, sentence: sentenceOf(error) };
+}
+
+// The sentence a person reads: the code is for support and logs, never shown.
+export function sentenceOf(error: string) {
+  return error.replace(/^E-[A-Z0-9-]+ · /, '');
+}
+
 export function setupError(error: unknown) {
   if (!(error instanceof ApiError)) {
     return copy.saveFailed;

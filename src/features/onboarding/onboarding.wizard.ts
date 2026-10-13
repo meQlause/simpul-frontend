@@ -85,6 +85,7 @@ export function useOnboardingWizard({
     backups,
     active,
     error,
+    clearError: () => setError(''),
     saving: complete.isPending,
     goTo,
     next,

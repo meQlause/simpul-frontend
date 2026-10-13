@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type SubmitEvent } from 'react';
+import { ErrorToast } from '../../../shared/ui/ErrorToast';
 import { usePeople } from '../../people';
 import { useVocabulary } from '../../vocabulary';
 import { Drawer } from '../../../shared/ui/Drawer';
@@ -58,7 +59,7 @@ function useMapping(item: ReviewItem, onSaved: (kind: string) => void) {
   const data = useMappingOptions(item);
   const mutation = useResolveReview(item.id);
   const online = useOnline();
-  const [error, setError] = useState('');
+  const [error, setError] = useState({ field: '', failure: '' });
   const disabled = !online || mutation.isPending;
 
   function submit(event: SubmitEvent<HTMLFormElement>) {
@@ -70,7 +71,7 @@ function useMapping(item: ReviewItem, onSaved: (kind: string) => void) {
       return;
     }
 
-    setError('');
+    setError({ field: '', failure: '' });
     mutation.mutate(
       { [data.text.field]: value },
       {
@@ -82,13 +83,14 @@ function useMapping(item: ReviewItem, onSaved: (kind: string) => void) {
     );
   }
 
-  return { ...data, disabled, error, submit };
+  return { ...data, disabled, error, setError, submit };
 }
 
+// A rejected value is the select's own; any other failure is a toast (error-handling §5).
 function mappingError(failure: Error) {
   return failure instanceof ApiError && failure.code === 'E-VALIDATION'
-    ? failure.message
-    : copy.failed;
+    ? { field: failure.message, failure: '' }
+    : { field: '', failure: copy.failed };
 }
 
 export function MappingForm({
@@ -179,8 +181,8 @@ function MappingFields({ model }: { model: ReturnType<typeof useMapping> }) {
             name="value"
             defaultValue={model.suggested ?? model.options[0]?.id}
             disabled={model.disabled}
-            aria-invalid={!!model.error}
-            aria-describedby={model.error ? 'mapping-error' : undefined}
+            aria-invalid={!!model.error.field}
+            aria-describedby={model.error.field ? 'mapping-error' : undefined}
           >
             {model.options.map((option) => (
               <option key={option.id} value={option.id}>
@@ -188,12 +190,16 @@ function MappingFields({ model }: { model: ReturnType<typeof useMapping> }) {
               </option>
             ))}
           </select>
+          {model.error.field && (
+            <small role="alert" id="mapping-error" className="field-error">
+              {model.error.field}
+            </small>
+          )}
         </label>
-        {model.error && (
-          <p role="alert" id="mapping-error">
-            {model.error}
-          </p>
-        )}
+        <ErrorToast
+          message={model.error.failure}
+          onClose={() => model.setError({ field: '', failure: '' })}
+        />
         <div className="drawer-inline-note">
           <Icon name="link" />
           {model.text.note}

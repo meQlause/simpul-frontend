@@ -69,7 +69,7 @@ export function useVocabularyForm(options: {
     }
   }
 
-  return { errors, failed, submit, disabled: !online || mutation.isPending };
+  return { errors, failed, setFailed, submit, disabled: !online || mutation.isPending };
 }
 
 function serverErrors(error: unknown): Record<string, string> {

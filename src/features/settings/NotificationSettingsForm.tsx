@@ -1,4 +1,5 @@
 import { useState, type SubmitEvent } from 'react';
+import { ErrorToast } from '../../shared/ui/ErrorToast';
 import { ApiError } from '../../shared/api/error';
 import { useOnline } from '../../shared/useOnline';
 import { settingsCopy as copy } from './settings.copy';
@@ -104,7 +105,7 @@ function useSettingsForm(
     showErrors(form, fields);
   }
 
-  return { online, errors, failed, submit };
+  return { online, errors, failed, setFailed, submit };
 }
 
 export function NotificationSettingsForm({
@@ -120,7 +121,7 @@ export function NotificationSettingsForm({
   pending: boolean;
   onSaved: () => void;
 }) {
-  const { online, errors, failed, submit } = useSettingsForm(save, pending, onSaved);
+  const { online, errors, failed, setFailed, submit } = useSettingsForm(save, pending, onSaved);
 
   return (
     <form
@@ -157,11 +158,7 @@ export function NotificationSettingsForm({
               {copy.noticeEnd}
             </span>
           </div>
-          {failed && (
-            <p role="alert" className="channel-error">
-              {copy.failed}
-            </p>
-          )}
+          <ErrorToast message={failed ? copy.failed : ''} onClose={() => setFailed(false)} />
           <div className="form-actions">
             <button
               className="button button-primary"

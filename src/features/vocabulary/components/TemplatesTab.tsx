@@ -1,4 +1,5 @@
 import { DrawerSection } from '../../../shared/ui/DrawerParts';
+import { ErrorToast } from '../../../shared/ui/ErrorToast';
 import { useState } from 'react';
 import type { Vocabulary } from '../vocabulary.schema';
 import { templateInput } from '../vocabulary.schema';
@@ -60,7 +61,10 @@ export function TemplatesTab({
             <small>Internal sample preview</small>
             <p data-testid="template-preview">{preview(body, templates.sample)}</p>
           </div>
-          {form.failed && <p role="alert">{copy.failed}</p>}
+          <ErrorToast
+            message={form.failed ? copy.failed : ''}
+            onClose={() => form.setFailed(false)}
+          />
         </form>
       </DrawerSection>
       <DrawerSection

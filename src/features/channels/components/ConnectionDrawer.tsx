@@ -7,7 +7,8 @@ import { useOnline } from '../../../shared/useOnline';
 import { channelRequest } from '../channels.api';
 import { connectionSchema, credentialCheckSchema, type Connection } from '../channels.schema';
 import { channelsCopy as copy } from '../channels.copy';
-import { setupError } from '../useChannelSetup';
+import { sentenceOf, setupError } from '../useChannelSetup';
+import { ErrorToast } from '../../../shared/ui/ErrorToast';
 import { ChannelConfirmation } from './ChannelConfirmation';
 
 async function digest(value: string) {
@@ -58,19 +59,7 @@ export function ConnectionDrawer({
               onChange={(event) => form.setName(event.target.value)}
             />
           </label>
-          <label className="field" data-component="Field" data-variant="default" data-size="drawer">
-            Replacement bot token
-            <input
-              ref={token}
-              type="password"
-              autoComplete="off"
-              disabled={form.pending || Boolean(form.confirmation)}
-              onChange={() => {
-                void form.changed();
-              }}
-              placeholder="Existing credential is hidden"
-            />
-          </label>
+          <TokenField form={form} token={token} />
           <button
             className="button"
             data-component="Button"
@@ -114,6 +103,38 @@ export function ConnectionDrawer({
   );
 }
 
+function TokenField({
+  form,
+  token,
+}: {
+  form: ReturnType<typeof useCredentialForm>;
+  token: RefObject<HTMLInputElement | null>;
+}) {
+  return (
+    <label className="field" data-component="Field" data-variant="default" data-size="drawer">
+      Replacement bot token
+      <input
+        ref={token}
+        type="password"
+        aria-label="Replacement bot token"
+        autoComplete="off"
+        disabled={form.pending || Boolean(form.confirmation)}
+        aria-invalid={Boolean(form.tokenError)}
+        aria-describedby={form.tokenError ? 'bot-token-error' : undefined}
+        onChange={() => {
+          void form.changed();
+        }}
+        placeholder="Existing credential is hidden"
+      />
+      {form.tokenError && (
+        <small id="bot-token-error" role="alert" className="field-error">
+          {form.tokenError}
+        </small>
+      )}
+    </label>
+  );
+}
+
 function useCredentialForm(
   connection: Connection,
   onSaved: () => void,
@@ -123,13 +144,31 @@ function useCredentialForm(
   const [verified, setVerified] = useState('');
   const [matches, setMatches] = useState(false);
   const [result, setResult] = useState('');
+  const [error, setError] = useState('');
+  const [tokenError, setTokenError] = useState('');
   const [pending, setPending] = useState(false);
   const [confirmation, setConfirmation] = useState('');
+
+  // A field's own problem stays on the token field; anything else is a toast.
+  function fail(failure: unknown) {
+    const message = setupError(failure);
+    const show = message.startsWith('E-TG-INPUT-INVALID') ? setTokenError : setError;
+
+    show(sentenceOf(message));
+  }
+
+  function checkable(field: HTMLInputElement) {
+    setResult('');
+    setError('');
+    setTokenError(emptyToken(field));
+
+    return !emptyToken(field);
+  }
 
   async function verify() {
     const field = token.current;
 
-    if (pending || !field) {
+    if (pending || !field || !checkable(field)) {
       return;
     }
 
@@ -141,13 +180,13 @@ function useCredentialForm(
       const checked = await verifyToken(field.value);
 
       if (checked.sameBotAsStored === false) {
-        setResult(copy.mismatch);
+        setError(sentenceOf(copy.mismatch));
       } else {
         setVerified(checked.fingerprint);
-        setResult('@' + checked.botUsername);
+        setResult('@' + checked.botUsername.replace(/^@/, ''));
       }
-    } catch (error) {
-      setResult(setupError(error));
+    } catch (failure) {
+      fail(failure);
     } finally {
       field.value = '';
       setPending(false);
@@ -185,8 +224,8 @@ function useCredentialForm(
       if (saved) {
         onSaved();
       }
-    } catch (error) {
-      setResult(setupError(error));
+    } catch (failure) {
+      fail(failure);
     } finally {
       field.value = '';
       setPending(false);
@@ -201,6 +240,9 @@ function useCredentialForm(
     setName,
     matches,
     result,
+    error,
+    setError,
+    tokenError,
     pending,
     confirmation,
     setConfirmation,
@@ -244,6 +286,7 @@ function ConnectionFooter({
 
   return (
     <>
+      <ErrorToast message={form.error} onClose={() => form.setError('')} />
       <button
         className="button"
         data-component="Button"
@@ -265,6 +308,17 @@ function ConnectionFooter({
       </button>
     </>
   );
+}
+
+// An empty token never reaches Telegram: the field says so and takes focus.
+function emptyToken(field: HTMLInputElement) {
+  if (field.value.trim()) {
+    return '';
+  }
+
+  field.focus();
+
+  return copy.tokenRequired;
 }
 
 async function verifyToken(botToken: string) {

@@ -3,6 +3,7 @@ import type { SubmitEvent } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router';
 import { OfflineControls } from '../../shared/ui/OfflineControls';
+import { ErrorToast } from '../../shared/ui/ErrorToast';
 import { signIn } from './auth.api';
 import { authCopy } from './auth.copy';
 import { returnPath } from './auth.rules';
@@ -42,11 +43,11 @@ function useSignIn() {
     }
   }
 
-  return { pending, failed, submit };
+  return { pending, failed, setFailed, submit };
 }
 
 export function SignInForm() {
-  const { pending, failed, submit } = useSignIn();
+  const { pending, failed, setFailed, submit } = useSignIn();
 
   return (
     <form id="sign-in-form" onSubmit={submit} data-component="SignInForm">
@@ -59,9 +60,7 @@ export function SignInForm() {
           {authCopy.password}
           <input type="password" name="password" autoComplete="current-password" required />
         </label>
-        <p className="channel-error" role="alert" id="auth-error">
-          {failed && authCopy.invalid}
-        </p>
+        <ErrorToast message={failed ? authCopy.invalid : ''} onClose={() => setFailed(false)} />
         <button className="button button-primary auth-submit" type="submit" disabled={pending}>
           {authCopy.title}
           <svg className="icon" aria-hidden="true">

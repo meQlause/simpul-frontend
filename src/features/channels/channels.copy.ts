@@ -48,4 +48,5 @@ export const channelsCopy = {
   mismatch: 'E-TG-CREDENTIAL-BOT-MISMATCH · This token belongs to a different bot.',
   privateChat: 'E-TG-CHAT-TYPE-UNSUPPORTED · Only Telegram groups and supergroups are supported.',
   saveFailed: 'Your changes were not saved. Try again.',
+  tokenRequired: 'Enter the bot token.',
 };

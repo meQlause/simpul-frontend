@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { ErrorToast } from '../../shared/ui/ErrorToast';
 import { useNavigate } from 'react-router';
 import { Icon } from '../../shared/ui/Icon';
 import { Drawer } from '../../shared/ui/Drawer';
@@ -125,9 +126,7 @@ function Wizard({
     >
       <OnboardingProgress step={step} />
       <StepBody wizard={wizard} channels={channels} rules={rules} settings={settings} />
-      <p id="onboarding-error" role="alert" className="channel-error">
-        {wizard.error}
-      </p>
+      <ErrorToast message={wizard.error} onClose={wizard.clearError} />
     </Shell>
   );
 }

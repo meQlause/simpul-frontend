@@ -1,4 +1,5 @@
 import { DrawerSection } from '../../../shared/ui/DrawerParts';
+import { ErrorToast } from '../../../shared/ui/ErrorToast';
 import { usePeople } from '../../people';
 import { useScreenState } from '../../../shared/useScreenState';
 import { ScreenState } from '../../../shared/ui/ScreenState';
@@ -67,7 +68,10 @@ export function AliasesTab({
                 ))}
               </select>
             </VocabularyField>
-            {form.failed && <p role="alert">{copy.failed}</p>}
+            <ErrorToast
+              message={form.failed ? copy.failed : ''}
+              onClose={() => form.setFailed(false)}
+            />
           </form>
         ) : (
           <ScreenState

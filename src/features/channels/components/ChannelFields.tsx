@@ -1,18 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Icon } from '../../../shared/ui/Icon';
-import type { GroupInput } from '../useChannelSetup';
+import { invalidFields, type GroupInput } from '../useChannelSetup';
 import { channelsCopy as copy } from '../channels.copy';
-
-function invalidFields(input: GroupInput, error: string) {
-  const invalid =
-    error.includes('E-TG-INPUT-INVALID') || error.includes('E-TG-CHAT-TYPE-UNSUPPORTED');
-
-  return {
-    name: invalid && !input.displayName.trim(),
-    chat: invalid && !/^-\d+$/.test(input.providerChatId),
-    sentence: error.split(' · ')[1] ?? error,
-  };
-}
 
 export function ChannelFields({
   input,
