@@ -24,9 +24,9 @@ test('Field: invalid is announced on the field; a saved identity is read-only', 
   await name.fill('');
   await page.getByRole('dialog').getByRole('button', { name: 'Save rule' }).click();
   await expect(name).toHaveAttribute('aria-invalid', 'true');
-  await page.goto('/channels');
-  await page.getByRole('button', { name: 'Configure Operations' }).click();
-  await expect(page.getByLabel('Telegram Chat ID', { exact: true })).toHaveAttribute(
+  await page.goto('/channels/new');
+  await page.getByRole('button', { name: 'Generate code', exact: true }).click();
+  await expect(page.getByLabel('Connection command', { exact: true })).toHaveAttribute(
     'readonly',
     '',
   );

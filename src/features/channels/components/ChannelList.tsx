@@ -11,6 +11,7 @@ import { useOnline } from '../../../shared/useOnline';
 import { dayTime } from '../../work';
 import type { Channel, Connection } from '../channels.schema';
 import { channelsCopy as copy } from '../channels.copy';
+import { channelName } from '../channels.rules';
 
 type Handlers = {
   onOpen: (id: string) => void;
@@ -55,13 +56,13 @@ function ChannelRow({ channel, onOpen, onPause }: { channel: Channel } & Handler
           <div>
             <button
               className="directory-title"
-              title={channel.displayName}
+              title={channelName(channel)}
               disabled={!online}
               onClick={() => onOpen(channel.id)}
             >
-              {channel.displayName}
+              {channelName(channel)}
             </button>
-            <p>{channel.providerChatId} · Telegram group</p>
+            <p>Telegram group</p>
           </div>
         </div>
       </td>
@@ -83,7 +84,7 @@ function ChannelRow({ channel, onOpen, onPause }: { channel: Channel } & Handler
           data-component="IconButton"
           data-variant="default"
           disabled={!online}
-          aria-label={`${channel.monitored ? 'Pause' : 'Resume'} ${channel.displayName}`}
+          aria-label={`${channel.monitored ? 'Pause' : 'Resume'} ${channelName(channel)}`}
           onClick={() => (channel.monitored ? onPause(channel) : onOpen(channel.id))}
         >
           <Icon name={channel.monitored ? 'pause' : 'play'} />
@@ -93,7 +94,7 @@ function ChannelRow({ channel, onOpen, onPause }: { channel: Channel } & Handler
           data-component="IconButton"
           data-variant="default"
           disabled={!online}
-          aria-label={`Configure ${channel.displayName}`}
+          aria-label={`Configure ${channelName(channel)}`}
           onClick={() => onOpen(channel.id)}
         >
           <Icon name="chevron-right" />
@@ -211,7 +212,7 @@ export function ChannelList({
   const visible = channels.filter(
     (channel) =>
       (!state || channel.connectionStatus === state) &&
-      `${channel.displayName} ${channel.providerChatId}`.toLowerCase().includes(search),
+      `${channelName(channel)} ${channel.providerChatId}`.toLowerCase().includes(search),
   );
   const count = (value: string) =>
     channels.filter((channel) => !value || channel.connectionStatus === value).length;

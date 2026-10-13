@@ -264,7 +264,6 @@ function SharedGroups({ connection }: { connection: Connection }) {
           <Icon name="telegram" />
           <div>
             <strong>{group.displayName}</strong>
-            <small>{group.providerChatId}</small>
           </div>
           <span className="badge gray">{group.connectionStatus}</span>
         </div>

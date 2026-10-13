@@ -7,6 +7,7 @@ import { useScreenState } from '../../shared/useScreenState';
 import { useChannels, useConnections, readChannel, channelRequest } from './channels.api';
 import { channelSchema, type Channel, type Connection } from './channels.schema';
 import { sentenceOf, setupError } from './useChannelSetup';
+import { channelName } from './channels.rules';
 import { ErrorToast } from '../../shared/ui/ErrorToast';
 import { ChannelList } from './components/ChannelList';
 import { ChannelDrawer } from './components/ChannelDrawer';
@@ -34,9 +35,9 @@ export function ChannelsPage() {
       {page.pause && (
         <ChannelConfirmation
           eyebrow="PAUSE MONITORING"
-          title={'Pause ' + page.pause.displayName + '?'}
+          title={'Pause ' + channelName(page.pause) + '?'}
           description="New messages and notifications for this group will stop. Other groups sharing the bot stay active."
-          chatId={page.pause.providerChatId}
+          heading={channelName(page.pause)}
           detail={`@${page.connection?.botUsername.replace(/^@/, '')} · ${page.pause.class === 'external' ? 'External' : 'Internal'} audience`}
           label="Pause group"
           pending={page.pending}

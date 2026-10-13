@@ -1202,22 +1202,12 @@ dialog.drawer.trace-drawer #dialog-content {
   font-size: 11px;
   color: #5d7655;
 }
-.setup-alternative summary {
-  cursor: pointer;
-  font-weight: 600;
-}
 .setup-alternative p {
   line-height: 1.8;
   margin: 14px 0;
 }
 .setup-alternative .field {
   margin-top: 15px;
-}
-.group-metadata {
-  background: white;
-  border: 1px solid #e0e8d9;
-  border-radius: 8px;
-  padding: 7px 14px;
 }
 .setup-freshness {
   display: flex;

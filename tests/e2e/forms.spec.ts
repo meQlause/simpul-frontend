@@ -70,15 +70,6 @@ test('Template form: a forbidden field shows under Template', async ({ page }) =
   );
 });
 
-test('Channel form: a positive chat ID shows under Telegram Chat ID', async ({ page }) => {
-  await page.goto('/channels');
-  await page.getByRole('button', { name: 'Add Telegram channel', exact: true }).click();
-  await page.getByLabel('Display name', { exact: true }).fill('Private chat');
-  await page.getByLabel('Telegram Chat ID', { exact: true }).fill('12345');
-  await page.getByRole('button', { name: 'Check group', exact: true }).click();
-  await expectFieldError(page, page.getByLabel('Telegram Chat ID', { exact: true }), /.+/);
-});
-
 test('Close work form: a short reason shows under Closure reason', async ({ page }) => {
   await page.goto('/work/ORD-0098');
   await page.getByRole('button', { name: 'Close work', exact: true }).click();

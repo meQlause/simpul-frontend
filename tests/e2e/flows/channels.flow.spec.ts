@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { connectBackend, startBackend } from '../helpers/backend';
 
 let backend: Awaited<ReturnType<typeof startBackend>> | undefined;
@@ -16,14 +16,40 @@ test.afterEach(async ({ page }) => {
 
 test('B-16: a group is saved as a draft and listed without being monitored', async ({ page }) => {
   await page.getByRole('button', { name: 'Add Telegram channel' }).click();
-  const drawer = page.getByRole('dialog');
+  await page.getByRole('button', { name: 'Generate code', exact: true }).click();
+  const command = page.getByLabel('Connection command', { exact: true });
 
-  await drawer.getByLabel('Display name').fill('Flow draft');
-  await drawer.getByLabel('Telegram Chat ID').fill('-1009100000001');
-  await drawer.getByRole('button', { name: 'Save draft', exact: true }).click();
-  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(command).toHaveValue(/\/simpul_connect /);
+  await sendGroupMessage(page, '-1009100000001', 'Flow draft', await command.inputValue());
   await expect(page.getByRole('row').filter({ hasText: 'Flow draft' })).toContainText('Draft');
 });
+
+// One message from a group, as the webhook receives it.
+async function sendGroupMessage(page: Page, chatId: string, title: string, text: string) {
+  const base = backend?.baseUrl;
+
+  if (!base) {
+    throw new Error('The backend is not running');
+  }
+
+  const connection = (await (await page.request.get(base + '/api/v1/telegram/connections')).json())
+    .data[0];
+  const receipt = await page.request.post(base + '/api/v1/webhooks/telegram/' + connection.id, {
+    headers: { 'X-Telegram-Bot-Api-Secret-Token': Buffer.alloc(32, 8).toString('base64url') },
+    data: {
+      update_id: Date.now(),
+      message: {
+        message_id: Date.now(),
+        date: Math.floor(Date.now() / 1000),
+        from: { id: 1, is_bot: false, first_name: 'Tester' },
+        chat: { id: Number(chatId), type: 'supergroup', title },
+        text,
+      },
+    },
+  });
+
+  expect(receipt.ok()).toBe(true);
+}
 
 test('B-20: a group is paused after its confirmation and the others keep running', async ({
   page,

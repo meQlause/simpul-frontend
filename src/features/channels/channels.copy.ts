@@ -41,12 +41,10 @@ export const channelsCopy = {
     'indicator',
   ],
   consent: 'I am authorized to monitor this group and have informed its participants.',
-  fixed: 'Saved group identity is fixed. Add a new channel to connect another group.',
   expired:
     'E-TG-VERIFICATION-EXPIRED · The setup changed or the check expired. Run the checks again.',
   expiredCode: 'E-TG-SESSION-EXPIRED · This connection code has expired. Generate a new code.',
   mismatch: 'E-TG-CREDENTIAL-BOT-MISMATCH · This token belongs to a different bot.',
-  privateChat: 'E-TG-CHAT-TYPE-UNSUPPORTED · Only Telegram groups and supergroups are supported.',
   saveFailed: 'Your changes were not saved. Try again.',
   tokenRequired: 'Enter the bot token.',
   steps: [
@@ -63,4 +61,9 @@ export const channelsCopy = {
   found: 'Found: ',
   received: 'Message received',
   retry: 'Try again',
+  botNote: 'Add this bot to your Telegram group and disable its privacy mode in BotFather.',
+  codeNote: 'The command identifies a candidate group. It never starts monitoring.',
+  freshness: 'Last checked just now · Valid for 10 minutes',
+  historyNote:
+    'History starts when monitoring is activated. Earlier Telegram group messages cannot be fetched by a new Bot API connection.',
 };

@@ -7,7 +7,7 @@ export function ChannelConfirmation({
   eyebrow,
   title,
   description,
-  chatId,
+  heading,
   detail,
   children,
   label,
@@ -18,7 +18,7 @@ export function ChannelConfirmation({
   eyebrow: string;
   title: string;
   description: string;
-  chatId?: string;
+  heading?: string;
   detail?: string;
   children?: ReactNode;
   label: string;
@@ -55,11 +55,13 @@ export function ChannelConfirmation({
           {title}
         </h2>
         <p className="page-description">{description}</p>
-        {chatId && (
+        {heading && (
           <div className="drawer-policy-preview">
             <Icon name="telegram" />
             <div>
-              <strong>{chatId}</strong>
+              <h3>
+                <strong>{heading}</strong>
+              </h3>
               <p>{detail}</p>
             </div>
           </div>

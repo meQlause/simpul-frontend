@@ -1,17 +1,18 @@
-import { useCallback, useState } from 'react';
-import type { Channel, Connection, CodeSession } from '../channels.schema';
+import { useEffect, useRef, useState } from 'react';
+import type { Channel, Connection } from '../channels.schema';
 import { Drawer } from '../../../shared/ui/Drawer';
-import { DrawerIdentity, DrawerSection } from '../../../shared/ui/DrawerParts';
+import { DrawerIdentity } from '../../../shared/ui/DrawerParts';
 import { Icon } from '../../../shared/ui/Icon';
 import { OfflineControls } from '../../../shared/ui/OfflineControls';
 import { useOnline } from '../../../shared/useOnline';
-import { invalidFields, sentenceOf, useChannelSetup } from '../useChannelSetup';
+import { sentenceOf, useChannelSetup } from '../useChannelSetup';
 import { ErrorToast } from '../../../shared/ui/ErrorToast';
 import { channelsCopy as copy } from '../channels.copy';
-import { ChannelAudience, ChannelFields } from './ChannelFields';
-import { Checklist, useFreshVerification } from './Checklist';
-import { ConnectionCode } from './ConnectionCode';
+import { channelName, shouldRecheck } from '../channels.rules';
+import { ChannelAudience } from './ChannelFields';
+import { useFreshVerification } from './Checklist';
 import { ChannelConfirmation } from './ChannelConfirmation';
+import { BotBody, CodeBody, ConfirmBody, MessageBody, SetupStep } from './SetupSteps';
 
 type Setup = ReturnType<typeof useChannelSetup>;
 
@@ -30,20 +31,20 @@ export function ChannelDrawer({
 }) {
   const setup = useChannelSetup(channel, connection, onSaved);
   const fresh = useFreshVerification(setup.verification);
-  const [metadata, setMetadata] = useState<CodeSession['candidate']>(null);
+  const stale = Boolean(setup.verification?.activationReady) && !fresh;
+  const wasFresh = useRef(false);
+
+  // A passing check that goes stale is checked once more, and the drawer says so.
+  useEffect(() => {
+    if (shouldRecheck(wasFresh.current, fresh)) {
+      setup.recheck();
+    }
+
+    wasFresh.current = fresh;
+  }, [fresh, setup]);
   const [activationKey, setActivationKey] = useState('');
-  const { setInput } = setup;
-  const candidate = useCallback(
-    (value: NonNullable<CodeSession['candidate']>) => {
-      setMetadata(value);
-      setInput((current) => ({
-        ...current,
-        providerChatId: value.providerChatId,
-        displayName: current.displayName || value.title,
-      }));
-    },
-    [setInput],
-  );
+  const name = setup.channel ? channelName(setup.channel) : '';
+  const [botStatus, codeStatus, messageStatus, confirmStatus] = setup.steps;
 
   return (
     <Drawer
@@ -55,47 +56,38 @@ export function ChannelDrawer({
       footer={
         <ChannelFooter
           setup={setup}
-          fresh={fresh && matchesSavedInput(setup)}
+          fresh={fresh}
+          stale={stale}
           onActivate={() => setActivationKey(crypto.randomUUID())}
         />
       }
     >
-      <ChannelIdentity saved={Boolean(channel)} name={setup.input.displayName} />
+      <ChannelIdentity saved={Boolean(channel)} name={name} />
       <OfflineControls>
-        <WorkspaceBot connection={connection} onManage={onManage} />
-        <DrawerSection
-          number="02"
-          title="Identify the group"
-          description="Choose the audience before any monitoring starts."
-        >
-          <ChannelFields
-            input={setup.input}
-            onChange={setup.setInput}
-            saved={Boolean(setup.channel)}
-            error={setup.error}
+        <ChannelAudience input={setup.input} onChange={setup.setInput} />
+        <SetupStep number="01" title={copy.steps[0]} status={botStatus}>
+          <BotBody
+            botUsername={connection.botUsername.replace(/^@/, '')}
+            onManage={onManage}
+            code={setup.code}
           />
-          {!setup.channel && (
-            <details className="setup-alternative">
-              <summary>Identify with a connection code instead</summary>
-              <ConnectionCode
-                connectionId={connection.id}
-                purpose="identify_group"
-                onCandidate={candidate}
-                onError={setup.setError}
-              />
-            </details>
-          )}
-          <GroupMetadata channel={setup.channel} candidate={metadata} />
-          <ChannelAudience input={setup.input} onChange={setup.setInput} />
-        </DrawerSection>
-        <ChannelReadiness setup={setup} connection={connection} />
+        </SetupStep>
+        <SetupStep number="02" title={copy.steps[1]} status={codeStatus} result={copy.found + name}>
+          <CodeBody code={setup.code} />
+        </SetupStep>
+        <SetupStep number="03" title={copy.steps[2]} status={messageStatus} result={copy.received}>
+          <MessageBody verification={setup.verification} code={setup.code} />
+        </SetupStep>
+        <SetupStep number="04" title={copy.steps[3]} status={confirmStatus}>
+          <ConfirmBody fresh={fresh} consent={setup.consent} onConsent={setup.setConsent} />
+        </SetupStep>
       </OfflineControls>
       {activationKey && (
         <ChannelConfirmation
           eyebrow="ACTIVATE MONITORING"
-          title={'Start monitoring ' + setup.input.displayName + '?'}
+          title={'Start monitoring ' + name + '?'}
           description={`New messages in this ${setup.input.class} group will start to be read and routed by your rules.`}
-          chatId={setup.input.providerChatId}
+          heading={name}
           detail={`@${connection.botUsername.replace(/^@/, '')} · ${setup.input.class === 'external' ? 'External' : 'Internal'} audience`}
           label="Activate monitoring"
           pending={setup.pending}
@@ -109,47 +101,56 @@ export function ChannelDrawer({
   );
 }
 
-function shownOnField(setup: Setup) {
-  const fields = invalidFields(setup.input, setup.error);
-
-  return fields.name || fields.chat;
-}
-
 function ChannelFooter({
   setup,
   fresh,
+  stale,
   onActivate,
 }: {
   setup: Setup;
   fresh: boolean;
+  stale: boolean;
   onActivate: () => void;
 }) {
   const online = useOnline();
+  const busy = setup.pending || !online;
+  const message = setup.error || !stale ? sentenceOf(setup.error) : sentenceOf(copy.expired);
 
   return (
     <>
-      <ErrorToast
-        message={shownOnField(setup) ? '' : sentenceOf(setup.error)}
-        onClose={() => setup.setError('')}
-      />
-      <button
-        className="button"
-        data-component="Button"
-        data-variant="default"
-        data-size="drawer"
-        disabled={setup.pending || !online}
-        onClick={() => {
-          void setup.run('save');
-        }}
-      >
-        {setup.channel ? 'Save changes' : 'Save draft'}
-      </button>
+      <ErrorToast message={message} onClose={() => setup.setError('')} />
+      {setup.failed && (
+        <button
+          className="button"
+          data-component="Button"
+          data-variant="default"
+          data-size="drawer"
+          disabled={busy}
+          onClick={setup.retry}
+        >
+          {copy.retry}
+        </button>
+      )}
+      {setup.channel && (
+        <button
+          className="button"
+          data-component="Button"
+          data-variant="default"
+          data-size="drawer"
+          disabled={busy}
+          onClick={() => {
+            void setup.saveChanges();
+          }}
+        >
+          Save changes
+        </button>
+      )}
       <button
         className="button button-primary"
         data-component="Button"
         data-variant="primary"
         data-size="drawer"
-        disabled={!fresh || !setup.consent || setup.pending || !online}
+        disabled={!fresh || !setup.consent || busy}
         onClick={onActivate}
       >
         <Icon name="play" />
@@ -167,147 +168,5 @@ function ChannelIdentity({ saved, name }: { saved: boolean; name: string }) {
       description="Telegram groups & supergroups only"
       status={<span className="badge green">{saved ? 'Configure group' : 'New group'}</span>}
     />
-  );
-}
-
-function WorkspaceBot({ connection, onManage }: { connection: Connection; onManage: () => void }) {
-  return (
-    <DrawerSection
-      number="01"
-      title="Use your workspace bot"
-      description="Reuse one connection across your Telegram groups."
-    >
-      <div className="channel-bot-reference">
-        <Icon name="link" />
-        <div>
-          <strong>@{connection.botUsername.replace(/^@/, '')}</strong>
-          <small>Token stored separately · Never required for each group</small>
-        </div>
-        <button
-          className="button"
-          data-component="Button"
-          data-variant="default"
-          data-size="drawer"
-          onClick={onManage}
-        >
-          Manage
-        </button>
-      </div>
-      <div className="drawer-inline-note">
-        <Icon name="help" />
-        Add this bot to your Telegram group and disable its privacy mode in BotFather.
-      </div>
-    </DrawerSection>
-  );
-}
-
-function ChannelReadiness({ setup, connection }: { setup: Setup; connection: Connection }) {
-  const ignoreCandidate = useCallback(() => {}, []);
-  let label = setup.verification || setup.channel ? 'Recheck' : 'Check group';
-
-  if (setup.pending) {
-    label = 'Verifying…';
-  }
-
-  return (
-    <DrawerSection
-      number="03"
-      title="Verify before you activate"
-      description="A bot connection and group monitoring are separate states."
-    >
-      <Checklist verification={setup.verification} />
-      <div className="channel-check-actions">
-        <button
-          className="button"
-          data-component="Button"
-          data-variant="default"
-          data-size="drawer"
-          disabled={setup.pending}
-          onClick={() => {
-            void setup.run('verify');
-          }}
-        >
-          <Icon name="refresh" />
-          {label}
-        </button>
-      </div>
-      {setup.channel && (
-        <ConnectionCode
-          connectionId={connection.id}
-          purpose="receive_check"
-          onCandidate={ignoreCandidate}
-          onError={setup.setError}
-        />
-      )}
-      {setup.verification?.activationReady && (
-        <p className="setup-freshness">Last checked just now · Valid for 10 minutes</p>
-      )}
-      <div className="drawer-inline-note" data-component="InlineNote">
-        <Icon name="clock" />
-        History starts when monitoring is activated. Earlier Telegram group messages cannot be
-        fetched by a new Bot API connection.
-      </div>
-      <label className="channel-consent">
-        <input
-          type="checkbox"
-          checked={setup.consent}
-          onChange={(event) => setup.setConsent(event.target.checked)}
-        />
-        <span>{copy.consent}</span>
-      </label>
-    </DrawerSection>
-  );
-}
-
-function matchesSavedInput(setup: Setup) {
-  const saved = setup.channel;
-
-  return Boolean(
-    saved &&
-    setup.input.displayName.trim() === saved.displayName &&
-    setup.input.class === saved.class &&
-    setup.input.primaryLanguage === saved.primaryLanguage &&
-    setup.input.providerChatId === saved.providerChatId,
-  );
-}
-
-function GroupMetadata({
-  channel,
-  candidate,
-}: {
-  channel?: Channel;
-  candidate: CodeSession['candidate'];
-}) {
-  const group =
-    candidate ??
-    (channel
-      ? {
-          title: channel.providerChatTitle,
-          providerChatId: channel.providerChatId,
-          chatType: channel.providerChatType,
-        }
-      : null);
-
-  if (!group?.title) {
-    return null;
-  }
-
-  return (
-    <dl
-      className="trace-facts group-metadata"
-      data-component="TraceFacts"
-      data-variant="group-metadata"
-    >
-      <div>
-        <dt>Telegram title</dt>
-        <dd>{group.title}</dd>
-      </div>
-      <div>
-        <dt>Chat ID / type</dt>
-        <dd>
-          {group.providerChatId} · {group.chatType}
-        </dd>
-      </div>
-    </dl>
   );
 }

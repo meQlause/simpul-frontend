@@ -24,7 +24,13 @@ export function useFreshVerification(verification: Verification | null) {
 
 const ICONS = { pass: 'check-circle', pending: 'clock', fail: 'alert' } as const;
 
-export function Checklist({ verification }: { verification: Verification | null }) {
+export function Checklist({
+  verification,
+  unpassedOnly = false,
+}: {
+  verification: Verification | null;
+  unpassedOnly?: boolean;
+}) {
   return (
     <div data-testid="channel-checklist" data-variant="channel">
       {copy.checkTitles.map((title, index) => {
@@ -32,6 +38,10 @@ export function Checklist({ verification }: { verification: Verification | null 
         const status = check?.status ?? 'pending';
         const labels = { pass: 'Passed', pending: 'Pending', fail: 'Needs action' };
         const colors = { pass: 'green', pending: 'gray', fail: 'amber' };
+
+        if (unpassedOnly && status === 'pass') {
+          return null;
+        }
 
         return (
           <div
