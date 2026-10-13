@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { connectBackend, startBackend } from './helpers/backend';
 
 test('Ctrl K focuses the search field; the skip link moves focus to #page-content', async ({
@@ -56,13 +56,14 @@ test.describe('shell against the real API', () => {
     page,
   }) => {
     const sidebar = page.getByRole('complementary', { name: 'Main navigation' });
+    // The workspace switcher sits at the top right (fidelity FD-24); the person stays below.
+    const topbar = page.locator('.topbar');
 
-    for (const name of [
-      'Point Star',
-      'Operations workspace',
-      'Siti Aminah',
-      'Operations Manager',
-    ]) {
+    for (const name of ['Point Star', 'Operations workspace']) {
+      await expect(topbar.getByText(name, { exact: true })).toBeVisible();
+    }
+
+    for (const name of ['Siti Aminah', 'Operations Manager']) {
       await expect(sidebar.getByText(name, { exact: true })).toBeVisible();
     }
 
@@ -118,10 +119,7 @@ test.describe('shell against the real API', () => {
   });
 });
 
-test('At 760px the menu button opens the sidebar and sets aria-expanded=true (shell acceptance 5)', async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 760, height: 900 });
+async function stubShell(page: Page) {
   await page.route('**/api/v1/**', async (route) => {
     if (route.request().url().endsWith('/me')) {
       await route.fulfill({
@@ -145,6 +143,13 @@ test('At 760px the menu button opens the sidebar and sets aria-expanded=true (sh
 
     await route.fulfill({ json: { data, page: { total: 7 } } });
   });
+}
+
+test('At 760px the menu button opens the sidebar and sets aria-expanded=true (shell acceptance 5)', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 760, height: 900 });
+  await stubShell(page);
   await page.goto('/work');
   const menu = page.getByRole('button', { name: 'Open navigation' }),
     sidebar = page.getByRole('complementary', { name: 'Main navigation' });
@@ -163,4 +168,22 @@ test('At 760px the menu button opens the sidebar and sets aria-expanded=true (sh
   await page.keyboard.press('Space');
   await expect(menu).toHaveAttribute('aria-expanded', 'false');
   await expect(sidebar).not.toBeInViewport();
+});
+
+test('A window shorter than the sidebar keeps brand and profile; only the menu scrolls (fidelity FD-22)', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 760 });
+  await stubShell(page);
+  await page.goto('/work');
+  const sidebar = page.getByRole('complementary', { name: 'Main navigation' });
+
+  await expect(sidebar.getByText('Siti Aminah', { exact: true })).toBeInViewport();
+  await page.setViewportSize({ width: 1440, height: 560 });
+  // The sidebar itself never scrolls: the brand and the profile stay; only the menu does.
+  await expect(sidebar.getByText('Siti Aminah', { exact: true })).toBeInViewport();
+  await expect(sidebar.locator('.brand')).toBeInViewport();
+  expect(await sidebar.evaluate((node) => node.scrollHeight - node.clientHeight)).toBe(0);
+  await sidebar.getByRole('link', { name: 'Settings' }).scrollIntoViewIfNeeded();
+  await expect(sidebar.getByRole('link', { name: 'Settings' })).toBeInViewport();
 });

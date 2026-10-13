@@ -67,6 +67,9 @@ async function addGroup(page: Page, name: string, chatId: string) {
   await expect(page.getByLabel('Telegram Chat ID', { exact: true })).toHaveValue(chatId);
 }
 
+// Every error that is not a field's own is a toast with its sentence, never its code.
+const errorToast = (page: Page) => page.locator('[data-component="ErrorToast"]');
+
 async function failRequest(page: Page, path: RegExp, code: string) {
   await page.route(path, (route) =>
     route.fulfill({
@@ -138,7 +141,7 @@ test('Channels acceptance 3: duplicate group never adds a row', async ({ page })
   await expect(page.getByRole('row')).toHaveCount(rows);
   await addGroup(page, 'Demo new group', groups[0].providerChatId);
   await page.getByRole('button', { name: 'Save draft', exact: true }).click();
-  await expect(page.getByRole('alert')).toContainText('E-TG-CHANNEL-DUPLICATE');
+  await expect(errorToast(page)).toHaveText('This group is already configured in this workspace.');
   await expect(page.getByRole('row')).toHaveCount(rows);
 });
 test('Channels acceptance 4: positive chat IDs show the exact unsupported error', async ({
@@ -146,9 +149,14 @@ test('Channels acceptance 4: positive chat IDs show the exact unsupported error'
 }) => {
   await addGroup(page, 'Private chat', '12345');
   await page.getByRole('button', { name: 'Check group', exact: true }).click();
-  await expect(page.locator('#channel-setup-error')).toHaveText(
-    'E-TG-CHAT-TYPE-UNSUPPORTED · Only Telegram groups and supergroups are supported.',
+  await expect(page.locator('#channel-chat-error')).toHaveText(
+    'Only Telegram groups and supergroups are supported.',
   );
+  await expect(page.getByLabel('Telegram Chat ID', { exact: true })).toHaveAttribute(
+    'aria-invalid',
+    'true',
+  );
+  await expect(errorToast(page)).toHaveCount(0);
 });
 
 for (const [index, [number, code]] of (
@@ -168,10 +176,11 @@ for (const [index, [number, code]] of (
       await addGroup(page, code, chatId);
       await failRequest(page, /\/channels\/[^/]+\/verify$/, code);
       await page.getByRole('button', { name: 'Check group', exact: true }).click();
-      await expect(page.locator('#channel-setup-error')).toContainText(code);
+      await expect(errorToast(page)).toContainText('Setup failed');
+      await expect(errorToast(page)).not.toContainText(code);
 
       if (code === 'E-TG-RATE-LIMITED') {
-        await expect(page.locator('#channel-setup-error')).toContainText('30s');
+        await expect(errorToast(page)).toContainText('30s');
       }
 
       await expect(page.getByLabel('Display name', { exact: true })).toHaveValue(code);
@@ -191,7 +200,7 @@ test('Channels acceptance 7: failed activation never marks the group Active', as
     .getByRole('dialog', { name: 'Start monitoring Failed activation?' })
     .getByRole('button', { name: 'Activate monitoring', exact: true })
     .click();
-  await expect(page.locator('#channel-setup-error')).toContainText('E-TG-ACTIVATION-FAILED');
+  await expect(errorToast(page)).toHaveText('Setup failed');
   const response = await page.request.get(backend.baseUrl + '/api/v1/channels');
   const saved = (await response.json()).data.find(
     (group: { displayName: string }) => group.displayName === 'Failed activation',
@@ -251,7 +260,9 @@ test('Channels acceptance 11: expired code keeps the typed Chat ID', async ({ pa
   );
   await page.getByText('Identify with a connection code instead', { exact: true }).click();
   await page.getByRole('button', { name: 'Get connection code', exact: true }).click();
-  await expect(page.locator('#channel-setup-error')).toContainText('E-TG-SESSION-EXPIRED');
+  await expect(errorToast(page)).toHaveText(
+    'This connection code has expired. Generate a new code.',
+  );
   await expect(page.getByLabel('Telegram Chat ID', { exact: true })).toHaveValue('-1009000000004');
 });
 test('Channels acceptance 12: verifying a different bot empties the password field', async ({
@@ -260,7 +271,7 @@ test('Channels acceptance 12: verifying a different bot empties the password fie
   await page.getByRole('button', { name: 'Manage Telegram connection', exact: true }).click();
   await page.getByLabel('Replacement bot token', { exact: true }).fill('different-bot-token');
   await page.getByRole('button', { name: 'Verify', exact: true }).click();
-  await expect(page.locator('#bot-check-result')).toContainText('E-TG-CREDENTIAL-BOT-MISMATCH');
+  await expect(errorToast(page)).toHaveText('This token belongs to a different bot.');
   await expect(page.getByLabel('Replacement bot token', { exact: true })).toHaveValue('');
 });
 
@@ -279,6 +290,8 @@ test('Channels credential re-entry uses the token submitted to Verify even if th
   await field.fill('verified-re-entry-token');
   await page.getByRole('button', { name: 'Verify', exact: true }).click();
   await expect(field).toHaveValue('');
+  // The seed stores the username with its @; the result shows exactly one.
+  await expect(page.locator('#bot-check-result')).toHaveText('@simpul_workspace_bot');
   await field.fill('verified-re-entry-token');
   await expect(page.getByRole('button', { name: 'Save connection', exact: true })).toBeEnabled();
 });
@@ -453,7 +466,9 @@ test('The connection-code poll stops on expired and preserves the typed Chat ID'
   await expect.poll(calls).toBe(1);
   expired = true;
   await page.clock.fastForward(10000);
-  await expect(page.locator('#channel-setup-error')).toContainText('E-TG-SESSION-EXPIRED');
+  await expect(errorToast(page)).toHaveText(
+    'This connection code has expired. Generate a new code.',
+  );
   const stopped = calls();
 
   await page.clock.fastForward(60000);

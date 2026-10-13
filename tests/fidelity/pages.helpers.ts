@@ -22,6 +22,13 @@ export type Json = Record<string, unknown>;
 // FR-UI-03's description wraps to more lines than the mockup's sample sentence at 900 and 375.
 export const PREVIEW_TOLERANCE = 0.3;
 
+// FD-19: the auth card is centred, so it sits lower than the mockup's; FD-20 reuses the bar.
+export const AUTH_TOLERANCE = 0.2;
+
+// FD-24 and FD-25: the top bar carries the workspace switcher and a bordered search; two page
+// views and the shell comparisons at 375 land just over the common bar.
+export const SHELL_TOLERANCE = 0.15;
+
 // The mockup lists nine hand-written rows in a fixed order; the real API lists 125 by recency.
 // The same rows, in the mockup's order, are served so row styling is compared like for like.
 const WORK_ORDER = [

@@ -1,6 +1,8 @@
 // The views the app is compared on; how each is reached is in pages.helpers.ts.
 import { connectedWorkspace, pendingWorkspace, STRING } from '../e2e/helpers/database';
 import {
+  AUTH_TOLERANCE,
+  SHELL_TOLERANCE,
   PREVIEW_TOLERANCE,
   checkedGroup,
   mockupPeople,
@@ -147,6 +149,7 @@ export const appViews: AppView[] = [
   },
   {
     view: 'database.setup',
+    tolerance: AUTH_TOLERANCE,
     path: '/',
     prepare: async (page) => {
       await pendingWorkspace(page);
@@ -154,6 +157,7 @@ export const appViews: AppView[] = [
   },
   {
     view: 'database.notice-not-accepted',
+    tolerance: AUTH_TOLERANCE,
     path: '/setup/database',
     prepare: async (page) => {
       await pendingWorkspace(page);
@@ -166,8 +170,9 @@ export const appViews: AppView[] = [
   },
   {
     view: 'database.check-failed',
-    // The mockup's "Demo only" line under the form is not built (FD-02): content below shifts.
-    tolerance: 0.15,
+    // The mockup's "Demo only" line under the form is not built (FD-17), and the card is centred
+    // (FD-19): content below shifts.
+    tolerance: AUTH_TOLERANCE,
     path: '/setup/database',
     prepare: async (page) => {
       await pendingWorkspace(page, { put: () => Promise.resolve(refused('E-DB-VECTOR-MISSING')) });
@@ -182,6 +187,7 @@ export const appViews: AppView[] = [
   },
   {
     view: 'database.connecting',
+    tolerance: AUTH_TOLERANCE,
     path: '/setup/database',
     prepare: async (page) => {
       await pendingWorkspace(page, { put: () => new Promise(() => undefined) });
@@ -195,6 +201,7 @@ export const appViews: AppView[] = [
   },
   {
     view: 'database.unavailable',
+    tolerance: SHELL_TOLERANCE,
     path: '/',
     prepare: async (page) => {
       await connectedWorkspace(page);
@@ -255,12 +262,14 @@ export const appViews: AppView[] = [
     view: 'auth.sign-in',
     path: '/sign-in',
     anonymous: true,
+    tolerance: AUTH_TOLERANCE,
     prepare: signedOut,
   },
   {
     view: 'auth.sign-in-failed',
     path: '/sign-in',
     anonymous: true,
+    tolerance: AUTH_TOLERANCE,
     prepare: async (page) => {
       await signedOut(page);
       await page.route('**/api/auth/sign-in/email', (route) =>
@@ -275,11 +284,18 @@ export const appViews: AppView[] = [
       await page.evaluate(() => window.scrollTo(0, 0));
     },
   },
-  { view: 'auth.set-password', path: '/set-password', anonymous: true, prepare: signedOut },
+  {
+    view: 'auth.set-password',
+    path: '/set-password',
+    anonymous: true,
+    tolerance: AUTH_TOLERANCE,
+    prepare: signedOut,
+  },
   {
     view: 'auth.set-password-differs',
     path: '/set-password',
     anonymous: true,
+    tolerance: AUTH_TOLERANCE,
     prepare: signedOut,
     steps: async (page) => {
       await page.getByLabel('New password', { exact: true }).fill('one-password');
@@ -292,6 +308,7 @@ export const appViews: AppView[] = [
   {
     view: 'auth.no-access',
     path: '/',
+    tolerance: AUTH_TOLERANCE,
     prepare: async (page) => {
       await page.route('**/api/v1/**', (route) => {
         if (route.request().url().endsWith('/me')) {
@@ -353,6 +370,8 @@ export const appViews: AppView[] = [
   },
   ...[1, 2, 3, 4].map((step) => ({
     view: `settings.onboarding.${step}`,
+    // FD-20: the body is 32px wider than the mockup's, so the last step's text wraps differently.
+    tolerance: step === 4 ? AUTH_TOLERANCE : undefined,
     path: '/settings/onboarding',
     steps: onboardingAt(step),
   })),
@@ -363,6 +382,7 @@ export const appViews: AppView[] = [
   },
   {
     view: 'settings.mail.saved',
+    tolerance: SHELL_TOLERANCE,
     path: '/settings',
     steps: async (page) => {
       await page.getByRole('link', { name: /^Configure/ }).click();

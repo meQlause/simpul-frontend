@@ -150,6 +150,8 @@ async function inApp(page: Page, oneOff: OneOff) {
     },
   });
   await entry.steps?.(page);
+  // A drawer's block renders after its data arrives; reading it sooner finds nothing.
+  await page.locator(`[data-testid="${oneOff.app}"]`).waitFor();
   await page.mouse.move(0, 0);
 
   return page.evaluate(signature, `[data-testid="${oneOff.app}"]`);

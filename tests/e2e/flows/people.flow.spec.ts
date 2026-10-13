@@ -22,7 +22,10 @@ test('B-15: a role is edited, its backup preview follows, and the list shows the
 
   await drawer.getByLabel('Role', { exact: true }).fill('Warehouse Manager');
   await drawer.getByLabel('Backup person', { exact: true }).selectOption({ label: 'Mr. Hendra' });
-  await expect(drawer.locator('.drawer-handoff')).toContainText('Mr. Hendra');
+  const handoff = drawer.getByRole('list', { name: 'Hand-off order' });
+
+  await expect(handoff.getByRole('listitem').first()).toHaveText(/Budi Santoso\s*Contacted first/);
+  await expect(handoff.getByRole('listitem').last()).toHaveText(/Mr\. Hendra\s*Next when away/);
   await drawer.getByRole('button', { name: 'Save role', exact: true }).click();
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expect(

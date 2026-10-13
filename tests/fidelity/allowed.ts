@@ -23,6 +23,18 @@ export const exceptions = [
   { id: 'FD-15', view: 'settings.preview.voice-note', kind: 'tolerance' },
   { id: 'FD-16', view: 'settings.offline', kind: 'tolerance' },
   { id: 'FD-17', view: 'database.check-failed', kind: 'tolerance' },
+  { id: 'FD-19', view: 'auth.sign-in', kind: 'tolerance' },
+  { id: 'FD-19', view: 'auth.sign-in-failed', kind: 'tolerance' },
+  { id: 'FD-19', view: 'auth.set-password', kind: 'tolerance' },
+  { id: 'FD-19', view: 'auth.set-password-differs', kind: 'tolerance' },
+  { id: 'FD-19', view: 'auth.no-access', kind: 'tolerance' },
+  { id: 'FD-19', view: 'database.setup', kind: 'tolerance' },
+  { id: 'FD-19', view: 'database.notice-not-accepted', kind: 'tolerance' },
+  { id: 'FD-19', view: 'database.check-failed', kind: 'tolerance' },
+  { id: 'FD-19', view: 'database.connecting', kind: 'tolerance' },
+  { id: 'FD-20', view: 'settings.onboarding.4', kind: 'tolerance' },
+  { id: 'FD-24', view: 'database.unavailable', kind: 'tolerance' },
+  { id: 'FD-24', view: 'settings.mail.saved', kind: 'tolerance' },
 ] as const;
 
 export const usedIds = [...new Set([...allowed, ...exceptions].map((entry) => entry.id))];

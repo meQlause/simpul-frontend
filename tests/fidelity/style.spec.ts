@@ -90,7 +90,11 @@ for (const entry of views.filter((candidate) => candidate.view.startsWith(only))
       const roots = ['.sidebar', '.topbar', '#page-content', 'dialog[open]', '.toast']
         .flatMap((selector) => [...document.querySelectorAll(selector)])
         .filter(visible);
-      const elements = roots.flatMap((root) => [...root.querySelectorAll('*')]).filter(visible);
+      // FD-23: the error toast is a component the mockup never drew; its behaviour spec owns it.
+      const elements = roots
+        .flatMap((root) => [...root.querySelectorAll('*')])
+        .filter(visible)
+        .filter((element) => !element.closest('[data-component="ErrorToast"]'));
 
       return {
         texts: elements.filter(own).map((element) => ({

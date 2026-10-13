@@ -203,9 +203,10 @@ for (const form of forms) {
     await holdWrites(page);
     await form.button(page).click();
 
-    await expect(page.getByText(SENTENCE, { exact: true }).first()).toBeVisible();
+    await expect(page.locator('[data-component="ErrorToast"]')).toHaveText(SENTENCE);
     await expect(form.kept(page)).toHaveValue(form.keptValue);
-    await expect(page.locator('.toast.visible')).toHaveCount(0);
+    // A failure is never reported as a success.
+    await expect(page.locator('.toast.visible:not(.toast-error)')).toHaveCount(0);
   });
 
   test(`${form.name} form: a dropped connection says so and keeps what was typed`, async ({
@@ -215,8 +216,9 @@ for (const form of forms) {
     await holdWrites(page, 'dropped');
     await form.button(page).click();
 
-    await expect(page.getByText(SENTENCE, { exact: true }).first()).toBeVisible();
+    await expect(page.locator('[data-component="ErrorToast"]')).toHaveText(SENTENCE);
     await expect(form.kept(page)).toHaveValue(form.keptValue);
-    await expect(page.locator('.toast.visible')).toHaveCount(0);
+    // A failure is never reported as a success.
+    await expect(page.locator('.toast.visible:not(.toast-error)')).toHaveCount(0);
   });
 }
