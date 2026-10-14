@@ -59,9 +59,9 @@ export function ChannelConfirmation({
           <div className="drawer-policy-preview">
             <Icon name="telegram" />
             <div>
-              <h3>
-                <strong>{heading}</strong>
-              </h3>
+              <strong role="heading" aria-level={3}>
+                {heading}
+              </strong>
               <p>{detail}</p>
             </div>
           </div>

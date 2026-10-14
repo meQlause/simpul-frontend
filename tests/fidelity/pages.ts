@@ -3,6 +3,7 @@ import { connectedWorkspace, pendingWorkspace, STRING } from '../e2e/helpers/dat
 import {
   AUTH_TOLERANCE,
   SETTINGS_TOLERANCE,
+  SETUP_TOLERANCE,
   SHELL_TOLERANCE,
   PREVIEW_TOLERANCE,
   checkedGroup,
@@ -102,12 +103,14 @@ export const appViews: AppView[] = [
   { view: 'channels.ready', path: '/channels' },
   {
     view: 'channels.configure',
+    tolerance: SETUP_TOLERANCE,
     path: '/channels',
     steps: (page) =>
       openByKeyboard(page, page.locator('tbody tr').first().locator('.directory-title')),
   },
   {
     view: 'channels.add',
+    tolerance: SETUP_TOLERANCE,
     path: '/channels',
     steps: (page) =>
       openByKeyboard(page, page.getByRole('button', { name: 'Add Telegram channel' })),
@@ -130,9 +133,10 @@ export const appViews: AppView[] = [
           .getByRole('button', { name: /^Pause / }),
       ),
   },
-  { view: 'channels.verified', path: '/channels', ...checkedGroup() },
+  { view: 'channels.verified', path: '/channels', tolerance: SETUP_TOLERANCE, ...checkedGroup() },
   {
     view: 'channels.needs-action',
+    tolerance: SETUP_TOLERANCE,
     path: '/channels',
     ...checkedGroup((verification) => {
       const checks = verification.checks as Json[];
@@ -143,10 +147,11 @@ export const appViews: AppView[] = [
   },
   {
     view: 'channels.expired',
+    tolerance: SETUP_TOLERANCE,
     path: '/channels',
     ...checkedGroup((verification) => {
       verification.expiresAt = '2026-10-10T03:00:00Z';
-    }),
+    }, true),
   },
   {
     view: 'database.setup',

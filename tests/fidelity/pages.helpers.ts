@@ -33,6 +33,9 @@ export const SHELL_TOLERANCE = 0.15;
 // just over the common bar at 1440 and 900 (measured 15.55% and 14.38%, rounded up to 0.05).
 export const SETTINGS_TOLERANCE = 0.2;
 
+// FD-29: four steps where the mockup draws three sections; the bar is set from the measured ratios.
+export const SETUP_TOLERANCE = 0.4;
+
 // The mockup lists nine hand-written rows in a fixed order; the real API lists 125 by recency.
 // The same rows, in the mockup's order, are served so row styling is compared like for like.
 const WORK_ORDER = [
@@ -174,35 +177,34 @@ function nextGroup() {
   return { name: 'Sales & Order', chatId: `-100123456${String(groupCounter).padStart(4, '0')}` };
 }
 
-// Sends the two messages the readiness check waits for, as Telegram would.
-async function sendProof(page: Page, backendUrl: string, group: { name: string; chatId: string }) {
+// One message from the group, as Telegram would send it.
+async function sendUpdate(
+  page: Page,
+  backendUrl: string,
+  group: { name: string; chatId: string },
+  text: string,
+) {
   const list = await page.request.get(`${backendUrl}/api/v1/telegram/connections`);
   const connection = ((await list.json()) as { data: { id: string }[] }).data[0];
-  const session = await page.request.post(
-    `${backendUrl}/api/v1/telegram/connections/${connection.id}/sessions`,
-    { data: { purpose: 'receive_check' } },
-  );
-  const command = ((await session.json()) as { data: { command: string } }).data.command;
 
-  for (const text of [command, 'A new ordinary check message']) {
-    await page.request.post(`${backendUrl}/api/v1/webhooks/telegram/${connection.id}`, {
-      headers: { 'X-Telegram-Bot-Api-Secret-Token': Buffer.alloc(32, 8).toString('base64url') },
-      data: {
-        update_id: Date.now(),
-        message: {
-          message_id: Date.now(),
-          date: Math.floor(Date.now() / 1000),
-          from: { id: 1, is_bot: false, first_name: 'Tester' },
-          chat: { id: Number(group.chatId), type: 'supergroup', title: group.name },
-          text,
-        },
+  await page.request.post(`${backendUrl}/api/v1/webhooks/telegram/${connection.id}`, {
+    headers: { 'X-Telegram-Bot-Api-Secret-Token': Buffer.alloc(32, 8).toString('base64url') },
+    data: {
+      update_id: Date.now(),
+      message: {
+        message_id: Date.now(),
+        date: Math.floor(Date.now() / 1000),
+        from: { id: 1, is_bot: false, first_name: 'Tester' },
+        chat: { id: Number(group.chatId), type: 'supergroup', title: group.name },
+        text,
       },
-    });
-  }
+    },
+  });
 }
 
-// The new group's setup drawer after its checks ran; `patch` shapes the verification answer.
-export function checkedGroup(patch?: (verification: Json) => void) {
+// The new group's setup drawer after its checks ran; `patch` shapes the verification answer, and
+// `proof` sends the ordinary message that makes the group ready.
+export function checkedGroup(patch?: (verification: Json) => void, proof = !patch) {
   let backend = '';
   let group = nextGroup();
 
@@ -230,21 +232,21 @@ export function checkedGroup(patch?: (verification: Json) => void) {
     },
     steps: async (page: Page) => {
       await page.getByRole('button', { name: 'Add Telegram channel' }).click();
-      await page.getByLabel('Display name', { exact: true }).fill(group.name);
-      await page.getByLabel('Telegram Chat ID', { exact: true }).fill(group.chatId);
-      await page.getByRole('button', { name: 'Check group', exact: true }).click();
-      await page.getByRole('button', { name: 'Recheck', exact: true }).waitFor();
+      await page.getByRole('button', { name: 'Generate code', exact: true }).click();
+      const command = await page.getByLabel('Connection command', { exact: true }).inputValue();
 
-      if (!patch) {
-        await sendProof(page, backend, group);
-        await page.getByRole('button', { name: 'Recheck', exact: true }).click();
-        await page.getByText('Last checked just now').waitFor();
+      await sendUpdate(page, backend, group, command);
+      await page.getByText('Found: ' + group.name, { exact: true }).waitFor();
+
+      if (proof) {
+        await sendUpdate(page, backend, group, 'A new ordinary check message');
+        await page.getByText('Message received', { exact: true }).waitFor();
       }
 
       await page
-        .locator('.drawer-check-row')
+        .locator('.setup-step')
         .first()
-        .evaluate((row) => row.scrollIntoView({ block: 'center' }));
+        .evaluate((step) => step.scrollIntoView({ block: 'center' }));
     },
   };
 }

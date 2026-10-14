@@ -36,6 +36,11 @@ export const exceptions = [
   { id: 'FD-30', view: 'settings.ready', kind: 'tolerance' },
   { id: 'FD-24', view: 'database.unavailable', kind: 'tolerance' },
   { id: 'FD-24', view: 'settings.mail.saved', kind: 'tolerance' },
+  { id: 'FD-29', view: 'channels.configure', kind: 'tolerance' },
+  { id: 'FD-29', view: 'channels.add', kind: 'tolerance' },
+  { id: 'FD-29', view: 'channels.verified', kind: 'tolerance' },
+  { id: 'FD-29', view: 'channels.needs-action', kind: 'tolerance' },
+  { id: 'FD-29', view: 'channels.expired', kind: 'tolerance' },
 ] as const;
 
 export const usedIds = [...new Set([...allowed, ...exceptions].map((entry) => entry.id))];

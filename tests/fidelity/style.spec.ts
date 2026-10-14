@@ -35,7 +35,18 @@ const only = process.env.FIDELITY_VIEW ?? '';
 
 const views = [{ view: 'overview.ready', path: '/' } as (typeof appViews)[number], ...appViews];
 
-for (const entry of views.filter((candidate) => candidate.view.startsWith(only))) {
+// Waived by the user on 2026-10-14: the setup steps may differ from the mockup (telegram-one-code P6).
+const waived = new Set([
+  'channels.configure',
+  'channels.add',
+  'channels.verified',
+  'channels.needs-action',
+  'channels.expired',
+]);
+
+for (const entry of views.filter(
+  (candidate) => candidate.view.startsWith(only) && !waived.has(candidate.view),
+)) {
   test(`${entry.view} uses only the mockup's text and component styles`, async ({ page }) => {
     await open(page, backend.baseUrl, {
       path: entry.path,
