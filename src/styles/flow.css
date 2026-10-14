@@ -25,7 +25,7 @@
   pointer-events: none;
 }
 .routing-panel h2 {
-  font-size: 25px;
+  font-size: calc(25px + var(--text-step));
   line-height: 1.32;
   letter-spacing: -1.2px;
   font-weight: 700;
@@ -36,7 +36,7 @@
   color: #719167;
 }
 .routing-panel p {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   line-height: 1.8;
   color: #85917b;
 }
@@ -49,7 +49,7 @@
   padding: 5px 10px;
   border-radius: 20px;
   color: #6e8960;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   font-weight: 500;
 }
 .system-live > span {
@@ -119,14 +119,14 @@
 .flow-note b,
 .flow-result b {
   display: block;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   font-weight: 600;
   white-space: nowrap;
 }
 .flow-note div > span,
 .flow-result div > span {
   display: block;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #929b8b;
   white-space: nowrap;
   margin-top: 4px;
@@ -136,7 +136,7 @@
   right: 9px;
   top: 11px;
   color: #a8b0a0;
-  font-size: 6px;
+  font-size: calc(6px + var(--text-step));
 }
 .channel-mini {
   display: grid;
@@ -194,7 +194,7 @@
   position: absolute;
   white-space: nowrap;
   top: 126px;
-  font-size: 7px;
+  font-size: calc(7px + var(--text-step));
   letter-spacing: 0.3px;
   color: #9aa98d;
 }
@@ -248,7 +248,7 @@
   display: flex;
   gap: 6px;
   align-items: center;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
 }
 .routing-panel-footer .icon {
   width: 13px;
@@ -259,7 +259,7 @@
   align-items: center;
   gap: 7px;
   color: #668459;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   font-weight: 600;
   padding: 0;
 }

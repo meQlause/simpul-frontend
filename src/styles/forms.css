@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #6c8061;
   margin-bottom: 18px;
 }
@@ -17,7 +17,7 @@
   border: 1px solid #dfe7d7;
   border-radius: 7px;
   background: #fff;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   min-width: 0;
   width: 100%;
   outline-color: #91b27e;
@@ -33,7 +33,7 @@
 }
 .field small {
   color: #96a18e;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .field input[type='checkbox'] {
   width: auto;
@@ -43,7 +43,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 15px;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #afb6a4;
   padding-top: 21px;
 }

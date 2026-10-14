@@ -16,12 +16,12 @@
   margin-top: 2px;
 }
 .drawer-policy-preview strong {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #7d996a;
   font-weight: 600;
 }
 .drawer-policy-preview p {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #9aaf8b;
   line-height: 1.9;
   margin-top: 6px;
@@ -41,13 +41,13 @@
 }
 .drawer-check-row strong {
   display: block;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #839b70;
   font-weight: 550;
 }
 .drawer-check-row small {
   display: block;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #abb79d;
   margin-top: 5px;
 }
@@ -72,10 +72,10 @@
   margin-bottom: 9px;
   border: 1px solid #dae4d4;
   border-radius: 50%;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
 }
 .onboarding-progress small {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
 }
 .onboarding-progress .current {
   border-color: #176448;
@@ -106,12 +106,12 @@
 }
 .onboard-rule strong {
   flex: 1;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   color: #466348;
 }
 .onboard-rule small {
   flex-basis: 100%;
   padding-left: 28px;
   color: #7c9175;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }

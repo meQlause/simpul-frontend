@@ -1,9 +1,9 @@
 .panel-title {
-  font-size: 15px;
+  font-size: calc(15px + var(--text-step));
   font-weight: 700;
 }
 .panel-subtitle {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: var(--muted);
   margin-top: 5px;
 }
@@ -30,7 +30,7 @@
   background: #f3f8ed;
   border-radius: 8px;
   color: #789268;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   line-height: 1.8;
   margin: 20px 0;
   display: flex;

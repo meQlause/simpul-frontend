@@ -53,7 +53,7 @@
   overflow: hidden;
 }
 .auth-story h2 {
-  font-size: 30px;
+  font-size: calc(30px + var(--text-step));
   font-weight: 750;
   letter-spacing: -1.3px;
   line-height: 1.25;
@@ -64,7 +64,7 @@
   color: #6a9658;
 }
 .auth-story > p {
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   line-height: 1.7;
   color: #8a9288;
   max-width: 250px;
@@ -115,7 +115,7 @@
   position: absolute;
   z-index: 4;
   max-width: 230px;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #96a48a;
 }
 .auth-note-in {
@@ -149,7 +149,7 @@
   gap: 8px;
   border-top: 1px solid #dce6d3;
   padding: 13px 0;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #8a9980;
 }
 .auth-story-footer .icon {
@@ -164,7 +164,7 @@
 }
 .auth-form .brand {
   margin: 0 0 38px;
-  font-size: 25px;
+  font-size: calc(25px + var(--text-step));
   letter-spacing: -1.3px;
 }
 .auth-form .brand-mark {
@@ -267,7 +267,7 @@
     padding: 22px 22px 50px;
   }
   .auth-story h2 {
-    font-size: 24px;
+    font-size: calc(24px + var(--text-step));
   }
   .auth-story-footer {
     left: 22px;

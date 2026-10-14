@@ -15,11 +15,11 @@
   align-items: baseline;
 }
 .section-title h2 {
-  font-size: 13px;
+  font-size: calc(13px + var(--text-step));
   letter-spacing: -0.3px;
 }
 .section-title .text-small {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #a2a899;
 }
 .period-switch {
@@ -29,7 +29,7 @@
   border-radius: 6px;
 }
 .period-switch button {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #939b8c;
   padding: 5px 10px;
   border-radius: 4px;
@@ -57,7 +57,7 @@
   justify-content: space-between;
   gap: 8px;
   color: #8a9585;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .stat-top > .icon {
   width: 16px;
@@ -73,7 +73,7 @@
 }
 .stat-main > strong {
   font-family: 'Manrope', sans-serif;
-  font-size: 31px;
+  font-size: calc(31px + var(--text-step));
   font-weight: 650;
   letter-spacing: -1px;
   color: #304b34;
@@ -93,7 +93,7 @@
   gap: 5px;
   align-items: center;
   color: #a0a795;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   white-space: nowrap;
 }
 .trend {
@@ -188,13 +188,13 @@
   width: 17px;
 }
 .attention-intro h2 {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   letter-spacing: 0;
   line-height: 1.6;
   font-weight: 700;
 }
 .attention-intro p {
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #9aa28f;
   margin-top: 4px;
 }
@@ -214,19 +214,19 @@
 }
 .attention-number {
   font-family: 'Manrope', sans-serif;
-  font-size: 20px;
+  font-size: calc(20px + var(--text-step));
   color: #b2bd9c;
   font-weight: 500;
 }
 .attention-item b {
   display: block;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   white-space: nowrap;
   font-weight: 550;
   color: #6d7f5e;
 }
 .attention-item small {
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #a1aa93;
   display: block;
   margin-top: 3px;
@@ -258,7 +258,7 @@
   gap: 14px;
 }
 .panel-header h2 {
-  font-size: 13px;
+  font-size: calc(13px + var(--text-step));
 }
 .panel-title-row {
   display: flex;
@@ -266,7 +266,7 @@
   gap: 9px;
 }
 .count-badge {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #9aa98b;
   border: 1px solid #e3e9dd;
   border-radius: 5px;
@@ -300,7 +300,7 @@
   outline: none;
   min-width: 0;
   width: 100%;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   background: none;
 }
 .search-field input::placeholder {
@@ -325,7 +325,7 @@
 .filter-field select {
   border: 0;
   background: none;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #8c9a7e;
   padding-right: 2px;
   outline: none;
@@ -341,7 +341,7 @@
   white-space: nowrap;
 }
 .data-table th {
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   letter-spacing: 0.25px;
   color: #a2ac96;
   font-weight: 500;
@@ -361,7 +361,7 @@
 .data-table td {
   padding: 13px 12px;
   border-bottom: 1px solid #eef1e9;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #7a8b6e;
 }
 .data-table tbody tr:last-child td {
@@ -376,12 +376,12 @@
 }
 .data-table td strong {
   display: block;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   font-weight: 550;
   color: #4a6141;
 }
 .data-table td small {
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #a3af97;
   display: block;
   margin-top: 4px;
@@ -400,17 +400,17 @@
 .data-table .avatar {
   width: 25px;
   height: 25px;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
 }
 .data-table .person strong {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   padding: 3px 7px;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   border-radius: 4px;
   font-weight: 500;
   white-space: nowrap;
@@ -447,7 +447,7 @@
   gap: 5px;
   justify-content: flex-start;
   padding: 13px 20px;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #aab29e;
 }
 .table-footer > span:first-child {
@@ -514,7 +514,7 @@
   color: #aab79b;
 }
 .feed-time {
-  font-size: 7px;
+  font-size: calc(7px + var(--text-step));
   letter-spacing: 0.7px;
   color: #a3af95;
   display: block;
@@ -524,7 +524,7 @@
   padding: 0 4px;
 }
 .feed-item p {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   line-height: 1.75;
   color: #8d9b80;
 }
@@ -538,7 +538,7 @@
   align-items: center;
   padding: 0;
   margin-top: 6px;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #91a07e;
 }
 .feed-item button:hover {
@@ -550,7 +550,7 @@
 }
 .feed-tag {
   display: inline-block;
-  font-size: 7px;
+  font-size: calc(7px + var(--text-step));
   color: #9caa8d;
   background: #f7f9f2;
   border: 1px solid #eef1e7;
@@ -564,7 +564,7 @@
   justify-content: space-between;
   border-top: 1px solid var(--line);
   padding: 13px 19px;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #91a17f;
   text-align: left;
 }
@@ -580,7 +580,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 15px;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #afb6a4;
   padding-top: 21px;
 }

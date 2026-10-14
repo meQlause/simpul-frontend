@@ -8,12 +8,12 @@
   color: #405c44;
 }
 .message-preview p {
-  font-size: 13px;
+  font-size: calc(13px + var(--text-step));
   line-height: 1.9;
   margin: 14px 0;
 }
 .message-preview small {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #7e9375;
   line-height: 1.8;
 }
@@ -21,7 +21,7 @@
   display: flex;
   gap: 8px;
   align-items: center;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #176448;
   font-weight: 600;
 }
@@ -35,7 +35,7 @@
   margin: 17px 0 10px;
 }
 .message-actions > button {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   padding: 11px 12px;
   background: #fff;
   border: 1px solid #cbdcc1;
@@ -46,7 +46,7 @@
   opacity: 0.5;
 }
 .message-outcome {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   line-height: 1.8;
   border-top: 1px solid #d3e2ca;
   padding-top: 14px;
@@ -54,7 +54,7 @@
   color: #65855a;
 }
 .message-facts {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   line-height: 1.8;
   color: #7e9375;
   padding-left: 16px;
@@ -67,11 +67,11 @@
 }
 .clarification-options > .button {
   justify-content: flex-start;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
 }
 .email-preview ul {
   padding-left: 17px;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   line-height: 2;
 }
 .setup-failure {
@@ -80,7 +80,7 @@
   border: 1px solid #ecdfc3;
   border-radius: 9px;
   color: #8b6a32;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
 }
 .setup-failure p {
   line-height: 1.9;

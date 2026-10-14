@@ -16,7 +16,7 @@
   align-items: center;
   gap: 18px;
   color: #8e968f;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
 }
 .breadcrumb strong {
   font-weight: 500;
@@ -95,14 +95,14 @@
   background: transparent;
   outline: none;
   width: 159px;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
 }
 .global-search input::placeholder {
   color: #929b91;
 }
 kbd {
   font-family: inherit;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   background: #f8f9f5;
   border: 1px solid #e9ece5;
   padding: 2px 5px;
@@ -158,7 +158,7 @@ kbd {
   margin-bottom: 27px;
 }
 .eyebrow {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   font-weight: 600;
   letter-spacing: 1.55px;
   color: #7b8a77;
@@ -174,10 +174,10 @@ kbd {
 }
 .greeting-workspace {
   color: #a1a897;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
 }
 .page-title {
-  font-size: 30px;
+  font-size: calc(30px + var(--text-step));
   font-weight: 750;
   letter-spacing: -1.3px;
   margin: 9px 0 6px;
@@ -187,7 +187,7 @@ kbd {
   color: #71a977;
 }
 .page-description {
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   color: #8a9288;
 }
 .heading-actions {
@@ -197,7 +197,7 @@ kbd {
   gap: 12px;
 }
 .demo-label {
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #8a9883;
   letter-spacing: 1.3px;
 }
@@ -209,7 +209,7 @@ kbd {
   border: 1px solid #dfe5da;
   border-radius: 7px;
   padding: 10px 14px;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   font-weight: 550;
   background: #fff;
   transition:
@@ -244,14 +244,14 @@ kbd {
 }
 .button-small {
   padding: 6px 10px;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .text-button {
   color: #60815b;
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   font-weight: 600;
   padding: 0;
 }

@@ -32,7 +32,7 @@
   border-color: #dce9e4;
 }
 .review-age {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #97a58b;
   white-space: nowrap;
 }
@@ -51,14 +51,14 @@
 }
 .audit-time {
   font-family: 'Manrope', sans-serif;
-  font-size: 13px;
+  font-size: calc(13px + var(--text-step));
   font-weight: 600;
   letter-spacing: -0.2px;
   color: #6f845f;
 }
 .audit-timezone {
   display: inline-block;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   letter-spacing: 0.5px;
   color: #95a589;
   border: 1px solid #e3e9db;
@@ -95,18 +95,18 @@
 }
 .trace-source strong {
   display: block;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   font-weight: 600;
   color: #687e58;
   margin: 7px 0;
 }
 .trace-source p {
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   color: #8a9c7a;
   line-height: 1.8;
 }
 .trace-label {
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   letter-spacing: 1.4px;
   color: #a0af92;
   font-weight: 600;
@@ -141,7 +141,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #839e6e;
   font-weight: 600;
 }
@@ -158,12 +158,12 @@
   padding-top: 3px;
 }
 .decision-trace h3 {
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   color: #667f55;
   margin: 0 0 8px;
 }
 .decision-trace p {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   line-height: 1.9;
   color: #92a185;
 }
@@ -173,7 +173,7 @@
 }
 .trace-footnote {
   display: block;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   line-height: 1.8;
   color: #a5b096;
   margin-top: 8px;
@@ -183,7 +183,7 @@
   align-items: center;
   gap: 7px;
   text-align: left;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #799769;
   background: #f4f8ee;
   border: 1px solid #e2ecd8;
@@ -203,7 +203,7 @@
   align-items: center;
   gap: 5px;
   padding: 0;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #7c9869;
 }
 .trace-work-link .icon {
@@ -218,12 +218,12 @@
   padding: 23px 0 8px;
 }
 .review-next-step h3 {
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   margin: 3px 0 8px;
   color: #70885e;
 }
 .review-next-step p {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   line-height: 1.9;
   color: #94a387;
 }
@@ -237,7 +237,7 @@
   align-items: center;
   gap: 6px;
   white-space: nowrap;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #859b75;
 }
 .safeguard .icon {
@@ -255,7 +255,7 @@
   gap: 10px;
 }
 .upcoming-channel > .text-small {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .cards-grid {
   display: grid;
@@ -286,10 +286,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
 }
 .config-card p {
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   color: #84917d;
   line-height: 1.8;
 }
@@ -301,14 +301,14 @@
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #768a6e;
 }
 .rule-step {
   padding: 7px 9px;
   background: #f3f7ef;
   border-radius: 6px;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
 }
 .toggle.active,
 .toggle[aria-checked='true'] {
@@ -330,7 +330,7 @@
   padding: 11px 16px;
   color: #88977e;
   white-space: nowrap;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   border-bottom: 2px solid transparent;
 }
 .tab.active {
@@ -351,7 +351,7 @@
   align-items: center;
   gap: 9px;
   flex-wrap: wrap;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #8b9a80;
   margin-bottom: 25px;
 }
@@ -359,11 +359,11 @@
   margin: 25px 0;
 }
 .detail-section h3 {
-  font-size: 13px;
+  font-size: calc(13px + var(--text-step));
   margin-bottom: 13px;
 }
 .detail-section p {
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   color: #7c8d73;
   line-height: 1.9;
 }
@@ -375,7 +375,7 @@
   border-left: 1px solid #dce6d3;
   margin-left: 7px;
   padding: 0 0 24px 24px;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   color: #7d8f73;
 }
 .timeline-item:last-child {
@@ -396,7 +396,7 @@
   color: #4e6940;
 }
 .timeline-item small {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #9baa90;
 }
 .notice.amber {
@@ -406,7 +406,7 @@
 }
 .stat-value {
   font-family: 'Manrope', sans-serif;
-  font-size: 30px;
+  font-size: calc(30px + var(--text-step));
   font-weight: 700;
   letter-spacing: -1px;
   line-height: 1.5;
@@ -427,13 +427,13 @@
   min-width: 0;
 }
 .row-content p {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   line-height: 1.8;
   color: #98a38e;
   margin-top: 5px;
 }
 .row-content h3 {
-  font-size: 13px;
+  font-size: calc(13px + var(--text-step));
 }
 .split-layout {
   display: grid;
@@ -450,10 +450,10 @@
   top: 20px;
 }
 .simulation-panel h3 {
-  font-size: 13px;
+  font-size: calc(13px + var(--text-step));
 }
 .simulation-panel p {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #8b9d7b;
   line-height: 1.8;
   margin-top: 10px;
@@ -468,7 +468,7 @@
   gap: 12px;
   padding: 15px 0;
   border-bottom: 1px solid var(--line);
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   line-height: 1.8;
 }
 .audit-step .icon {
@@ -489,7 +489,7 @@
   height: 24px;
 }
 .queue-count {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   background: #edf2e7;
   color: #8b9e7b;
   border-radius: 5px;
@@ -500,7 +500,7 @@
   text-align: center;
   padding: 60px 25px;
   color: #96a38b;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
 }
 .empty-state .icon {
   width: 32px;
@@ -517,7 +517,7 @@
   align-items: center;
 }
 .config-card .muted {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
 }
 .noscript {
   position: fixed;
@@ -542,7 +542,7 @@ dialog.drawer.trace-drawer #dialog-content {
   margin-bottom: 23px;
 }
 .trace-header .eyebrow {
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   letter-spacing: 1.4px;
   color: #84977a;
 }
@@ -554,7 +554,7 @@ dialog.drawer.trace-drawer #dialog-content {
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #8f9f85;
 }
 .trace-record-meta > span:first-child {
@@ -567,7 +567,7 @@ dialog.drawer.trace-drawer #dialog-content {
   height: 13px;
 }
 .trace-sample-label {
-  font-size: 7px;
+  font-size: calc(7px + var(--text-step));
   letter-spacing: 1px;
   color: #a7b197;
 }
@@ -615,7 +615,7 @@ dialog.drawer.trace-drawer #dialog-content {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   font-weight: 550;
   padding: 5px 9px;
   border-radius: 20px;
@@ -628,14 +628,14 @@ dialog.drawer.trace-drawer #dialog-content {
   height: 12px;
 }
 .trace-outcome-hero h3 {
-  font-size: 20px;
+  font-size: calc(20px + var(--text-step));
   line-height: 1.5;
   font-weight: 650;
   letter-spacing: -0.5px;
   max-width: 350px;
 }
 .trace-outcome-hero > p {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   line-height: 1.9;
   color: #aac29e;
   max-width: 410px;
@@ -654,7 +654,7 @@ dialog.drawer.trace-drawer #dialog-content {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
 }
 .trace-path .icon {
   width: 13px;
@@ -701,7 +701,7 @@ dialog.drawer.trace-drawer #dialog-content {
   align-items: center;
   gap: 8px;
   padding: 14px 0;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #94a18a;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
@@ -712,7 +712,7 @@ dialog.drawer.trace-drawer #dialog-content {
   font-weight: 600;
 }
 .trace-view-tabs > button > span {
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   background: #eef3e6;
   border-radius: 4px;
   padding: 2px 5px;
@@ -733,13 +733,13 @@ dialog.drawer.trace-drawer #dialog-content {
   margin: 22px 0 18px;
 }
 .trace-section-heading h3 {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   letter-spacing: 0;
   font-weight: 600;
   color: #728969;
 }
 .trace-section-heading > span {
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #a6b19b;
 }
 .rich-decision-trace {
@@ -776,7 +776,7 @@ dialog.drawer.trace-drawer #dialog-content {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #86a374;
   font-weight: 600;
 }
@@ -832,13 +832,13 @@ dialog.drawer.trace-drawer #dialog-content {
 }
 .trace-step-heading strong {
   display: block;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #657e55;
   font-weight: 600;
 }
 .trace-step-heading small {
   display: block;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #a2af95;
   margin-top: 4px;
 }
@@ -856,7 +856,7 @@ dialog.drawer.trace-drawer #dialog-content {
   border-top: 1px solid #f0f3eb;
 }
 .trace-step-content > p {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #8c9d7f;
   line-height: 1.9;
   padding-top: 13px;
@@ -886,13 +886,13 @@ dialog.drawer.trace-drawer #dialog-content {
 }
 .trace-linked-work strong {
   display: block;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #728c60;
   font-weight: 600;
 }
 .trace-linked-work small {
   display: block;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #a2af93;
   line-height: 1.8;
   margin-top: 3px;
@@ -907,7 +907,7 @@ dialog.drawer.trace-drawer #dialog-content {
   align-items: flex-start;
   gap: 6px;
   color: #a1b092;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   line-height: 1.8;
   margin-top: 12px;
 }
@@ -936,7 +936,7 @@ dialog.drawer.trace-drawer #dialog-content {
 }
 .trace-policy-header > strong {
   flex: 1;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #7b9569;
   font-weight: 600;
 }
@@ -951,13 +951,13 @@ dialog.drawer.trace-drawer #dialog-content {
 }
 .trace-recipient-row strong {
   display: block;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #6b8758;
   font-weight: 600;
 }
 .trace-recipient-row small {
   display: block;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #a3b092;
   margin-top: 4px;
 }
@@ -965,7 +965,7 @@ dialog.drawer.trace-drawer #dialog-content {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #8ca178;
   padding: 10px;
   background: #f6f9f1;
@@ -988,7 +988,7 @@ dialog.drawer.trace-drawer #dialog-content {
   margin-top: 14px;
   padding-top: 13px;
   color: #85a173;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .trace-outcome-stamp .icon {
   width: 15px;
@@ -996,7 +996,7 @@ dialog.drawer.trace-drawer #dialog-content {
 }
 .trace-outcome-stamp time {
   margin-left: auto;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #a6b396;
 }
 .trace-context-facts {
@@ -1036,12 +1036,12 @@ dialog.drawer.trace-drawer #dialog-content {
   height: 16px;
 }
 .trace-evidence-lock h3 {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #80966c;
   margin: 1px 0 6px;
 }
 .trace-evidence-lock p {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   line-height: 1.9;
   color: #a0af91;
 }
@@ -1050,7 +1050,7 @@ dialog.drawer.trace-drawer #dialog-content {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #a6b198;
   padding: 13px 0 22px;
 }
@@ -1073,7 +1073,7 @@ dialog.drawer.trace-drawer #dialog-content {
   z-index: 5;
 }
 .trace-drawer-footer > .button {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   padding: 9px 12px;
 }
 .trace-record-navigation {
@@ -1081,7 +1081,7 @@ dialog.drawer.trace-drawer #dialog-content {
   align-items: center;
   gap: 3px;
   color: #a6b39a;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
 }
 .trace-record-navigation .icon-button {
   width: 25px;
@@ -1108,7 +1108,7 @@ dialog.drawer.trace-drawer #dialog-content {
   border-radius: 10px;
 }
 .drawer-work-summary > p {
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   line-height: 2;
   color: #7b9369;
   margin: 10px 0 14px;
@@ -1118,7 +1118,7 @@ dialog.drawer.trace-drawer #dialog-content {
   align-items: center;
   gap: 6px;
   color: #b0a071;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
 }
 .drawer-work-summary .icon {
   width: 13px;
@@ -1137,7 +1137,7 @@ dialog.drawer.trace-drawer #dialog-content {
   background: #eee4c9;
 }
 .drawer-review-hero h3 {
-  font-size: 23px;
+  font-size: calc(23px + var(--text-step));
   font-weight: 650;
   line-height: 1.5;
   color: #908052;
@@ -1145,7 +1145,7 @@ dialog.drawer.trace-drawer #dialog-content {
   letter-spacing: -0.6px;
 }
 .drawer-review-hero > p {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   line-height: 1.9;
   color: #b2a27e;
   margin-top: 9px;
@@ -1158,7 +1158,7 @@ dialog.drawer.trace-drawer #dialog-content {
   border-top: 1px solid #e5dbbd;
   padding-top: 15px;
   margin-top: 18px;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #b9aa85;
 }
 .workspace-setup-banner > span {
@@ -1180,14 +1180,14 @@ dialog.drawer.trace-drawer #dialog-content {
 .onboard-person strong,
 .onboard-rule strong {
   display: block;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   color: #466348;
 }
 .onboard-person small,
 .onboard-rule small {
   display: block;
   color: #7c9175;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   margin-top: 6px;
 }
 .onboard-person > .field {
@@ -1199,7 +1199,7 @@ dialog.drawer.trace-drawer #dialog-content {
   padding: 15px;
   border: 1px dashed #cadac4;
   border-radius: 9px;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #5d7655;
 }
 .setup-alternative p {
@@ -1213,7 +1213,7 @@ dialog.drawer.trace-drawer #dialog-content {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   flex-wrap: wrap;
   color: #66865c;
   margin: 16px 0;
@@ -1242,11 +1242,11 @@ dialog.drawer.trace-drawer #dialog-content {
   display: flex;
   gap: 9px;
   align-items: center;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   color: #466b50;
 }
 .configuration-list > button small {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #8b9f81;
   max-width: 180px;
 }
@@ -1255,7 +1255,7 @@ dialog.drawer.trace-drawer #dialog-content {
   height: 14px;
 }
 .mockup-states {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #8b9c80;
   margin: 26px 0 10px;
   padding: 14px 0;
@@ -1265,7 +1265,7 @@ dialog.drawer.trace-drawer #dialog-content {
   cursor: pointer;
 }
 .mockup-states .button {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
 }
 .field small.field-error,
 .drawer-section-content .field small.field-error {
@@ -1326,7 +1326,7 @@ dialog.drawer.trace-drawer #dialog-content {
     width: auto;
     text-align: left;
     margin: 0;
-    font-size: 9px;
+    font-size: calc(9px + var(--text-step));
   }
   .audit-panel .directory-table .directory-actions {
     top: 15px;
@@ -1339,13 +1339,13 @@ dialog.drawer.trace-drawer #dialog-content {
   }
   .audit-timezone {
     margin-left: 0;
-    font-size: 7px;
+    font-size: calc(7px + var(--text-step));
   }
   .decision-trace li {
     gap: 11px;
   }
   .decision-trace p {
-    font-size: 11px;
+    font-size: calc(11px + var(--text-step));
   }
   dialog.drawer.trace-drawer {
     padding: 27px 20px 0;
@@ -1354,7 +1354,7 @@ dialog.drawer.trace-drawer #dialog-content {
     padding-right: 12px;
   }
   .trace-header .eyebrow {
-    font-size: 7px;
+    font-size: calc(7px + var(--text-step));
     gap: 7px;
     letter-spacing: 1px;
   }
@@ -1362,19 +1362,19 @@ dialog.drawer.trace-drawer #dialog-content {
     padding: 18px;
   }
   .trace-outcome-hero h3 {
-    font-size: 18px;
+    font-size: calc(18px + var(--text-step));
   }
   .trace-record-meta {
-    font-size: 9px;
+    font-size: calc(9px + var(--text-step));
   }
   .trace-sample-label {
-    font-size: 6px;
+    font-size: calc(6px + var(--text-step));
   }
   .trace-section-heading > span {
-    font-size: 7px;
+    font-size: calc(7px + var(--text-step));
   }
   .trace-section-heading h3 {
-    font-size: 10px;
+    font-size: calc(10px + var(--text-step));
   }
   .rich-trace-step {
     gap: 9px;
@@ -1391,10 +1391,10 @@ dialog.drawer.trace-drawer #dialog-content {
     height: 24px;
   }
   .trace-step-heading strong {
-    font-size: 10px;
+    font-size: calc(10px + var(--text-step));
   }
   .trace-step-heading small {
-    font-size: 8px;
+    font-size: calc(8px + var(--text-step));
   }
   .trace-context-facts dt {
     width: 80px;
@@ -1405,11 +1405,11 @@ dialog.drawer.trace-drawer #dialog-content {
     gap: 8px;
   }
   .trace-drawer-footer > .button {
-    font-size: 9px;
+    font-size: calc(9px + var(--text-step));
     padding: 8px 10px;
   }
   .trace-record-navigation {
-    font-size: 8px;
+    font-size: calc(8px + var(--text-step));
     gap: 0;
   }
   .trace-record-navigation .icon-button {
@@ -1419,7 +1419,7 @@ dialog.drawer.trace-drawer #dialog-content {
     gap: 9px;
   }
   .trace-path > span {
-    font-size: 8px;
+    font-size: calc(8px + var(--text-step));
   }
   .trace-path .icon {
     width: 12px;
@@ -1429,7 +1429,7 @@ dialog.drawer.trace-drawer #dialog-content {
     padding: 19px;
   }
   .drawer-review-hero h3 {
-    font-size: 21px;
+    font-size: calc(21px + var(--text-step));
   }
   .workspace-setup-banner {
     align-items: flex-start;
@@ -1450,7 +1450,7 @@ dialog.drawer.trace-drawer #dialog-content {
     gap: 3px;
   }
   .onboarding-progress small {
-    font-size: 8px;
+    font-size: calc(8px + var(--text-step));
   }
   .configuration-list > button small {
     display: none;
@@ -1475,17 +1475,17 @@ dialog.drawer.trace-drawer #dialog-content {
     width: 100px;
   }
   .page-title {
-    font-size: 25px;
+    font-size: calc(25px + var(--text-step));
   }
   .page-description {
-    font-size: 10px;
+    font-size: calc(10px + var(--text-step));
   }
   .routing-panel {
     padding-left: 18px;
     padding-right: 18px;
   }
   .system-live {
-    font-size: 6px;
+    font-size: calc(6px + var(--text-step));
     padding: 4px 6px;
     gap: 4px;
   }
@@ -1494,7 +1494,7 @@ dialog.drawer.trace-drawer #dialog-content {
     height: 4px;
   }
   .routing-panel h2 {
-    font-size: 21px;
+    font-size: calc(21px + var(--text-step));
   }
   .flow-map {
     left: 15px;
@@ -1504,30 +1504,30 @@ dialog.drawer.trace-drawer #dialog-content {
   }
   .flow-note b,
   .flow-result b {
-    font-size: 7px;
+    font-size: calc(7px + var(--text-step));
   }
   .flow-note div > span,
   .flow-result div > span {
-    font-size: 6px;
+    font-size: calc(6px + var(--text-step));
   }
   .flow-result-icon {
     display: none;
   }
   .routing-panel-footer > span {
-    font-size: 6px;
+    font-size: calc(6px + var(--text-step));
     max-width: 160px;
   }
   .routing-panel-footer > button {
-    font-size: 7px;
+    font-size: calc(7px + var(--text-step));
   }
   .section-title h2 {
-    font-size: 11px;
+    font-size: calc(11px + var(--text-step));
   }
   .stat-card {
     padding: 14px;
   }
   .stat-foot {
-    font-size: 7px;
+    font-size: calc(7px + var(--text-step));
   }
   .sparkline {
     width: 60px;
@@ -1569,7 +1569,7 @@ dialog.drawer.trace-drawer #dialog-content {
   align-items: center;
   padding: 0;
   margin-top: 6px;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   font-weight: 400;
   line-height: 1.5;
   color: #91a07e;

@@ -7,7 +7,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   font-weight: 650;
   flex-shrink: 0;
 }
@@ -33,7 +33,7 @@
 .avatar.small {
   width: 32px;
   height: 32px;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
 }
 .avatar-stack {
   display: flex;
@@ -49,7 +49,7 @@
   border: 2px solid white;
   border-radius: 50%;
   margin-left: -6px;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   font-weight: 600;
 }
 .avatar-stack span:nth-child(2) {
@@ -75,7 +75,7 @@
   border: 1px solid #dfe5da;
   border-radius: 7px;
   padding: 10px 14px;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   font-weight: 550;
   background: #fff;
   transition:
@@ -110,14 +110,14 @@
 }
 .button-small {
   padding: 6px 10px;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .text-button {
   color: #60815b;
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   font-weight: 600;
   padding: 0;
 }
@@ -143,7 +143,7 @@
   gap: 14px;
 }
 .panel-header h2 {
-  font-size: 13px;
+  font-size: calc(13px + var(--text-step));
 }
 .panel-title-row {
   display: flex;
@@ -151,7 +151,7 @@
   gap: 9px;
 }
 .count-badge {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #9aa98b;
   border: 1px solid #e3e9dd;
   border-radius: 5px;
@@ -161,14 +161,14 @@
 .data-table .avatar {
   width: 25px;
   height: 25px;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
 }
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   padding: 3px 7px;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   border-radius: 4px;
   font-weight: 500;
   white-space: nowrap;
@@ -212,7 +212,7 @@
   flex-wrap: wrap;
   margin: 0 0 24px;
   padding: 14px 0;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #8b9983;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
@@ -264,13 +264,13 @@
   align-items: center;
   gap: 7px;
   white-space: nowrap;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #8a9882;
   padding: 8px 10px;
   border-radius: 6px;
 }
 .directory-tab span {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   padding: 1px 5px;
   background: #f0f3eb;
   color: #98a48d;
@@ -295,7 +295,7 @@
   background: #fcfdf9;
 }
 .directory-search input {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
 }
 .directory-table {
   width: 100%;
@@ -308,7 +308,7 @@
   padding: 13px 16px;
   background: #f9fbf6;
   border-bottom: 1px solid var(--line);
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   font-weight: 500;
   color: #9aa58e;
   white-space: nowrap;
@@ -319,7 +319,7 @@
 .directory-table td {
   padding: 22px 16px;
   border-bottom: 1px solid #edf1e7;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   color: #6b7d60;
   vertical-align: middle;
 }
@@ -335,7 +335,7 @@
 }
 .directory-table small {
   display: block;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #a2ac97;
   margin-top: 5px;
   white-space: nowrap;
@@ -370,14 +370,14 @@
 .directory-identity .avatar {
   width: 36px;
   height: 36px;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .directory-title {
   display: block;
   text-align: left;
   padding: 0;
   color: #405b36;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   line-height: 1.6;
   font-weight: 600;
 }
@@ -387,7 +387,7 @@
   text-underline-offset: 3px;
 }
 .directory-identity p {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #9aa68d;
   line-height: 1.8;
   margin-top: 4px;
@@ -401,7 +401,7 @@
   background: #fafcf6;
   border-radius: 5px;
   padding: 4px 8px;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   font-weight: 500;
   color: #88987a;
   white-space: nowrap;
@@ -414,7 +414,7 @@
   display: flex;
   gap: 6px;
   align-items: center;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   white-space: nowrap;
 }
 .directory-recipient .icon {
@@ -424,7 +424,7 @@
 }
 .directory-number {
   font-family: 'Manrope', sans-serif;
-  font-size: 17px;
+  font-size: calc(17px + var(--text-step));
   letter-spacing: -0.5px;
   font-weight: 600;
   color: #6b835c;
@@ -434,7 +434,7 @@
   align-items: center;
   gap: 8px;
   color: #8c9a80;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   white-space: nowrap;
 }
 .directory-table .directory-actions {
@@ -453,18 +453,18 @@
   height: 15px;
 }
 .directory-table .badge {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   padding: 4px 8px;
 }
 .directory-role {
   white-space: nowrap;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
 }
 .backup-person {
   display: flex;
   gap: 7px;
   align-items: center;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   white-space: nowrap;
 }
 .backup-avatar {
@@ -476,7 +476,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 7px;
+  font-size: calc(7px + var(--text-step));
   color: #8c9c7e;
   flex-shrink: 0;
 }
@@ -484,7 +484,7 @@
   display: flex;
   gap: 7px;
   align-items: center;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   font-variant-numeric: tabular-nums;
 }
 .directory-member-count .icon {
@@ -498,7 +498,7 @@
   gap: 15px;
   align-items: center;
   padding: 14px 22px;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #a0ac94;
   border-top: 1px solid var(--line);
   background: #fdfefa;
@@ -507,7 +507,7 @@
   display: flex;
   gap: 6px;
   align-items: center;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
 }
 .directory-footer .icon {
   width: 12px;
@@ -517,7 +517,7 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   line-height: 1.8;
   color: #96a48a;
   padding: 19px 2px;
@@ -542,12 +542,12 @@
   flex: 1;
 }
 .directory-callout h3 {
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   color: #6b825b;
   font-weight: 650;
 }
 .directory-callout p {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #96a48a;
   line-height: 1.9;
   margin-top: 6px;
@@ -565,10 +565,10 @@
     padding-bottom: 25px;
   }
   .directory-title {
-    font-size: 13px;
+    font-size: calc(13px + var(--text-step));
   }
   .directory-identity p {
-    font-size: 11px;
+    font-size: calc(11px + var(--text-step));
   }
   .directory-toolbar {
     padding: 20px 24px;
@@ -584,7 +584,7 @@
     max-width: 320px;
   }
   .directory-tab {
-    font-size: 10px;
+    font-size: calc(10px + var(--text-step));
     padding: 7px 9px;
   }
   .directory-table td {
@@ -597,14 +597,14 @@
     max-width: 270px;
   }
   .directory-context {
-    font-size: 10px;
+    font-size: calc(10px + var(--text-step));
   }
 }
 @media (max-width: 760px) {
   .directory-context {
     margin-bottom: 18px;
     gap: 8px;
-    font-size: 10px;
+    font-size: calc(10px + var(--text-step));
   }
   .directory-context .context-divider {
     display: none;
@@ -658,7 +658,7 @@
     width: 100%;
     padding: 0;
     border: 0;
-    font-size: 11px;
+    font-size: calc(11px + var(--text-step));
   }
   .directory-table td:first-child {
     padding: 0 35px 5px 0;
@@ -666,13 +666,13 @@
   }
   .directory-table td[data-label]:not(:first-child):before {
     content: attr(data-label);
-    font-size: 10px;
+    font-size: calc(10px + var(--text-step));
     color: #a4af99;
     flex-shrink: 0;
   }
   .directory-table td small {
     margin: 0;
-    font-size: 9px;
+    font-size: calc(9px + var(--text-step));
   }
   .directory-table td:has(> small) {
     flex-wrap: wrap;
@@ -700,10 +700,10 @@
     height: 16px;
   }
   .directory-title {
-    font-size: 12px;
+    font-size: calc(12px + var(--text-step));
   }
   .directory-identity p {
-    font-size: 10px;
+    font-size: calc(10px + var(--text-step));
     max-width: none;
   }
   .directory-table .directory-empty {
@@ -714,10 +714,10 @@
   }
   .directory-footer {
     padding: 13px 16px;
-    font-size: 9px;
+    font-size: calc(9px + var(--text-step));
   }
   .directory-footer > span:last-child {
-    font-size: 8px;
+    font-size: calc(8px + var(--text-step));
     max-width: 150px;
     text-align: right;
   }
@@ -738,10 +738,10 @@
     margin-left: 47px;
   }
   .directory-note {
-    font-size: 9px;
+    font-size: calc(9px + var(--text-step));
   }
   .directory-status {
-    font-size: 10px;
+    font-size: calc(10px + var(--text-step));
   }
 }
 /* Details and forms enter from the right; confirmations stay centered. */
@@ -813,11 +813,11 @@ html:has(dialog[open]) {
   }
 }
 .panel-title {
-  font-size: 15px;
+  font-size: calc(15px + var(--text-step));
   font-weight: 700;
 }
 .panel-subtitle {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: var(--muted);
   margin-top: 5px;
 }
@@ -827,17 +827,17 @@ html:has(dialog[open]) {
 .card-top .avatar {
   width: 43px;
   height: 43px;
-  font-size: 13px;
+  font-size: calc(13px + var(--text-step));
 }
 .detail-title {
-  font-size: 24px;
+  font-size: calc(24px + var(--text-step));
   line-height: 1.4;
   letter-spacing: -0.7px;
   padding-right: 30px;
   margin: 12px 0 10px;
 }
 .data-table td .button {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .panel > .toolbar {
   padding-top: 18px;
@@ -865,12 +865,12 @@ dialog::backdrop {
   background: #f6f8f2;
 }
 #dialog-content > h2 {
-  font-size: 24px;
+  font-size: calc(24px + var(--text-step));
   margin: 10px 35px 15px 0;
 }
 #dialog-content > p {
   color: #8a9a7f;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   line-height: 1.8;
 }
 #dialog-content .eyebrow {
@@ -886,7 +886,7 @@ dialog::backdrop {
   background: #254b34;
   color: #edf3e7;
   box-shadow: 0 5px 25px #21362230;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   z-index: 100;
   opacity: 0;
   pointer-events: none;
@@ -905,7 +905,7 @@ dialog::backdrop {
   pointer-events: auto;
 }
 .toast button {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   font-weight: 600;
   text-decoration: underline;
   color: #d4e8b6;
@@ -958,7 +958,7 @@ dialog.confirmation-popup .toast.visible,
 }
 @media (max-width: 1050px) {
   .heading-actions .button {
-    font-size: 10px;
+    font-size: calc(10px + var(--text-step));
   }
 }
 @media (max-width: 760px) {
@@ -987,21 +987,21 @@ dialog.confirmation-popup .toast.visible,
   .toast {
     left: 50%;
     min-width: 240px;
-    font-size: 11px;
+    font-size: calc(11px + var(--text-step));
   }
   dialog {
     padding: 25px 20px;
   }
   .detail-title {
-    font-size: 21px;
+    font-size: calc(21px + var(--text-step));
   }
   .page-heading > .button {
-    font-size: 10px;
+    font-size: calc(10px + var(--text-step));
     padding: 8px;
   }
 }
 .trace-header .detail-title {
-  font-size: 25px;
+  font-size: calc(25px + var(--text-step));
   line-height: 1.4;
   letter-spacing: -0.85px;
   color: #314c2c;
@@ -1017,12 +1017,12 @@ dialog.confirmation-popup .toast.visible,
   height: 14px;
 }
 .trace-policy-header .badge {
-  font-size: 7px;
+  font-size: calc(7px + var(--text-step));
   padding: 2px 5px;
 }
 .trace-facts {
   margin: 13px 0;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .trace-facts > div {
   display: flex;
@@ -1038,24 +1038,24 @@ dialog.confirmation-popup .toast.visible,
   width: 65px;
   flex-shrink: 0;
   color: #a5b095;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
 }
 .trace-facts dd {
   margin: 0;
   flex: 1;
   line-height: 1.8;
   color: #829871;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .trace-policy-box > .text-button {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   border-top: 1px solid #e4ebda;
   padding-top: 10px;
   width: 100%;
   justify-content: space-between;
 }
 .trace-recipient-row .badge {
-  font-size: 7px;
+  font-size: calc(7px + var(--text-step));
 }
 .trace-recipient-row .avatar {
   width: 32px;
@@ -1063,17 +1063,17 @@ dialog.confirmation-popup .toast.visible,
 }
 @media (max-width: 760px) {
   .trace-header .detail-title {
-    font-size: 21px;
+    font-size: calc(21px + var(--text-step));
   }
   .trace-policy-header .badge {
     margin-left: 20px;
   }
   .trace-facts dt {
     width: 56px;
-    font-size: 8px;
+    font-size: calc(8px + var(--text-step));
   }
   .trace-facts dd {
-    font-size: 9px;
+    font-size: calc(9px + var(--text-step));
   }
 }
 /* Shared drawer language: context first, numbered sections, persistent actions. */
@@ -1100,19 +1100,19 @@ dialog.drawer.enhanced-drawer .dialog-close {
   margin-bottom: 23px;
 }
 .drawer-screen-header .eyebrow {
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #91a183;
   letter-spacing: 1.4px;
 }
 .drawer-screen-header .detail-title {
-  font-size: 25px;
+  font-size: calc(25px + var(--text-step));
   line-height: 1.45;
   letter-spacing: -0.7px;
   color: #34532d;
   margin: 12px 0 10px;
 }
 .drawer-screen-header > p {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   line-height: 1.9;
   color: #97a68c;
   max-width: 440px;
@@ -1135,7 +1135,7 @@ dialog.drawer.enhanced-drawer .dialog-close {
   z-index: 5;
 }
 .drawer-screen-footer > .button {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   padding: 10px 14px;
 }
 .drawer-screen-footer > .button:only-child {
@@ -1146,7 +1146,7 @@ dialog.drawer.enhanced-drawer .dialog-close {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #a7b499;
   padding: 18px 0 24px;
 }
@@ -1186,19 +1186,19 @@ dialog.drawer.enhanced-drawer .dialog-close {
 }
 .drawer-identity strong {
   display: block;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   color: #74935e;
   line-height: 1.7;
   font-weight: 600;
 }
 .drawer-identity p {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   line-height: 1.8;
   color: #9aae8b;
   margin-top: 4px;
 }
 .drawer-identity .badge {
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   flex-shrink: 0;
 }
 .drawer-identity.warm {
@@ -1223,7 +1223,7 @@ dialog.drawer.enhanced-drawer .dialog-close {
 }
 .drawer-section-heading > span {
   font-family: 'Manrope', sans-serif;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #a4b790;
   border: 1px solid #dfe8d4;
   background: #f4f8ed;
@@ -1236,19 +1236,19 @@ dialog.drawer.enhanced-drawer .dialog-close {
   flex: 1;
 }
 .drawer-section-heading h3 {
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   line-height: 1.6;
   color: #6d895b;
   font-weight: 650;
 }
 .drawer-section-heading p {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   line-height: 1.8;
   color: #a0af91;
   margin-top: 3px;
 }
 .drawer-section-content .field {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   margin-bottom: 18px;
   gap: 8px;
   color: #8ba275;
@@ -1256,7 +1256,7 @@ dialog.drawer.enhanced-drawer .dialog-close {
 .drawer-section-content .field input,
 .drawer-section-content .field select,
 .drawer-section-content .field textarea {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   padding: 12px 13px;
   border-color: #dfe8d4;
   border-radius: 8px;
@@ -1266,7 +1266,7 @@ dialog.drawer.enhanced-drawer .dialog-close {
   padding-right: 38px;
 }
 .drawer-section-content .field small {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #a5b397;
   line-height: 1.8;
 }
@@ -1275,13 +1275,13 @@ dialog.drawer.enhanced-drawer .dialog-close {
 }
 .drawer-section-content > .text-button {
   margin: 15px 0;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .drawer-inline-note {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   line-height: 1.9;
   color: #a0b08d;
   margin: 13px 0 20px;
@@ -1310,34 +1310,34 @@ dialog.drawer.enhanced-drawer .dialog-close {
 }
 .drawer-person strong {
   display: block;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #708d5d;
   font-weight: 600;
 }
 .drawer-person small {
   display: block;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #a3b194;
   margin-top: 4px;
 }
 .drawer-person .text-button {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
 }
 .drawer-person .text-button .icon {
   width: 12px;
 }
 .drawer-timeline .timeline-item {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   padding-bottom: 23px;
   color: #8aa074;
 }
 .drawer-timeline .timeline-item strong {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #7a9566;
   font-weight: 600;
 }
 .drawer-timeline .timeline-item p {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #a0af91;
   margin-top: 5px;
   line-height: 1.9;
@@ -1353,14 +1353,14 @@ dialog.drawer.enhanced-drawer .dialog-close {
   width: 86px;
 }
 .drawer-section .trace-facts dd {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .drawer-section .trace-source {
   margin: 0;
   background: #fff;
 }
 .drawer-section .trace-source p {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
 }
 .drawer-impact {
   padding: 20px;
@@ -1383,14 +1383,14 @@ dialog.drawer.enhanced-drawer .dialog-close {
 }
 .drawer-impact-title h3 {
   flex: 1;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   font-weight: 600;
   letter-spacing: 0;
 }
 .drawer-impact-title .badge {
   background: #cde4b819;
   color: #c1dca9;
-  font-size: 7px;
+  font-size: calc(7px + var(--text-step));
   border: 1px solid #c5dfa124;
 }
 .drawer-impact-value {
@@ -1401,19 +1401,19 @@ dialog.drawer.enhanced-drawer .dialog-close {
 }
 .drawer-impact-value > strong {
   font-family: 'Manrope', sans-serif;
-  font-size: 43px;
+  font-size: calc(43px + var(--text-step));
   line-height: 1;
   letter-spacing: -1.5px;
   font-weight: 650;
   color: #dcf1c8;
 }
 .drawer-impact-value > span {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   line-height: 1.8;
   color: #a4c197;
 }
 .drawer-impact > p {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #a3c295;
   line-height: 1.9;
   min-height: 34px;
@@ -1425,7 +1425,7 @@ dialog.drawer.enhanced-drawer .dialog-close {
   border-top: 1px solid #c2dda21c;
   padding-top: 13px;
   margin-top: 13px;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #aac59d;
 }
 .drawer-impact-route .icon {
@@ -1446,7 +1446,7 @@ dialog.drawer.enhanced-drawer .dialog-close {
 .drawer-person-hero .avatar {
   width: 50px;
   height: 50px;
-  font-size: 15px;
+  font-size: calc(15px + var(--text-step));
   border: 4px solid #f6f8f1;
 }
 .drawer-person-hero > div {
@@ -1454,12 +1454,12 @@ dialog.drawer.enhanced-drawer .dialog-close {
 }
 .drawer-person-hero strong {
   display: block;
-  font-size: 14px;
+  font-size: calc(14px + var(--text-step));
   font-weight: 600;
   color: #6c875a;
 }
 .drawer-person-hero p {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #a3b095;
   margin-top: 5px;
 }
@@ -1475,7 +1475,7 @@ dialog.drawer.enhanced-drawer .dialog-close {
   background: #f0f5e9;
   border: 1px solid #e1ead5;
   border-radius: 9px;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #87a073;
 }
 .drawer-handoff-person {
@@ -1489,7 +1489,7 @@ dialog.drawer.enhanced-drawer .dialog-close {
 }
 .drawer-handoff-person strong {
   display: block;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #708d5d;
   font-weight: 600;
   white-space: nowrap;
@@ -1498,7 +1498,7 @@ dialog.drawer.enhanced-drawer .dialog-close {
 }
 .drawer-handoff-person small {
   display: block;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #a3b194;
   margin-top: 4px;
 }
@@ -1539,18 +1539,18 @@ dialog.drawer.enhanced-drawer .dialog-close {
 }
 .drawer-check-row strong {
   display: block;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #839b70;
   font-weight: 550;
 }
 .drawer-check-row small {
   display: block;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #abb79d;
   margin-top: 5px;
 }
 .drawer-check-row .badge {
-  font-size: 7px;
+  font-size: calc(7px + var(--text-step));
 }
 .drawer-next-action {
   display: flex;
@@ -1562,12 +1562,12 @@ dialog.drawer.enhanced-drawer .dialog-close {
   background: #fff;
 }
 .drawer-next-action h3 {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #829c6e;
   margin-top: 2px;
 }
 .drawer-next-action p {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   line-height: 1.9;
   color: #a1b091;
   margin-top: 7px;
@@ -1581,13 +1581,13 @@ dialog.drawer.enhanced-drawer .dialog-close {
 .drawer-mapping-source > strong {
   display: block;
   font-family: 'Manrope', sans-serif;
-  font-size: 24px;
+  font-size: calc(24px + var(--text-step));
   letter-spacing: -0.6px;
   color: #7c9569;
   margin: 10px 0;
 }
 .drawer-mapping-source > p {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   line-height: 1.9;
   color: #a5b297;
 }
@@ -1620,7 +1620,7 @@ dialog.drawer.enhanced-drawer .dialog-close {
 }
 .drawer-guide-number {
   font-family: 'Manrope', sans-serif;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #b2bf9e;
 }
 .drawer-guide-icon {
@@ -1644,13 +1644,13 @@ dialog.drawer.enhanced-drawer .dialog-close {
 }
 .drawer-guide strong {
   display: block;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #7d976a;
   font-weight: 600;
 }
 .drawer-guide small {
   display: block;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   line-height: 1.9;
   color: #a5b296;
   margin-top: 5px;
@@ -1681,20 +1681,20 @@ dialog.drawer.enhanced-drawer .dialog-close {
 .drawer-workspace-hero strong {
   display: block;
   font-family: 'Manrope', sans-serif;
-  font-size: 20px;
+  font-size: calc(20px + var(--text-step));
   font-weight: 650;
   letter-spacing: -0.4px;
 }
 .drawer-workspace-hero > div > span {
   display: block;
   color: #a6c59a;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   margin-top: 4px;
 }
 .drawer-workspace-hero .badge {
   background: #cde4b819;
   color: #c1dca9;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
 }
 .drawer-workspace-links {
   margin-top: 20px;
@@ -1712,7 +1712,7 @@ dialog.drawer.enhanced-drawer .dialog-close {
   border-radius: 8px;
   text-align: left;
   color: #8da57b;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .drawer-workspace-links > button:hover {
   background: #f0f5e8;
@@ -1729,10 +1729,10 @@ dialog.drawer.enhanced-drawer .dialog-close {
     padding: 27px 20px 0;
   }
   .drawer-screen-header .detail-title {
-    font-size: 22px;
+    font-size: calc(22px + var(--text-step));
   }
   .drawer-screen-header .eyebrow {
-    font-size: 7px;
+    font-size: calc(7px + var(--text-step));
     letter-spacing: 1px;
   }
   .drawer-screen-footer {
@@ -1741,7 +1741,7 @@ dialog.drawer.enhanced-drawer .dialog-close {
     gap: 10px;
   }
   .drawer-screen-footer > .button {
-    font-size: 9px;
+    font-size: calc(9px + var(--text-step));
     padding: 9px 11px;
   }
   .drawer-identity {
@@ -1754,10 +1754,10 @@ dialog.drawer.enhanced-drawer .dialog-close {
     height: 32px;
   }
   .drawer-identity strong {
-    font-size: 11px;
+    font-size: calc(11px + var(--text-step));
   }
   .drawer-identity p {
-    font-size: 8px;
+    font-size: calc(8px + var(--text-step));
   }
   .drawer-person-hero {
     padding: 17px;
@@ -1767,29 +1767,29 @@ dialog.drawer.enhanced-drawer .dialog-close {
   .drawer-person-hero .avatar {
     width: 43px;
     height: 43px;
-    font-size: 12px;
+    font-size: calc(12px + var(--text-step));
   }
   .drawer-person-hero strong {
-    font-size: 12px;
+    font-size: calc(12px + var(--text-step));
   }
   .drawer-person-hero .badge {
-    font-size: 7px;
+    font-size: calc(7px + var(--text-step));
   }
   .drawer-section-heading p {
-    font-size: 8px;
+    font-size: calc(8px + var(--text-step));
   }
   .drawer-section-content .field {
-    font-size: 10px;
+    font-size: calc(10px + var(--text-step));
   }
   .drawer-handoff {
-    font-size: 9px;
+    font-size: calc(9px + var(--text-step));
     gap: 9px;
   }
   .drawer-check-row small {
-    font-size: 8px;
+    font-size: calc(8px + var(--text-step));
   }
   .drawer-check-row strong {
-    font-size: 9px;
+    font-size: calc(9px + var(--text-step));
   }
   .drawer-section .trace-facts dt {
     width: 76px;
@@ -1802,10 +1802,10 @@ dialog.drawer.enhanced-drawer .dialog-close {
     gap: 9px;
   }
   .drawer-guide small {
-    font-size: 8px;
+    font-size: calc(8px + var(--text-step));
   }
   .drawer-demo-note {
-    font-size: 7px;
+    font-size: calc(7px + var(--text-step));
   }
   .drawer-screen-body .trace-evidence-lock {
     margin-bottom: 10px;
@@ -1815,7 +1815,7 @@ dialog.drawer.enhanced-drawer .dialog-close {
   flex: none;
 }
 .channel-check-actions .button {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   padding: 10px 12px;
 }
 .button:disabled {
@@ -1839,16 +1839,16 @@ dialog.drawer.enhanced-drawer .dialog-close {
   background: #edf5ee;
   border: 1px solid #d9e8db;
   border-radius: 10px;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #587260;
 }
 .workspace-setup-banner .text-button {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   white-space: nowrap;
 }
 .setup-freshness .text-button {
   margin-left: auto;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
 }
 
 /* Long customer names are cut on the row and shown whole in the title (FR-UI-16). */

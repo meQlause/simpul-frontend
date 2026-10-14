@@ -24,12 +24,12 @@
 }
 .telegram-connection h3 {
   margin: 5px 0;
-  font-size: 17px;
+  font-size: calc(17px + var(--text-step));
 }
 .telegram-connection p {
   margin: 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
 }
 .telegram-connection > div {
   flex: 1;
@@ -50,13 +50,13 @@
   flex: 1;
 }
 .channel-bot-reference strong {
-  font-size: 13px;
+  font-size: calc(13px + var(--text-step));
 }
 .channel-bot-reference small {
   display: block;
   margin-top: 4px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
 }
 .channel-form-pair {
   display: flex;
@@ -73,14 +73,14 @@
   margin: 17px 0;
 }
 .channel-check-actions .button {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   padding: 10px 12px;
 }
 .channel-consent {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   line-height: 1.7;
   padding: 14px;
   background: #f5f8f3;
@@ -96,7 +96,7 @@
 }
 .channel-error {
   color: #ad3b2c;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   line-height: 1.6;
   margin: 14px 0 0;
 }
@@ -104,7 +104,7 @@
   display: none;
 }
 .field small {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   line-height: 1.6;
   color: var(--muted);
 }
@@ -146,7 +146,7 @@
 .setup-step-result {
   margin: 4px 0 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
 }
 .setup-command {
   display: flex;

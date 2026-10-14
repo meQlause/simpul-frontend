@@ -12,12 +12,12 @@
   color: #7c9b66;
 }
 .screen-state h2 {
-  font-size: 21px;
+  font-size: calc(21px + var(--text-step));
   color: #315b3c;
   margin: 16px 0;
 }
 .screen-state p {
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   color: #859b78;
   margin: 12px 0 22px;
 }

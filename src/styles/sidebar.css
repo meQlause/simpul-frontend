@@ -32,7 +32,7 @@
   gap: 8px;
   margin: 0 13px 28px;
   font-family: 'Manrope', sans-serif;
-  font-size: 32px;
+  font-size: calc(32px + var(--text-step));
   font-weight: 800;
   letter-spacing: -1.8px;
   color: var(--green-dark);
@@ -68,7 +68,7 @@
 }
 .workspace-logo {
   font-family: 'Manrope', sans-serif;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   font-weight: 800;
   display: grid;
   place-items: center;
@@ -83,12 +83,12 @@
 }
 .workspace strong {
   display: block;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   font-weight: 650;
 }
 .workspace small {
   display: block;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: var(--muted);
   margin-top: 1px;
 }
@@ -96,7 +96,7 @@
   width: 13px;
 }
 .nav-label {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   letter-spacing: 1.45px;
   font-weight: 600;
   color: #949c93;
@@ -114,7 +114,7 @@
   width: 100%;
   text-align: left;
   font-weight: 500;
-  font-size: 12px;
+  font-size: calc(12px + var(--text-step));
   color: #69766d;
   border-radius: 7px;
   margin-bottom: 4px;
@@ -139,7 +139,7 @@
   stroke-width: 1.85;
 }
 .nav-count {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   margin-left: auto;
   color: #8a928b;
 }
@@ -182,12 +182,12 @@
 }
 .quiet-card strong {
   font-family: 'Manrope', sans-serif;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   line-height: 1.7;
   font-weight: 700;
 }
 .quiet-card p {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #8b9685;
   line-height: 1.65;
   margin-top: 8px;
@@ -196,7 +196,7 @@
   display: flex;
   align-items: center;
   gap: 17px;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   font-weight: 600;
   color: #6b845b;
   margin-top: 16px;
@@ -218,12 +218,12 @@
 }
 .profile strong {
   display: block;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   font-weight: 600;
 }
 .profile small {
   display: block;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: var(--muted);
   margin-top: 2px;
 }
@@ -240,7 +240,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   font-weight: 650;
   flex-shrink: 0;
 }
@@ -266,7 +266,7 @@
 .avatar.small {
   width: 32px;
   height: 32px;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
 }
 .avatar-stack {
   display: flex;
@@ -282,7 +282,7 @@
   border: 2px solid white;
   border-radius: 50%;
   margin-left: -6px;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   font-weight: 600;
 }
 .avatar-stack span:nth-child(2) {

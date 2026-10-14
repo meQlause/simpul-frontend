@@ -12,7 +12,7 @@ dialog.drawer.trace-drawer #dialog-content {
   margin-bottom: 23px;
 }
 .trace-header .eyebrow {
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   letter-spacing: 1.4px;
   color: #84977a;
 }
@@ -20,7 +20,7 @@ dialog.drawer.trace-drawer #dialog-content {
   color: #c2cbb9;
 }
 .trace-header .detail-title {
-  font-size: 25px;
+  font-size: calc(25px + var(--text-step));
   line-height: 1.4;
   letter-spacing: -0.85px;
   color: #314c2c;
@@ -31,7 +31,7 @@ dialog.drawer.trace-drawer #dialog-content {
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #8f9f85;
 }
 .trace-record-meta > span:first-child {
@@ -44,7 +44,7 @@ dialog.drawer.trace-drawer #dialog-content {
   height: 13px;
 }
 .trace-sample-label {
-  font-size: 7px;
+  font-size: calc(7px + var(--text-step));
   letter-spacing: 1px;
   color: #a7b197;
 }
@@ -92,7 +92,7 @@ dialog.drawer.trace-drawer #dialog-content {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   font-weight: 550;
   padding: 5px 9px;
   border-radius: 20px;
@@ -105,14 +105,14 @@ dialog.drawer.trace-drawer #dialog-content {
   height: 12px;
 }
 .trace-outcome-hero h3 {
-  font-size: 20px;
+  font-size: calc(20px + var(--text-step));
   line-height: 1.5;
   font-weight: 650;
   letter-spacing: -0.5px;
   max-width: 350px;
 }
 .trace-outcome-hero > p {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   line-height: 1.9;
   color: #aac29e;
   max-width: 410px;
@@ -131,7 +131,7 @@ dialog.drawer.trace-drawer #dialog-content {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
 }
 .trace-path .icon {
   width: 13px;
@@ -178,7 +178,7 @@ dialog.drawer.trace-drawer #dialog-content {
   align-items: center;
   gap: 8px;
   padding: 14px 0;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #94a18a;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
@@ -189,7 +189,7 @@ dialog.drawer.trace-drawer #dialog-content {
   font-weight: 600;
 }
 .trace-view-tabs > button > span {
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   background: #eef3e6;
   border-radius: 4px;
   padding: 2px 5px;
@@ -210,13 +210,13 @@ dialog.drawer.trace-drawer #dialog-content {
   margin: 22px 0 18px;
 }
 .trace-section-heading h3 {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   letter-spacing: 0;
   font-weight: 600;
   color: #728969;
 }
 .trace-section-heading > span {
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #a6b19b;
 }
 .rich-decision-trace {
@@ -253,7 +253,7 @@ dialog.drawer.trace-drawer #dialog-content {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #86a374;
   font-weight: 600;
 }
@@ -309,13 +309,13 @@ dialog.drawer.trace-drawer #dialog-content {
 }
 .trace-step-heading strong {
   display: block;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #657e55;
   font-weight: 600;
 }
 .trace-step-heading small {
   display: block;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #a2af95;
   margin-top: 4px;
 }
@@ -333,7 +333,7 @@ dialog.drawer.trace-drawer #dialog-content {
   border-top: 1px solid #f0f3eb;
 }
 .trace-step-content > p {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #8c9d7f;
   line-height: 1.9;
   padding-top: 13px;
@@ -372,13 +372,13 @@ dialog.drawer.trace-drawer #dialog-content {
 }
 .trace-linked-work strong {
   display: block;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #728c60;
   font-weight: 600;
 }
 .trace-linked-work small {
   display: block;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #a2af93;
   line-height: 1.8;
   margin-top: 3px;
@@ -393,7 +393,7 @@ dialog.drawer.trace-drawer #dialog-content {
   align-items: flex-start;
   gap: 6px;
   color: #a1b092;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   line-height: 1.8;
   margin-top: 12px;
 }
@@ -422,17 +422,17 @@ dialog.drawer.trace-drawer #dialog-content {
 }
 .trace-policy-header > strong {
   flex: 1;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   color: #7b9569;
   font-weight: 600;
 }
 .trace-policy-header .badge {
-  font-size: 7px;
+  font-size: calc(7px + var(--text-step));
   padding: 2px 5px;
 }
 .trace-facts {
   margin: 13px 0;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .trace-facts > div {
   display: flex;
@@ -448,17 +448,17 @@ dialog.drawer.trace-drawer #dialog-content {
   width: 65px;
   flex-shrink: 0;
   color: #a5b095;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
 }
 .trace-facts dd {
   margin: 0;
   flex: 1;
   line-height: 1.8;
   color: #829871;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .trace-policy-box > .text-button {
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   border-top: 1px solid #e4ebda;
   padding-top: 10px;
   width: 100%;
@@ -475,18 +475,18 @@ dialog.drawer.trace-drawer #dialog-content {
 }
 .trace-recipient-row strong {
   display: block;
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #6b8758;
   font-weight: 600;
 }
 .trace-recipient-row small {
   display: block;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #a3b092;
   margin-top: 4px;
 }
 .trace-recipient-row .badge {
-  font-size: 7px;
+  font-size: calc(7px + var(--text-step));
 }
 .trace-recipient-row .avatar {
   width: 32px;
@@ -496,7 +496,7 @@ dialog.drawer.trace-drawer #dialog-content {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #8ca178;
   padding: 10px;
   background: #f6f9f1;
@@ -519,7 +519,7 @@ dialog.drawer.trace-drawer #dialog-content {
   margin-top: 14px;
   padding-top: 13px;
   color: #85a173;
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
 }
 .trace-outcome-stamp .icon {
   width: 15px;
@@ -527,7 +527,7 @@ dialog.drawer.trace-drawer #dialog-content {
 }
 .trace-outcome-stamp time {
   margin-left: auto;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
   color: #a6b396;
 }
 .trace-context-facts {
@@ -567,12 +567,12 @@ dialog.drawer.trace-drawer #dialog-content {
   height: 16px;
 }
 .trace-evidence-lock h3 {
-  font-size: 11px;
+  font-size: calc(11px + var(--text-step));
   color: #80966c;
   margin: 1px 0 6px;
 }
 .trace-evidence-lock p {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   line-height: 1.9;
   color: #a0af91;
 }
@@ -581,7 +581,7 @@ dialog.drawer.trace-drawer #dialog-content {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-size: 8px;
+  font-size: calc(8px + var(--text-step));
   color: #a6b198;
   padding: 13px 0 22px;
 }
@@ -604,7 +604,7 @@ dialog.drawer.trace-drawer #dialog-content {
   z-index: 5;
 }
 .trace-drawer-footer > .button {
-  font-size: 10px;
+  font-size: calc(10px + var(--text-step));
   padding: 9px 12px;
 }
 .trace-record-navigation {
@@ -612,7 +612,7 @@ dialog.drawer.trace-drawer #dialog-content {
   align-items: center;
   gap: 3px;
   color: #a6b39a;
-  font-size: 9px;
+  font-size: calc(9px + var(--text-step));
 }
 .trace-record-navigation .icon-button {
   width: 25px;
@@ -634,10 +634,10 @@ dialog.drawer.trace-drawer #dialog-content {
     padding-right: 12px;
   }
   .trace-header .detail-title {
-    font-size: 21px;
+    font-size: calc(21px + var(--text-step));
   }
   .trace-header .eyebrow {
-    font-size: 7px;
+    font-size: calc(7px + var(--text-step));
     gap: 7px;
     letter-spacing: 1px;
   }
@@ -645,19 +645,19 @@ dialog.drawer.trace-drawer #dialog-content {
     padding: 18px;
   }
   .trace-outcome-hero h3 {
-    font-size: 18px;
+    font-size: calc(18px + var(--text-step));
   }
   .trace-record-meta {
-    font-size: 9px;
+    font-size: calc(9px + var(--text-step));
   }
   .trace-sample-label {
-    font-size: 6px;
+    font-size: calc(6px + var(--text-step));
   }
   .trace-section-heading > span {
-    font-size: 7px;
+    font-size: calc(7px + var(--text-step));
   }
   .trace-section-heading h3 {
-    font-size: 10px;
+    font-size: calc(10px + var(--text-step));
   }
   .rich-trace-step {
     gap: 9px;
@@ -674,20 +674,20 @@ dialog.drawer.trace-drawer #dialog-content {
     height: 24px;
   }
   .trace-step-heading strong {
-    font-size: 10px;
+    font-size: calc(10px + var(--text-step));
   }
   .trace-step-heading small {
-    font-size: 8px;
+    font-size: calc(8px + var(--text-step));
   }
   .trace-policy-header .badge {
     margin-left: 20px;
   }
   .trace-facts dt {
     width: 56px;
-    font-size: 8px;
+    font-size: calc(8px + var(--text-step));
   }
   .trace-facts dd {
-    font-size: 9px;
+    font-size: calc(9px + var(--text-step));
   }
   .trace-context-facts dt {
     width: 80px;
@@ -698,11 +698,11 @@ dialog.drawer.trace-drawer #dialog-content {
     gap: 8px;
   }
   .trace-drawer-footer > .button {
-    font-size: 9px;
+    font-size: calc(9px + var(--text-step));
     padding: 8px 10px;
   }
   .trace-record-navigation {
-    font-size: 8px;
+    font-size: calc(8px + var(--text-step));
     gap: 0;
   }
   .trace-record-navigation .icon-button {
@@ -712,7 +712,7 @@ dialog.drawer.trace-drawer #dialog-content {
     gap: 9px;
   }
   .trace-path > span {
-    font-size: 8px;
+    font-size: calc(8px + var(--text-step));
   }
   .trace-path .icon {
     width: 12px;
