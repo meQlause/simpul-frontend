@@ -7,7 +7,7 @@ import { widths } from './views.ts';
 
 let backend: Awaited<ReturnType<typeof startBackend>>;
 
-const STATES: State[] = ['loading', 'empty', 'error', 'offline', 'not-found'];
+const STATES: State[] = ['empty', 'error', 'offline', 'not-found'];
 const LIST = { data: [], page: { nextCursor: null, total: 0 } };
 const PAGES = [
   { view: 'work', path: '/work', pattern: /\/api\/v1\/work(\?|$)/, empty: LIST },

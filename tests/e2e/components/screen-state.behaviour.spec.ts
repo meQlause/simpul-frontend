@@ -3,7 +3,6 @@ import { expect, test } from '@playwright/test';
 const routes = ['/', '/work', '/queue', '/rules', '/people', '/channels', '/audit', '/settings'];
 const lists = ['/work', '/queue', '/rules', '/people', '/channels', '/audit'];
 const messages = {
-  loading: ['Loading workspace', 'Your workspace data is loading.'],
   empty: ['No data yet', 'Connect a group or adjust your filters to get started.'],
   error: [
     'Workspace could not be loaded',
@@ -50,6 +49,14 @@ for (const path of routes) {
 
       await expect(screen).toHaveAttribute('data-component', 'ScreenState');
       await expect(screen).toHaveAttribute('data-variant', state);
+
+      if (state === 'loading') {
+        await expect(screen).toHaveAccessibleName('Your workspace data is loading.');
+        await expect(screen.getByRole('heading')).toHaveCount(0);
+
+        return;
+      }
+
       await expect(screen.getByRole('heading')).toHaveText(messages[state][0]);
       await expect(screen.getByText(messages[state][1], { exact: true })).toBeVisible();
     });

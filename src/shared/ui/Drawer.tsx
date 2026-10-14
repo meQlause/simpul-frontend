@@ -1,4 +1,7 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { createContext, useEffect, useRef, useState, type ReactNode } from 'react';
+
+// True inside a drawer's body: a loading state there takes the drawer's skeleton (ScreenState).
+export const InDrawer = createContext(false);
 
 export function Drawer({
   title,
@@ -97,7 +100,9 @@ export function Drawer({
             </h2>
             <p data-role="description">{description}</p>
           </header>
-          <div className="drawer-screen-body">{children}</div>
+          <div className="drawer-screen-body">
+            <InDrawer.Provider value={true}>{children}</InDrawer.Provider>
+          </div>
           {/* The mockup's "demo workspace" note occupied this band; the band stays so every drawer
             keeps the proportions it was drawn with. */}
           <div className="drawer-demo-note" aria-hidden="true">

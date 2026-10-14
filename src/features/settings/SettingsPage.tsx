@@ -19,6 +19,7 @@ export function SettingsPage() {
     return (
       <ScreenState
         state={state}
+        skeleton="cards"
         onRetry={() => {
           void query.refetch();
         }}

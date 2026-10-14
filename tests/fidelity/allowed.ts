@@ -41,6 +41,15 @@ export const exceptions = [
   { id: 'FD-29', view: 'channels.verified', kind: 'tolerance' },
   { id: 'FD-29', view: 'channels.needs-action', kind: 'tolerance' },
   { id: 'FD-29', view: 'channels.expired', kind: 'tolerance' },
+  { id: 'FD-28', view: 'overview.loading', kind: 'structural' },
+  { id: 'FD-28', view: 'work.loading', kind: 'structural' },
+  { id: 'FD-28', view: 'queue.loading', kind: 'structural' },
+  { id: 'FD-28', view: 'rules.loading', kind: 'structural' },
+  { id: 'FD-28', view: 'people.loading', kind: 'structural' },
+  { id: 'FD-28', view: 'channels.loading', kind: 'structural' },
+  { id: 'FD-28', view: 'audit.loading', kind: 'structural' },
+  { id: 'FD-28', view: 'settings.loading', kind: 'structural' },
+  { id: 'FD-28', view: 'drawer.loading', kind: 'structural' },
 ] as const;
 
 export const usedIds = [...new Set([...allowed, ...exceptions].map((entry) => entry.id))];

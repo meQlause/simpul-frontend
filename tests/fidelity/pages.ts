@@ -236,15 +236,6 @@ export const appViews: AppView[] = [
     },
   },
   {
-    view: 'drawer.loading',
-    path: '/work',
-    prepare: async (page, backendUrl) => {
-      await mockupWork(page, backendUrl);
-      await workDetail('loading')(page);
-    },
-    steps: (page) => openFirstWork(page),
-  },
-  {
     view: 'drawer.not-found',
     path: '/work',
     prepare: async (page, backendUrl) => {

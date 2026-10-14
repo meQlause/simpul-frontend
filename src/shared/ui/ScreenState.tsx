@@ -1,14 +1,49 @@
+import { useContext } from 'react';
 import { Link } from 'react-router';
 import { useUnavailable } from '../useUnavailable';
+import { InDrawer } from './Drawer';
+import { Skeleton } from './Skeleton';
 import { screenStateCopy } from './screen-state.copy';
 
 type State = 'ready' | 'loading' | 'empty' | 'error' | 'offline' | 'not-found';
 
-export function ScreenState({ state, onRetry }: { state: State; onRetry?: () => void }) {
+// The loading state: a skeleton in the shape of its page, or of its drawer inside a drawer.
+function Loading({ skeleton = 'table', grid }: { skeleton?: 'table' | 'cards'; grid?: string }) {
+  const inDrawer = useContext(InDrawer);
+
+  return (
+    <section
+      className="screen-loading"
+      role="status"
+      aria-label={screenStateCopy.loading.description}
+      data-component="ScreenState"
+      data-variant="loading"
+      data-size="page"
+    >
+      <Skeleton variant={inDrawer ? 'drawer' : skeleton} grid={grid} />
+    </section>
+  );
+}
+
+export function ScreenState({
+  state,
+  onRetry,
+  skeleton,
+  grid,
+}: {
+  state: State;
+  onRetry?: () => void;
+  skeleton?: 'table' | 'cards';
+  grid?: string;
+}) {
   const unavailable = useUnavailable();
 
   if (state === 'ready') {
     return null;
+  }
+
+  if (state === 'loading') {
+    return <Loading skeleton={skeleton} grid={grid} />;
   }
 
   const copy = screenStateCopy[state];

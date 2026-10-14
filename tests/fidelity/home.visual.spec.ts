@@ -6,7 +6,7 @@ import { widths } from './views.ts';
 
 let backend: Awaited<ReturnType<typeof startBackend>>;
 
-const STATES: State[] = ['ready', 'loading', 'empty', 'error', 'offline', 'not-found'];
+const STATES: State[] = ['ready', 'empty', 'error', 'offline', 'not-found'];
 const EMPTY = {
   data: {
     messagesUnderstood: { count: 0, trendPercent: null },

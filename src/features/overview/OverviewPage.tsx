@@ -141,6 +141,8 @@ export function OverviewPage() {
       {!ready && (
         <ScreenState
           state={state}
+          skeleton="cards"
+          grid="stats-grid"
           onRetry={() => {
             void query.refetch();
           }}

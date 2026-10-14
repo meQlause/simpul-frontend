@@ -1,8 +1,6 @@
 export const screenStateCopy = {
   loading: {
-    title: 'Loading workspace',
     description: 'Your workspace data is loading.',
-    icon: 'refresh',
   },
   empty: {
     title: 'No data yet',
