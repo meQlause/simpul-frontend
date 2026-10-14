@@ -1,4 +1,5 @@
 import { createContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { InfoTip } from './InfoTip';
 
 // True inside a drawer's body: a loading state there takes the drawer's skeleton (ScreenState).
 export const InDrawer = createContext(false);
@@ -98,7 +99,7 @@ export function Drawer({
             <h2 id="drawer-title" className="detail-title" data-role="title">
               {title}
             </h2>
-            <p data-role="description">{description}</p>
+            <InfoTip title={title} text={description} />
           </header>
           <div className="drawer-screen-body">
             <InDrawer.Provider value={true}>{children}</InDrawer.Provider>

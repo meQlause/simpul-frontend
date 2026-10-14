@@ -163,7 +163,7 @@ export function DirectoryCallout({
       </span>
       <div>
         <h3>{title}</h3>
-        <p>{description}</p>
+        <InfoTip title={title} text={description} />
       </div>
       <Link className="text-button" to={to}>
         {action}

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Icon } from './Icon';
+import { InfoTip } from './InfoTip';
 
 // The mockup's drawerIdentity(): an icon, a title and line, and a status on the right.
 export function DrawerIdentity({
@@ -51,7 +52,7 @@ export function DrawerSection({
         <span>{number}</span>
         <div>
           <h3 data-role="section-title">{title}</h3>
-          {description && <p>{description}</p>}
+          <InfoTip title={title} text={description ?? ''} />
         </div>
       </div>
       <div className="drawer-section-content">{children}</div>

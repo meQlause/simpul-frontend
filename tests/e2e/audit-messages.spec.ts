@@ -245,7 +245,7 @@ test('AC29: the loading state shows, then the empty state when no units exist', 
 
   await messagesRoute(page, () => answer(SIX, false), gate);
   await page.goto('/audit?tab=messages');
-  await expect(page.getByRole('status')).toContainText('Loading workspace');
+  await expect(page.getByRole('status')).toHaveAccessibleName('Your workspace data is loading.');
   release();
   await expect(page.locator('[data-message-row]')).toHaveCount(5);
 
