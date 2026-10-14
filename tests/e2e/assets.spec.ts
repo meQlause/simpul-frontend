@@ -21,6 +21,8 @@ for (const path of PAGES) {
     });
     await page.route(/\/api\/(v1|auth)\//, (route) => route.fulfill({ status: 401, json: {} }));
     await page.goto(path);
+    // A loading skeleton has no text, so no font is requested until the page's heading is drawn.
+    await expect(page.locator('h1, h2').first()).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
 
     const faces = await page.evaluate(() =>
