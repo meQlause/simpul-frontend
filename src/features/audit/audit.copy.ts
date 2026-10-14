@@ -90,3 +90,85 @@ export const auditCopy = {
     },
   },
 };
+
+export const messagesCopy = {
+  tabs: { decisions: 'Decisions', messages: 'Messages' },
+  filters: {
+    all: 'All',
+    created: 'Created work',
+    attached: 'Attached',
+    held: 'Held',
+    rejected: 'Rejected',
+    ignored: 'Ignored',
+  },
+  badges: {
+    created: 'Created work',
+    attached: 'Attached',
+    held: 'Held',
+    rejected: 'Rejected',
+    ignored: 'Ignored',
+    pending: 'In progress',
+  },
+  hidden: 'Message text is hidden',
+  footnoteOn: 'Account, ID and card numbers are hidden. Opening this list is recorded.',
+  showing: (shown: number, total: number) => `Showing ${shown} of ${total}`,
+  steps: { read: 'Read', matched: 'Matched', outcome: 'Outcome', notified: 'Notified' },
+  readLines: { EVENT: 'Work event', QUERY: 'Question', NOISE: 'Not about work' },
+  matchedLines: {
+    reference: 'Explicit reference to',
+    clear: 'Clear match with',
+    created: 'Nothing similar — treated as new',
+    unclear: 'Unclear: looks like',
+    byScore: 'Decided by score',
+    byReference: 'Decided by reference',
+    byAi: (count: number) => `Decided by AI using ${count} recent messages`,
+    asked: 'Asked the group',
+    corrected: (name: string) => `Corrected by ${name}`,
+  },
+  outcomeLines: {
+    created: 'Created',
+    attached: 'Attached to',
+    waiting: (time: string) => `Waiting for an answer in the group until ${time}`,
+  },
+  notified: 'See the routing decision',
+  reasons: {
+    G1: 'A question or acknowledgement, not new work.',
+    query: 'A question or acknowledgement, not new work.',
+    G2: 'Describes a plan, not something that happened.',
+    G3: 'Does not say who or what it is about.',
+    G4: 'Does not say when the work would be done.',
+    G5: 'Looks like work that already exists.',
+    empty_evidence: 'Not clear enough to create work.',
+    low_genesis_confidence: 'Not clear enough to create work.',
+    model_invalid_json: 'The AI could not read this message. The operator has been alerted.',
+    question_expired: 'Nobody answered the question in the group.',
+    question_quota: "Unclear, and today's questions for this group are used up.",
+    noise: 'Not about work.',
+  },
+  wrong: 'This is wrong',
+  choices: {
+    create: 'Create new work',
+    attach: 'Attach to existing work',
+    move: 'Move to other work',
+  },
+  applyCorrection: 'Apply correction',
+  correctionApplied: 'Correction applied.',
+  cancelWork: 'To cancel this work, close it from Work.',
+  // COPY-nnn: placeholder, id to be assigned (plan 5a)
+  search: 'Lorem ipsum dolor sit amet',
+  // COPY-nnn: channel, sender and message headers, id to be assigned (plan 5a)
+  columns: ['Lorem ipsum', 'Lorem ipsum dolor', 'Lorem ipsum dolor sit'],
+  // COPY-nnn: footnote while text access is off and its link, id to be assigned (plan 5a)
+  footnote: { off: 'Lorem ipsum dolor sit amet.', link: 'Lorem ipsum sit' },
+  // COPY-nnn: accessible name of the expand button, id to be assigned (plan 5a)
+  expand: 'Lorem ipsum amet',
+  // COPY-nnn: eyebrow, title, description and close label, id to be assigned (plan 5a)
+  drawer: [
+    'Lorem ipsum consectetur',
+    'Lorem ipsum adipiscing',
+    'Lorem ipsum elit',
+    'Lorem ipsum sed',
+  ],
+  // COPY-nnn: label and search placeholder of the work picker, id to be assigned (plan 5a)
+  work: { field: 'Lorem ipsum eiusmod', search: 'Lorem ipsum tempor' },
+};

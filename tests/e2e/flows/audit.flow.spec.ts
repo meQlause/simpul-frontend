@@ -31,3 +31,25 @@ test('B-23: the rule is paused from the trace and the list shows it paused', asy
   await drawer.getByRole('button', { name: 'Pause this rule', exact: true }).click();
   await expect(drawer.getByText('Currently paused', { exact: true })).toBeVisible();
 });
+
+test('AC24: the switch on shows the redacted text in the Messages tab; off hides it again', async ({
+  page,
+}) => {
+  const toggle = page.getByLabel('Show message text in History & audit', { exact: true });
+
+  await page.goto('/settings');
+  await toggle.check();
+  await page.getByRole('button', { name: 'Save settings', exact: true }).click();
+  await expect(page.getByRole('status')).toHaveText('Workspace settings saved.');
+
+  await page.goto('/audit?tab=messages');
+  await expect(page.locator('[data-message-row]').first()).toContainText('Sample order update');
+
+  await page.goto('/settings');
+  await toggle.uncheck();
+  await page.getByRole('button', { name: 'Save settings', exact: true }).click();
+  await expect(page.getByRole('status')).toHaveText('Workspace settings saved.');
+
+  await page.goto('/audit?tab=messages');
+  await expect(page.getByText('Message text is hidden', { exact: true }).first()).toBeVisible();
+});

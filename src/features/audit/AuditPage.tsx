@@ -4,9 +4,17 @@ import { useScreenState } from '../../shared/useScreenState';
 import { useAudit } from './audit.api';
 import { auditCopy as copy } from './audit.copy';
 import { AuditTable } from './AuditTable';
+import { AuditTabs, withParam } from './AuditTabs';
+import { MessagesTab } from './MessagesTab';
 import { TraceDrawer } from './TraceDrawer';
 
 export function AuditPage() {
+  const [params] = useSearchParams();
+
+  return params.get('tab') === 'messages' ? <MessagesTab /> : <DecisionsTab />;
+}
+
+function DecisionsTab() {
   const [params, setParams] = useSearchParams();
   const { decisionId } = useParams();
   const { kind, search } = filtersOf(params);
@@ -42,6 +50,7 @@ export function AuditPage() {
             {copy.description}
           </p>
         </div>
+        <AuditTabs active="decisions" />
       </header>
       <div className="directory-context">
         <svg className="icon" aria-hidden="true">
@@ -79,18 +88,6 @@ export function AuditPage() {
       {decisionId && <TraceDrawer id={decisionId} />}
     </section>
   );
-}
-
-function withParam(params: URLSearchParams, key: string, value: string): URLSearchParams {
-  const next = new URLSearchParams(params);
-
-  if (value) {
-    next.set(key, value);
-  } else {
-    next.delete(key);
-  }
-
-  return next;
 }
 
 function filtersOf(params: URLSearchParams): { kind: string; search: string } {
