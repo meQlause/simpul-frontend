@@ -2,6 +2,7 @@
 import { expect, test } from '@playwright/test';
 import { startBackend } from '../e2e/helpers/backend.ts';
 import { capture, compare, goOffline, induce, masks, open, TOLERANCE, type State } from './app.ts';
+import { barOf } from './allowed.ts';
 import { widths } from './views.ts';
 
 let backend: Awaited<ReturnType<typeof startBackend>>;
@@ -70,6 +71,6 @@ for (const { entry, state, width } of cases) {
       ignore: masks(view, width),
     });
 
-    expect(ratio).toBeLessThanOrEqual(WIDER.get(view) ?? TOLERANCE);
+    expect(ratio).toBeLessThanOrEqual(barOf(view, WIDER.get(view) ?? TOLERANCE));
   });
 }

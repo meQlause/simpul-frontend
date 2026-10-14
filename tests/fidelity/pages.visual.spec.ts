@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { startBackend } from '../e2e/helpers/backend.ts';
 import { capture, compare, masks, open, TOLERANCE } from './app.ts';
+import { barOf } from './allowed.ts';
 import { appViews } from './pages.ts';
 import { widths } from './views.ts';
 
@@ -32,7 +33,7 @@ for (const entry of appViews.filter((candidate) => candidate.view.startsWith(onl
         ignore: [...masks(entry.view, width), ...(entry.ignore?.(width) ?? [])],
       });
 
-      expect(ratio).toBeLessThanOrEqual(entry.tolerance ?? TOLERANCE);
+      expect(ratio).toBeLessThanOrEqual(barOf(entry.view, entry.tolerance ?? TOLERANCE));
     });
   }
 }

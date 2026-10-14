@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { startBackend } from '../e2e/helpers/backend.ts';
 import { capture, compare, open, regionsOf, routes } from './app.ts';
+import { barOf } from './allowed.ts';
 import { widths } from './views.ts';
 import { SHELL_TOLERANCE } from './pages.helpers.ts';
 
@@ -31,7 +32,7 @@ for (const width of widths) {
       });
 
       // FD-24 and FD-25: the top bar now carries the workspace switcher and a bordered search.
-      expect(ratio).toBeLessThanOrEqual(SHELL_TOLERANCE);
+      expect(ratio).toBeLessThanOrEqual(barOf('shell.' + route, SHELL_TOLERANCE));
     });
   }
 }

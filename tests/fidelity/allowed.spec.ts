@@ -3,8 +3,10 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
-import { exceptions, usedIds } from './allowed.ts';
+import { BAR_CAP, exceptions, fd26Bars, usedIds } from './allowed.ts';
+import { routes } from './app.ts';
 import { appViews } from './pages.ts';
+import { views } from './views.ts';
 
 const document = readFileSync(resolve(import.meta.dirname, '../../../docs/FE/fidelity.md'), 'utf8');
 const section = document.slice(document.indexOf('## 11. Allowed deviations'));
@@ -19,6 +21,19 @@ test('every id the harness uses is an open row of §11', () => {
 
     expect(row, `${id} is a row of §11`).toBeDefined();
     expect(row?.closed, `${id} is open`).toBe(false);
+  }
+});
+
+test('every per-view bar is above 0, at most BAR_CAP, and on a known view', () => {
+  const known = new Set([
+    ...views.map((view) => view.id),
+    ...Object.keys(routes).map((route) => `shell.${route}`),
+  ]);
+
+  for (const [view, bar] of Object.entries(fd26Bars)) {
+    expect(bar, `${view} bar`).toBeGreaterThan(0);
+    expect(bar, `${view} bar`).toBeLessThanOrEqual(BAR_CAP);
+    expect(known.has(view), `${view} is a known view`).toBe(true);
   }
 });
 

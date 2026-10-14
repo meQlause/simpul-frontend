@@ -6,12 +6,17 @@ import { expect, test } from '@playwright/test';
 import { startBackend } from '../e2e/helpers/backend.ts';
 import { open } from './app.ts';
 import { appViews } from './pages.ts';
+import { boxKey, FONT_STEP_PX, textKey } from './scale.ts';
 
 const baseline = resolve(import.meta.dirname, 'baseline');
-const roles = JSON.parse(readFileSync(resolve(baseline, 'text-roles.json'), 'utf8')) as Record<
-  string,
-  number
->;
+const roles = new Set(
+  Object.keys(
+    JSON.parse(readFileSync(resolve(baseline, 'text-roles.json'), 'utf8')) as Record<
+      string,
+      number
+    >,
+  ).map((key) => textKey(key, 0)),
+);
 const components = JSON.parse(readFileSync(resolve(baseline, 'components.json'), 'utf8')) as Record<
   string,
   Record<string, Record<string, number>>
@@ -19,7 +24,11 @@ const components = JSON.parse(readFileSync(resolve(baseline, 'components.json'),
 const allowedBoxes = new Map(
   Object.entries(components).map(([name, variants]) => [
     name,
-    new Set(Object.values(variants).flatMap((signatures) => Object.keys(signatures))),
+    new Set(
+      Object.values(variants).flatMap((signatures) =>
+        Object.keys(signatures).map((key) => boxKey(key, 0)),
+      ),
+    ),
   ]),
 );
 
@@ -102,10 +111,16 @@ for (const entry of views.filter(
         .flatMap((selector) => [...document.querySelectorAll(selector)])
         .filter(visible);
       // FD-23: the error toast is a component the mockup never drew; its behaviour spec owns it.
+      // FD-27, FD-28: the info tip and the skeleton are not in the mockup either.
       const elements = roots
         .flatMap((root) => [...root.querySelectorAll('*')])
         .filter(visible)
-        .filter((element) => !element.closest('[data-component="ErrorToast"]'));
+        .filter(
+          (element) =>
+            !element.closest(
+              '[data-component="ErrorToast"], [data-component="InfoTip"], [data-component="Skeleton"]',
+            ),
+        );
 
       return {
         texts: elements.filter(own).map((element) => ({
@@ -124,7 +139,7 @@ for (const entry of views.filter(
     const badTexts = [
       ...new Set(
         found.texts
-          .filter((item) => !(item.signature in roles))
+          .filter((item) => !roles.has(textKey(item.signature, FONT_STEP_PX)))
           .map((item) => `${item.signature}  «${item.sample}»`),
       ),
     ];
@@ -133,7 +148,7 @@ for (const entry of views.filter(
         found.boxes.flatMap((item) =>
           item.classes
             .filter((name) => allowedBoxes.has(name))
-            .filter((name) => !allowedBoxes.get(name)?.has(item.signature))
+            .filter((name) => !allowedBoxes.get(name)?.has(boxKey(item.signature, FONT_STEP_PX)))
             .map((name) => `${name}: ${item.signature}  «${item.sample}»`),
         ),
       ),

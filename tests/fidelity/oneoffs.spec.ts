@@ -8,6 +8,7 @@ import { startBackend } from '../e2e/helpers/backend.ts';
 import { open } from './app.ts';
 import { run } from './drive.ts';
 import { appViews } from './pages.ts';
+import { FONT_STEP_PX, textKey } from './scale.ts';
 import { views } from './views.ts';
 
 const mockup = resolve(import.meta.dirname, '../../../index.html');
@@ -167,7 +168,10 @@ for (const oneOff of ONE_OFFS) {
     expect(actual?.box).toBe(expected?.box);
     // Demo markers and sample variations the mockup draws (FD-02) are not in the product: what
     // the app draws must be a style the mockup draws, nothing foreign.
-    const foreign = (actual?.texts ?? []).filter((style) => !expected?.texts.includes(style));
+    const mockup = new Set((expected?.texts ?? []).map((style) => textKey(style, 0)));
+    const foreign = (actual?.texts ?? []).filter(
+      (style) => !mockup.has(textKey(style, FONT_STEP_PX)),
+    );
 
     expect(foreign).toEqual([]);
   });

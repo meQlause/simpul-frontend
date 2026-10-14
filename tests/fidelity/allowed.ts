@@ -44,3 +44,13 @@ export const exceptions = [
 ] as const;
 
 export const usedIds = [...new Set([...allowed, ...exceptions].map((entry) => entry.id))];
+
+// The per-view bars the +2px step needs (FD-26), keyed by view id or `shell.<route>`. P8 measures
+// them; none may be above BAR_CAP.
+export const BAR_CAP = 0.5;
+
+export const fd26Bars: Record<string, number> = {};
+
+export function barOf(view: string, base: number): number {
+  return Math.max(base, fd26Bars[view] ?? 0);
+}
