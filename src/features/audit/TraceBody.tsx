@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router';
 import { Icon } from '../../shared/ui/Icon';
+import { InfoTip } from '../../shared/ui/InfoTip';
 import { avatarTone, initialsOf } from '../work';
 import { auditCopy as copy, kindCopy, type Kind } from './audit.copy';
 import type { Trace } from './audit.schema';
@@ -420,7 +421,10 @@ function ContextFacts({ trace }: { trace: Trace }) {
         </span>
         <div>
           <h3>Raw conversation access is restricted</h3>
-          <p>Decisions are shown as summaries. Source message content is not exposed.</p>
+          <InfoTip
+            title="Raw conversation access is restricted"
+            text="Decisions are shown as summaries. Source message content is not exposed."
+          />
         </div>
       </div>
     </>

@@ -72,7 +72,13 @@ export function ChannelDrawer({
             code={setup.code}
           />
         </SetupStep>
-        <SetupStep number="02" title={copy.steps[1]} status={codeStatus} result={copy.found + name}>
+        <SetupStep
+          number="02"
+          title={copy.steps[1]}
+          status={codeStatus}
+          result={copy.found + name}
+          description={copy.codeNote}
+        >
           <CodeBody code={setup.code} />
         </SetupStep>
         <SetupStep number="03" title={copy.steps[2]} status={messageStatus} result={copy.received}>

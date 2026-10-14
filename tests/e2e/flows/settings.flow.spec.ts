@@ -15,11 +15,13 @@ test.afterEach(async ({ page }) => {
 });
 
 test('B-24: quiet hours, the hourly limit and the digest time are saved', async ({ page }) => {
-  await page.getByLabel('Notifications per person / hour').fill('9');
+  await page.getByLabel('Notifications per person / hour', { exact: true }).fill('9');
   await page.getByRole('button', { name: 'Save settings', exact: true }).click();
   await expect(page.getByRole('status').filter({ hasText: 'saved' })).toBeVisible();
   await page.reload();
-  await expect(page.getByLabel('Notifications per person / hour')).toHaveValue('9');
+  await expect(page.getByLabel('Notifications per person / hour', { exact: true })).toHaveValue(
+    '9',
+  );
 });
 
 test('B-33: the mail server is saved and its password is kept out of the page', async ({

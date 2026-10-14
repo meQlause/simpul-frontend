@@ -1,5 +1,6 @@
 import { useSignOut } from '../../features/auth';
 import { Drawer } from '../../shared/ui/Drawer';
+import { InfoTip } from '../../shared/ui/InfoTip';
 import { useShellData } from './shell.api';
 import { shellCopy as copy } from './shell.copy';
 
@@ -43,7 +44,7 @@ export function WorkspaceDrawer({ onClose }: { onClose: () => void }) {
           <span>01</span>
           <div>
             <h3>{copy.workspaceSection}</h3>
-            <p>{copy.workspaceSectionDescription}</p>
+            <InfoTip title={copy.workspaceSection} text={copy.workspaceSectionDescription} />
           </div>
         </div>
         <div className="drawer-section-content">

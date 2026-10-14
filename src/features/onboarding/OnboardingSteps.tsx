@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { InfoTip } from '../../shared/ui/InfoTip';
 import { onboardingCopy as copy } from './onboarding.copy';
 import { isReady, type Channel, type PersonRow, type Rule } from './onboarding.rules';
 import { channelName } from '../channels';
@@ -118,7 +119,7 @@ export function FirstWeekStep({
           </svg>
           <div>
             <strong>{copy.first.noticeTitle}</strong>
-            <p>{copy.first.noticeBody}</p>
+            <InfoTip title={copy.first.noticeTitle} text={copy.first.noticeBody} />
           </div>
         </div>
         <dl className="trace-facts">
@@ -158,7 +159,7 @@ function Heading({
       <span>{number}</span>
       <div>
         <h3>{title}</h3>
-        <p>{description}</p>
+        <InfoTip title={title} text={description} />
       </div>
     </div>
   );

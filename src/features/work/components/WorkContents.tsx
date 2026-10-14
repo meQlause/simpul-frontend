@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import { DrawerIdentity, DrawerSection } from '../../../shared/ui/DrawerParts';
 import { Icon } from '../../../shared/ui/Icon';
+import { InfoTip } from '../../../shared/ui/InfoTip';
 import type { WorkDetail } from '../work.schema';
 import { workCopy as copy } from '../work.copy';
 import { avatarTone, dayTime, elapsed, initialsOf, statusColor } from '../work.format';
@@ -123,7 +124,7 @@ export function WorkContents({ item }: { item: WorkDetail }) {
         </span>
         <div>
           <h3>Evidence summaries only</h3>
-          <p>{copy.evidence}</p>
+          <InfoTip title="Evidence summaries only" text={copy.evidence} />
         </div>
       </div>
     </>

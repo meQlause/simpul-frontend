@@ -1,5 +1,6 @@
 import type { Person } from '../people.schema';
 import { peopleCopy as copy } from '../people.copy';
+import { InfoTip } from '../../../shared/ui/InfoTip';
 
 type Props = {
   person: Person;
@@ -16,7 +17,7 @@ export function PersonFields({ person, eligible, errors, onBackup }: Props) {
           <span>01</span>
           <div>
             <h3>{copy.responsibility}</h3>
-            <p>{copy.responsibilityDescription}</p>
+            <InfoTip title={copy.responsibility} text={copy.responsibilityDescription} />
           </div>
         </div>
         <div className="drawer-section-content">
@@ -67,7 +68,7 @@ export function PersonFields({ person, eligible, errors, onBackup }: Props) {
           <span>02</span>
           <div>
             <h3>{copy.backupTitle}</h3>
-            <p>{copy.backupDescription}</p>
+            <InfoTip title={copy.backupTitle} text={copy.backupDescription} />
           </div>
         </div>
         <div className="drawer-section-content">

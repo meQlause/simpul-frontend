@@ -120,6 +120,7 @@ function CategoryFields({
           name={field.name}
           label={field.label}
           error={errors[field.name]}
+          hint={field.hint}
         >
           <input
             id={'vocab-' + field.name}
@@ -131,7 +132,6 @@ function CategoryFields({
             aria-describedby={errors[field.name] ? 'vocab-error-' + field.name : undefined}
             disabled={disabled}
           />
-          {field.hint && <small>{field.hint}</small>}
         </VocabularyField>
       ))}
     </>

@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { InfoTip } from '../../../shared/ui/InfoTip';
 import { ScreenState } from '../../../shared/ui/ScreenState';
 import { useScreenState } from '../../../shared/useScreenState';
 import { useSettingsQuery } from '../../settings';
@@ -28,7 +29,7 @@ export function PersonDelivery() {
         <span>03</span>
         <div>
           <h3>{copy.delivery}</h3>
-          <p>{copy.deliveryDescription}</p>
+          <InfoTip title={copy.delivery} text={copy.deliveryDescription} />
         </div>
       </div>
       <div className="drawer-section-content">

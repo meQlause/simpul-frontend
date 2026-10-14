@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Icon } from '../../../shared/ui/Icon';
+import { InfoTip } from '../../../shared/ui/InfoTip';
 import type { StepStatus } from '../channels.rules';
 import { pollAgain } from '../channels.rules';
 import type { Verification } from '../channels.schema';
@@ -16,12 +17,14 @@ export function SetupStep({
   title,
   status,
   result,
+  description,
   children,
 }: {
   number: string;
   title: string;
   status: StepStatus;
   result?: string;
+  description?: string;
   children?: ReactNode;
 }) {
   return (
@@ -30,6 +33,7 @@ export function SetupStep({
         <span>{number}</span>
         <div>
           <h3 data-role="section-title">{title}</h3>
+          {description && <InfoTip title={title} text={description} />}
           {status === 'done' && result && <p className="setup-step-result">{result}</p>}
         </div>
         <span className={'badge ' + BADGES[status]}>
@@ -87,7 +91,6 @@ export function BotBody({
 export function CodeBody({ code }: { code: Code }) {
   return (
     <>
-      <p>{copy.codeNote}</p>
       <ConnectionCode
         session={code.session}
         issuing={code.issuing}

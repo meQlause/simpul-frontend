@@ -1,4 +1,5 @@
 import { Icon } from '../../../shared/ui/Icon';
+import { InfoTip } from '../../../shared/ui/InfoTip';
 import type { GroupInput } from '../useChannelSetup';
 
 export function ChannelAudience({
@@ -8,6 +9,11 @@ export function ChannelAudience({
   input: GroupInput;
   onChange: (input: GroupInput) => void;
 }) {
+  const label =
+    input.class === 'external'
+      ? 'External audience · Mask sensitive fields'
+      : 'Internal audience · Role-based routing';
+
   return (
     <>
       <div className="channel-form-pair">
@@ -46,12 +52,11 @@ export function ChannelAudience({
       <div className="drawer-policy-preview">
         <Icon name="shield" />
         <div>
-          <strong>
-            {input.class === 'external'
-              ? 'External audience · Mask sensitive fields'
-              : 'Internal audience · Role-based routing'}
-          </strong>
-          <p>Raw chat access remains restricted. Notifications follow configured rules.</p>
+          <strong>{label}</strong>
+          <InfoTip
+            title={label}
+            text="Raw chat access remains restricted. Notifications follow configured rules."
+          />
         </div>
       </div>
     </>

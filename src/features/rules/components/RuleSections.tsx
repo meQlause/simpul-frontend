@@ -1,3 +1,4 @@
+import { InfoTip } from '../../../shared/ui/InfoTip';
 import { eventTypes, historyModes } from '../rules.schema';
 import { rulesCopy as copy } from '../rules.copy';
 import type { Category, RuleErrors, StaffMember } from '../rules.form';
@@ -76,9 +77,11 @@ export function RuleWhen({
             {errors.eventType}
           </small>
         </label>
-        <label className="field">
-          {copy.condition}
+        <div className="field">
+          <label htmlFor="rule-conditionText">{copy.condition}</label>
+          <InfoTip title={copy.condition} text={copy.conditionHelp} />
           <textarea
+            id="rule-conditionText"
             name="conditionText"
             rows={3}
             required
@@ -87,11 +90,10 @@ export function RuleWhen({
             aria-invalid={Boolean(errors.conditionText)}
             aria-describedby={errors.conditionText ? 'rule-error-conditionText' : undefined}
           />
-          <small>{copy.conditionHelp}</small>
           <small role="alert" id="rule-error-conditionText">
             {errors.conditionText}
           </small>
-        </label>
+        </div>
       </div>
     </section>
   );
@@ -184,7 +186,7 @@ function SectionHeading({
       <span>{number}</span>
       <div>
         <h3>{title}</h3>
-        <p>{description}</p>
+        <InfoTip title={title} text={description} />
       </div>
     </div>
   );

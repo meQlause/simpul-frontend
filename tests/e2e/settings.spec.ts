@@ -112,7 +112,10 @@ test('SRS §6.7 (FR-UI-21): the Understanding panel shows the context window and
     page.getByLabel('Conversation context window (minutes)', { exact: true }),
   ).toHaveValue('30');
   await expect(page.getByLabel('Context messages', { exact: true })).toHaveValue('10');
-  await expect(page.getByText(contextHint, { exact: true })).toBeVisible();
+  await expect(page.getByText(contextHint, { exact: true })).toBeHidden();
+  await expect(
+    page.getByRole('button', { name: 'About Conversation context window (minutes)', exact: true }),
+  ).toBeVisible();
   await expect(
     page.getByLabel('Show message text in History & audit', { exact: true }),
   ).toBeVisible();

@@ -1,5 +1,6 @@
 import { useState, type SubmitEvent } from 'react';
 import { ErrorToast } from '../../shared/ui/ErrorToast';
+import { InfoTip } from '../../shared/ui/InfoTip';
 import { ApiError } from '../../shared/api/error';
 import { useOnline } from '../../shared/useOnline';
 import { settingsCopy as copy } from './settings.copy';
@@ -315,6 +316,7 @@ function SettingsFields({
           <label htmlFor={`settings-${name}`} data-role="field-label">
             {label}
           </label>
+          {hint && <InfoTip title={label} text={hint} />}
           <input
             id={`settings-${name}`}
             name={name}
@@ -325,11 +327,6 @@ function SettingsFields({
             aria-invalid={Boolean(errors[name])}
             aria-describedby={errors[name] ? `${name}-error` : undefined}
           />
-          {hint && (
-            <span className="muted text-small" data-role="field-hint">
-              {hint}
-            </span>
-          )}
           {errors[name] && (
             <span id={`${name}-error`} role="alert" className="field-error">
               {errors[name]}
