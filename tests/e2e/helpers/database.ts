@@ -87,6 +87,7 @@ const SETTINGS = {
   timezone: 'Asia/Jakarta',
   contextWindowMinutes: 30,
   contextMaxMessages: 10,
+  messageTextAccess: false,
 };
 
 // A connected own-database workspace with the Settings page's own data.

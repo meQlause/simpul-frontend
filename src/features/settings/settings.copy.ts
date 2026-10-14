@@ -16,6 +16,9 @@ export const settingsCopy = {
   contextMessages: 'Context messages',
   contextHint:
     "When a message is unclear, Simpul reads the group's recent messages to understand it. 0 turns this off: Simpul then reads only the message itself, and asks the group when that is not enough.",
+  textAccess: 'Show message text in History & audit',
+  textAccessHint:
+    'Account, ID and card numbers stay hidden. Every time message text is opened is recorded.',
   noticeStart: 'Non-critical updates during quiet hours wait until morning. A',
   noticeEnd: '-second hold allows time for message corrections.',
   save: 'Save settings',

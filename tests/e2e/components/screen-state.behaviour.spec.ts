@@ -108,6 +108,7 @@ for (const path of ['/', '/settings']) {
             timezone: 'Asia/Jakarta',
             contextWindowMinutes: 30,
             contextMaxMessages: 10,
+            messageTextAccess: false,
           },
         },
       });

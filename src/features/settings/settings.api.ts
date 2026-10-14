@@ -32,7 +32,10 @@ export function useSettings() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(settingsInputSchema.parse(input)),
       }),
-    onSuccess: (response) => client.setQueryData(queryKeys.page('settings'), response),
+    onSuccess: (response) => {
+      client.setQueryData(queryKeys.page('settings'), response);
+      void client.invalidateQueries({ queryKey: ['audit-messages'] });
+    },
   });
 
   return { ...query, save };

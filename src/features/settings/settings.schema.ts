@@ -10,6 +10,7 @@ export const settingsInputSchema = schema
     digestTime: time,
     contextWindowMinutes: schema.number().int().min(0).max(180),
     contextMaxMessages: schema.number().int().min(1).max(30),
+    messageTextAccess: schema.boolean().optional(),
   })
   .refine((input) => input.quietStart !== input.quietEnd, {
     path: ['quietEnd'],
@@ -25,6 +26,7 @@ const settingsSchema = schema.object({
   timezone: schema.string(),
   contextWindowMinutes: schema.number().int(),
   contextMaxMessages: schema.number().int(),
+  messageTextAccess: schema.boolean(),
 });
 
 export type Settings = schema.infer<typeof settingsSchema>;

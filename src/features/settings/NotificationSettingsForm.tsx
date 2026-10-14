@@ -50,6 +50,7 @@ function readSettingsForm(form: HTMLFormElement) {
     budgetPerHour: Number(input.budgetPerHour),
     contextWindowMinutes: Number(input.contextWindowMinutes),
     contextMaxMessages: Number(input.contextMaxMessages),
+    messageTextAccess: input.messageTextAccess === 'on',
   });
 }
 
@@ -265,6 +266,20 @@ function UnderstandingPanel({
             errors={errors}
             form={FORM_ID}
           />
+          <label className="settings-switch">
+            <input
+              type="checkbox"
+              role="switch"
+              name="messageTextAccess"
+              form={FORM_ID}
+              defaultChecked={settings.messageTextAccess}
+              aria-describedby="text-access-hint"
+            />
+            {copy.textAccess}
+          </label>
+          <span id="text-access-hint" className="muted text-small" data-role="field-hint">
+            {copy.textAccessHint}
+          </span>
         </div>
       </fieldset>
     </section>
@@ -306,7 +321,7 @@ function SettingsFields({
             form={form}
             {...attributes}
             required
-            defaultValue={settings[name as keyof Settings]}
+            defaultValue={String(settings[name as keyof Settings])}
             aria-invalid={Boolean(errors[name])}
             aria-describedby={errors[name] ? `${name}-error` : undefined}
           />

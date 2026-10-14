@@ -99,7 +99,7 @@ test('Settings acceptance 5: offline disables every field and Save settings', as
 const contextHint =
   "When a message is unclear, Simpul reads the group's recent messages to understand it. 0 turns this off: Simpul then reads only the message itself, and asks the group when that is not enough.";
 
-test('SRS §6.7 (FR-UI-21): the Understanding panel shows the context window and cap, their hint, and no message-text switch', async ({
+test('SRS §6.7 (FR-UI-21): the Understanding panel shows the context window and cap, their hint, and the message-text switch', async ({
   page,
 }) => {
   await expect(page.locator('[data-component="UnderstandingPanel"]')).toBeVisible();
@@ -113,7 +113,9 @@ test('SRS §6.7 (FR-UI-21): the Understanding panel shows the context window and
   ).toHaveValue('30');
   await expect(page.getByLabel('Context messages', { exact: true })).toHaveValue('10');
   await expect(page.getByText(contextHint, { exact: true })).toBeVisible();
-  await expect(page.getByText('Show message text', { exact: false })).toHaveCount(0);
+  await expect(
+    page.getByLabel('Show message text in History & audit', { exact: true }),
+  ).toBeVisible();
 });
 
 test('SRS §6.7 (FR-UI-21): 181 is refused before any write; 0 saves and survives a reload', async ({
@@ -152,4 +154,29 @@ test('SRS §6.7 (FR-UI-21): offline disables both Understanding fields', async (
     page.getByLabel('Conversation context window (minutes)', { exact: true }),
   ).toBeDisabled();
   await expect(page.getByLabel('Context messages', { exact: true })).toBeDisabled();
+});
+
+const textAccessHint =
+  'Account, ID and card numbers stay hidden. Every time message text is opened is recorded.';
+
+test('SRS §11.4 (FR-UI-21): the message-text switch is off on the seed, its hint shows, Save settings sends it, and it survives a reload', async ({
+  page,
+  context,
+}) => {
+  const toggle = page.getByLabel('Show message text in History & audit', { exact: true });
+
+  await expect(toggle).not.toBeChecked();
+  await expect(page.getByText(textAccessHint, { exact: true })).toBeVisible();
+  const sent = page.waitForRequest(
+    (request) => request.method() === 'PUT' && request.url().endsWith('/settings'),
+  );
+
+  await toggle.check();
+  await page.getByRole('button', { name: 'Save settings', exact: true }).click();
+  expect((await sent).postDataJSON()).toMatchObject({ messageTextAccess: true });
+  await page.reload();
+  await expect(toggle).toBeChecked();
+  await context.setOffline(true);
+
+  await expect(toggle).toBeDisabled();
 });

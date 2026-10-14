@@ -58,3 +58,17 @@ test('SRS §6.7 (FR-UI-21): the client rejects a body without the two context fi
 
   expect(settingsInputSchema.safeParse(without).success).toBe(false);
 });
+
+test.each([true, false])(
+  'SRS §11.4: the client accepts messageTextAccess %s',
+  (messageTextAccess) => {
+    expect(settingsInputSchema.parse({ ...valid, messageTextAccess })).toEqual({
+      ...valid,
+      messageTextAccess,
+    });
+  },
+);
+
+test('SRS §11.4: the client rejects messageTextAccess "on" before submission', () => {
+  expect(settingsInputSchema.safeParse({ ...valid, messageTextAccess: 'on' }).success).toBe(false);
+});

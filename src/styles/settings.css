@@ -47,3 +47,9 @@
     grid-template-columns: 1fr;
   }
 }
+.settings-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700; /* the mockup's label role; 400 is not in its text roles (fidelity style check) */
+}
