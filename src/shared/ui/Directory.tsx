@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 import { Icon } from './Icon';
+import { InfoTip } from './InfoTip';
 
 // The mockup's heading(): eyebrow, title and description, with an optional action on the right.
 export function PageHeading({
@@ -23,9 +24,7 @@ export function PageHeading({
         <h1 className="page-title" data-role="page-title">
           {title}
         </h1>
-        <p className="page-description" data-role="page-description">
-          {description}
-        </p>
+        <InfoTip title={title} text={description} />
       </div>
       {children}
     </div>

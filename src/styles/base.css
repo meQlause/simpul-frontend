@@ -11,6 +11,7 @@
   --amber: #ac813b;
   --radius: 12px;
   --sidebar: 226px;
+  --text-step: 0px;
   font-family: 'DM Sans', sans-serif;
   color: var(--ink);
   background: var(--canvas);
@@ -160,4 +161,55 @@ fieldset:disabled a.text-button,
 fieldset:disabled a.icon-button {
   opacity: 0.6;
   pointer-events: none;
+}
+
+/* FR-UI-17: the info tip. The sentence is a popover in the top layer, placed by placeTip. */
+.info-tip {
+  display: inline-flex;
+  vertical-align: middle;
+}
+.info-tip-button {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin: 0 0 0 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  cursor: help;
+}
+.info-tip-button .icon {
+  width: 16px;
+  height: 16px;
+}
+.info-tip-text {
+  position: fixed;
+  inset: auto;
+  max-width: min(280px, calc(100vw - 16px));
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgb(38 60 51 / 12%);
+  color: var(--ink);
+  font-size: calc(11px + var(--text-step));
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: left;
+  text-transform: none;
+}
+:is(h1, h2, h3, strong, label):has(+ .info-tip) {
+  display: inline-block;
+  vertical-align: middle;
+}
+.field:has(> .info-tip) {
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+.field:has(> .info-tip) > :not(label, .info-tip) {
+  grid-column: 1 / -1;
 }
