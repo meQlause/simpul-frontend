@@ -1,7 +1,7 @@
 // The +2px step (FD-26): the app draws every font size FONT_STEP_PX larger than the mockup. The
 // comparison reads that step back off the app's signatures, so both sides land on the same scale.
 // P1 keeps the step at 0 (no visible change); P7 sets it to 2.
-export const FONT_STEP_PX = 0;
+export const FONT_STEP_PX = 2;
 
 const round2 = (value: number) => Math.round(value * 100) / 100;
 const round3 = (value: number) => Math.round(value * 1000) / 1000;

@@ -332,6 +332,8 @@
   max-width: 125px;
 }
 .table-wrap {
+  /* The scroll box is the containing block, so an absolute .sr-only inside a cell cannot widen the page. */
+  position: relative;
   overflow-x: auto;
 }
 .data-table {

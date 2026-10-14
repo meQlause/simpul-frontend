@@ -10,8 +10,8 @@
   --canvas: #f8f9f6;
   --amber: #ac813b;
   --radius: 12px;
-  --sidebar: 226px;
-  --text-step: 0px;
+  --sidebar: 230px;
+  --text-step: 2px;
   font-family: 'DM Sans', sans-serif;
   color: var(--ink);
   background: var(--canvas);

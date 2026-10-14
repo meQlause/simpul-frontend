@@ -1472,7 +1472,7 @@ dialog.drawer.trace-drawer #dialog-content {
     padding-right: 15px;
   }
   .global-search input {
-    width: 100px;
+    width: 90px;
   }
   .page-title {
     font-size: calc(25px + var(--text-step));

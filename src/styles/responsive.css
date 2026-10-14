@@ -67,7 +67,7 @@
 }
 @media (max-width: 1250px) {
   :root {
-    --sidebar: 205px;
+    --sidebar: 221px;
   }
   .sidebar {
     padding-left: 12px;
@@ -204,7 +204,7 @@
 }
 @media (max-width: 1050px) {
   :root {
-    --sidebar: 188px;
+    --sidebar: 200px;
   }
   .sidebar {
     padding-left: 10px;
@@ -249,6 +249,14 @@
   }
   .global-search input {
     width: 125px;
+  }
+  /* AC5: at +2px the full bar is wider than the column, so the compact bar starts here. */
+  .topbar-actions {
+    gap: 9px;
+  }
+  .global-search kbd,
+  .topbar-divider {
+    display: none;
   }
   .routing-panel {
     padding: 22px 23px 0;
