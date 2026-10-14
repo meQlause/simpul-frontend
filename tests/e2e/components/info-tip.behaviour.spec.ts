@@ -180,3 +180,95 @@ test.describe('in the drawers and the callouts, at 1440px', () => {
     });
   }
 });
+
+const PAGE_TIPS = [
+  {
+    path: '/',
+    tip: 'About Good morning',
+    sentence: 'Conversations keep moving. Important updates reach the right people.',
+  },
+  {
+    path: '/work',
+    tip: 'About Work',
+    sentence: 'Commitments from conversations, tracked through completion.',
+  },
+  {
+    path: '/queue',
+    tip: 'About Needs review',
+    sentence: 'Resolve the gaps that keep useful updates from reaching your team.',
+  },
+  {
+    path: '/rules',
+    tip: 'About Notification rules',
+    sentence: 'Define when an update matters, and who should receive it.',
+  },
+  {
+    path: '/people',
+    tip: 'About People & structure',
+    sentence: 'Clear ownership, reliable backups, and fewer missed updates.',
+  },
+  {
+    path: '/channels',
+    tip: 'About Channels',
+    sentence: 'One Telegram connection. A clear policy for every group.',
+  },
+  {
+    path: '/audit',
+    tip: 'About History & audit',
+    sentence: 'Follow an update from its source to the rule, recipient, and final outcome.',
+  },
+  {
+    path: '/settings',
+    tip: 'About Settings',
+    sentence: 'Keep information flowing without overwhelming your team.',
+  },
+];
+
+test.describe('the eight page headings and the page-level sentences', () => {
+  for (const entry of PAGE_TIPS) {
+    test(`T13: ${entry.path} keeps its description in a tip after the title, not on screen`, async ({
+      page,
+    }) => {
+      await page.goto(entry.path);
+
+      await expect(page.locator('.page-description')).toHaveCount(0);
+      const tip = page.locator('h1 + [data-component="InfoTip"]');
+
+      await expect(tip).toHaveCount(1);
+      await expect(tip.getByRole('button', { name: entry.tip, exact: true })).toHaveCount(1);
+      await expect(tip.locator('[role="tooltip"]')).toHaveText(entry.sentence);
+      await expect(page.getByText(entry.sentence, { exact: true })).toBeHidden();
+    });
+  }
+});
+
+const CALLOUTS = [
+  {
+    name: 'the Home flow card',
+    path: '/',
+    tip: 'About Busy conversations. Clear next steps.',
+    sentence: 'Simpul connects updates, context, and the people who need to know.',
+  },
+  {
+    name: 'the channels callout',
+    path: '/channels',
+    tip: 'About Connect deliberately',
+    sentence:
+      'Add the bot to your group, verify ordinary messages, then activate monitoring. Saving a draft never starts ingestion.',
+  },
+  {
+    name: 'the settings callout',
+    path: '/settings',
+    tip: 'About Vocabulary & message templates',
+    sentence: 'Categories, aliases and approved notification wording.',
+  },
+];
+
+for (const row of CALLOUTS) {
+  test(`T14: ${row.name} keeps its sentence in a tip, not on screen`, async ({ page }) => {
+    await page.goto(row.path);
+
+    await expect(page.getByRole('button', { name: row.tip, exact: true }).first()).toBeVisible();
+    await expect(page.getByText(row.sentence, { exact: true })).toBeHidden();
+  });
+}

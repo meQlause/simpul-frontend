@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Icon } from '../../../shared/ui/Icon';
+import { InfoTip } from '../../../shared/ui/InfoTip';
 
 const SAMPLE_MS = 1800;
 
@@ -92,11 +93,10 @@ function Heading() {
           <br />
           <span>Clear next steps.</span>
         </h2>
-        <p>
-          Simpul connects updates, context,
-          <br />
-          and the people who need to know.
-        </p>
+        <InfoTip
+          title="Busy conversations. Clear next steps."
+          text="Simpul connects updates, context, and the people who need to know."
+        />
       </div>
       <span className="system-live">
         <span />

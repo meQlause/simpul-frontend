@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ErrorToast } from '../../../shared/ui/ErrorToast';
 import { Icon } from '../../../shared/ui/Icon';
+import { InfoTip } from '../../../shared/ui/InfoTip';
 import { exportWork } from '../work.api';
 import { useOnline } from '../../../shared/useOnline';
 import { workCopy as copy } from '../work.copy';
@@ -39,9 +40,7 @@ export function WorkHeading({ filter, onExport }: { filter: string; onExport: ()
         <h1 className="page-title" data-role="page-title">
           {copy.title}
         </h1>
-        <p className="page-description" data-role="page-description">
-          {copy.description}
-        </p>
+        <InfoTip title={copy.title} text={copy.description} />
         <ErrorToast message={error} onClose={() => setError('')} />
       </div>
       <button

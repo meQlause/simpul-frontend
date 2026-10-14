@@ -1,4 +1,5 @@
 import { useParams, useSearchParams } from 'react-router';
+import { InfoTip } from '../../shared/ui/InfoTip';
 import { ScreenState } from '../../shared/ui/ScreenState';
 import { useScreenState } from '../../shared/useScreenState';
 import { useAudit } from './audit.api';
@@ -46,9 +47,7 @@ function DecisionsTab() {
           <h1 className="page-title" data-role="title">
             {copy.title}
           </h1>
-          <p className="page-description" data-role="description">
-            {copy.description}
-          </p>
+          <InfoTip title={copy.title} text={copy.description} />
         </div>
         <AuditTabs active="decisions" />
       </header>

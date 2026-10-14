@@ -1,5 +1,6 @@
 import { Link, useSearchParams } from 'react-router';
 import { Icon } from '../../shared/ui/Icon';
+import { InfoTip } from '../../shared/ui/InfoTip';
 import { ScreenState } from '../../shared/ui/ScreenState';
 import { useScreenState } from '../../shared/useScreenState';
 import { exportSummary, useOverview, useOverviewIdentity } from './overview.api';
@@ -72,9 +73,10 @@ function Greeting({ identity }: { identity: Identity }) {
           Good morning{person ? `, ${person}` : ''}
           <span className="heading-dot">.</span>
         </h1>
-        <p className="page-description" data-role="page-description">
-          Conversations keep moving. Important updates reach the right people.
-        </p>
+        <InfoTip
+          title="Good morning"
+          text="Conversations keep moving. Important updates reach the right people."
+        />
       </div>
       <div className="heading-actions">
         <button className="button" type="button" data-action="export" onClick={exportSummary}>

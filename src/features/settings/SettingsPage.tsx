@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router';
+import { InfoTip } from '../../shared/ui/InfoTip';
 import { OfflineCard, ScreenState } from '../../shared/ui/ScreenState';
 import { useScreenState } from '../../shared/useScreenState';
 import { databaseCopy, useDatabase } from '../database-setup';
@@ -44,9 +45,7 @@ export function SettingsPage() {
           <h1 className="page-title" data-role="page-title">
             {copy.title}
           </h1>
-          <p className="page-description" data-role="page-description">
-            {copy.description}
-          </p>
+          <InfoTip title={copy.title} text={copy.description} />
         </div>
         <Link className="button" to="/settings/onboarding">
           <svg className="icon" aria-hidden="true">
@@ -124,7 +123,7 @@ function SettingsCallouts({ hasDatabase }: { hasDatabase: boolean }) {
           </span>
           <div>
             <h3>{entry.title}</h3>
-            <p>{entry.description}</p>
+            <InfoTip title={entry.title} text={entry.description} />
           </div>
           <Link className="button" to={entry.path}>
             {entry.action}

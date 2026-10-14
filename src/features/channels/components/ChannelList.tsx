@@ -7,6 +7,7 @@ import {
   PageHeading,
 } from '../../../shared/ui/Directory';
 import { Icon } from '../../../shared/ui/Icon';
+import { InfoTip } from '../../../shared/ui/InfoTip';
 import { useOnline } from '../../../shared/useOnline';
 import { dayTime } from '../../work';
 import type { Channel, Connection } from '../channels.schema';
@@ -181,10 +182,10 @@ function SetUpCallout({ onOpen, disabled }: { onOpen: () => void; disabled: bool
       </span>
       <div>
         <h3 data-role="section-title">Connect deliberately</h3>
-        <p>
-          Add the bot to your group, verify ordinary messages, then activate monitoring. Saving a
-          draft never starts ingestion.
-        </p>
+        <InfoTip
+          title="Connect deliberately"
+          text="Add the bot to your group, verify ordinary messages, then activate monitoring. Saving a draft never starts ingestion."
+        />
       </div>
       <button className="button" disabled={disabled} onClick={onOpen}>
         Set up a group
