@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { DirectoryToolbar, PageHeading, type Tab } from '../../shared/ui/Directory';
 import { Icon } from '../../shared/ui/Icon';
@@ -8,6 +9,7 @@ import { useMessages } from './audit.api';
 import { auditCopy, messagesCopy as copy } from './audit.copy';
 import type { MessageRow as Row, MessagesPage } from './audit.schema';
 import { AuditTabs, withParam } from './AuditTabs';
+import { CorrectionDrawer } from './CorrectionDrawer';
 import { MessageRow } from './MessageRow';
 
 type Counts = Record<Row['outcome'], number>;
@@ -37,6 +39,8 @@ export function MessagesTab() {
   const query = useMessages(outcome, search);
   const first = query.data?.pages[0];
   const state = useScreenState(query, isEmptyUnfiltered(first, outcome, search));
+  const [correcting, setCorrecting] = useState<string | null>(null);
+  const [applied, setApplied] = useState(false);
   const retry = () => {
     void query.refetch();
   };
@@ -60,9 +64,24 @@ export function MessagesTab() {
           onFilter={(value) => setParams(withParam(params, 'outcome', value))}
           onSearch={(value) => setParams(withParam(params, 'q', value))}
           onRetry={retry}
+          correcting={correcting}
+          onCorrect={(unitId) => {
+            setApplied(false);
+            setCorrecting(unitId);
+          }}
+          onClose={() => setCorrecting(null)}
+          onApplied={() => {
+            setCorrecting(null);
+            setApplied(true);
+          }}
         />
       ) : (
         <ScreenState state={state} onRetry={retry} />
+      )}
+      {applied && (
+        <div role="status" className="toast">
+          {copy.correctionApplied}
+        </div>
       )}
     </section>
   );
@@ -77,6 +96,10 @@ function MessageTable({
   onFilter,
   onSearch,
   onRetry,
+  correcting,
+  onCorrect,
+  onClose,
+  onApplied,
 }: {
   query: ReturnType<typeof useMessages>;
   page: MessagesPage;
@@ -86,9 +109,14 @@ function MessageTable({
   onFilter: (value: string) => void;
   onSearch: (value: string) => void;
   onRetry: () => void;
+  correcting: string | null;
+  onCorrect: (unitId: string) => void;
+  onClose: () => void;
+  onApplied: () => void;
 }) {
   const online = useOnline();
   const rows = query.data?.pages.flatMap((loaded) => loaded.data) ?? [];
+  const target = rows.find((row) => row.unitId === correcting);
 
   return (
     <>
@@ -124,6 +152,7 @@ function MessageTable({
                   row={row}
                   textAccess={page.textAccess}
                   disabled={!online}
+                  onCorrect={() => onCorrect(row.unitId)}
                 />
               ))}
             </tbody>
@@ -152,6 +181,7 @@ function MessageTable({
         )}
         <Footnote textAccess={page.textAccess} />
       </section>
+      {target && <CorrectionDrawer row={target} onClose={onClose} onApplied={onApplied} />}
     </>
   );
 }

@@ -151,6 +151,8 @@ export const messagesCopy = {
     attach: 'Attach to existing work',
     move: 'Move to other work',
   },
+  category: 'Category',
+  summary: 'Summary',
   applyCorrection: 'Apply correction',
   correctionApplied: 'Correction applied.',
   cancelWork: 'To cancel this work, close it from Work.',

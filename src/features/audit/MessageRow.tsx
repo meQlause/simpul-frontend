@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { Icon } from '../../shared/ui/Icon';
 import { auditCopy, messagesCopy as copy } from './audit.copy';
 import type { MessageRow as Row } from './audit.schema';
-import { choicesFor, clockOf, matchedLines, outcomeLine, readLine } from './messages.rules';
+import { clockOf, matchedLines, outcomeLine, readLine } from './messages.rules';
 
 type Step = Row['steps'][number];
 
@@ -148,7 +148,7 @@ export function MessageRow({
                   <StepItem key={step.key} number={index + 1} step={step} row={row} />
                 ))}
               </ol>
-              {choicesFor(row.outcome).length > 0 && (
+              {row.outcome !== 'pending' && (
                 <button
                   className="button button-soft"
                   type="button"

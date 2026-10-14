@@ -126,6 +126,8 @@ export const messagesResponse = schema.object({
   textAccess: schema.boolean(),
 });
 
+export const correctionResponse = schema.object({ data: messageRow });
+
 export type MessageRow = schema.infer<typeof messageRow>;
 
 export type MessagesPage = schema.infer<typeof messagesResponse>;

@@ -1,7 +1,19 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type InfiniteData,
+} from '@tanstack/react-query';
 import { z as schema } from 'zod';
 import { getResponse } from '../../shared/api/client';
-import { listResponse, messagesResponse, traceResponse } from './audit.schema';
+import {
+  correctionResponse,
+  listResponse,
+  messagesResponse,
+  traceResponse,
+  type MessagesPage,
+} from './audit.schema';
 
 export function useAudit(kind: string, search: string) {
   return useInfiniteQuery({
@@ -28,9 +40,11 @@ export function useAudit(kind: string, search: string) {
   });
 }
 
+const MESSAGES_KEY = 'audit-messages';
+
 export function useMessages(outcome: string, search: string) {
   return useInfiniteQuery({
-    queryKey: ['audit-messages', outcome, search],
+    queryKey: [MESSAGES_KEY, outcome, search],
     initialPageParam: '',
     queryFn: ({ pageParam }) => {
       const params = new URLSearchParams();
@@ -50,6 +64,34 @@ export function useMessages(outcome: string, search: string) {
       return getResponse(`/messages${query ? '?' + query : ''}`, messagesResponse);
     },
     getNextPageParam: (last) => last.page.nextCursor ?? undefined,
+  });
+}
+
+export function useCorrectMessage() {
+  const client = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ unitId, body }: { unitId: string; body: Record<string, unknown> }) =>
+      getResponse(`/messages/${unitId}/correct`, correctionResponse, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      }),
+    onSuccess: ({ data }) => {
+      client.setQueriesData<InfiniteData<MessagesPage>>(
+        { queryKey: [MESSAGES_KEY] },
+        (old) =>
+          old && {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.map((row) => (row.unitId === data.unitId ? data : row)),
+            })),
+          },
+      );
+      void client.invalidateQueries({ queryKey: [MESSAGES_KEY] });
+      void client.invalidateQueries({ queryKey: ['work'] });
+    },
   });
 }
 

@@ -53,3 +53,46 @@ test('AC24: the switch on shows the redacted text in the Messages tab; off hides
   await page.goto('/audit?tab=messages');
   await expect(page.getByText('Message text is hidden', { exact: true }).first()).toBeVisible();
 });
+
+test('AC17: a row attached to ORD-0091 and moved to ORD-0098 still reads Attached to ORD-0098 after a reload', async ({
+  page,
+}) => {
+  await page.goto('/audit?tab=messages&outcome=attached');
+  await page.locator('[data-message-row]').first().getByRole('button', { expanded: false }).click();
+  await page.getByRole('button', { name: 'This is wrong', exact: true }).click();
+
+  const dialog = page.getByRole('dialog');
+
+  await dialog.getByRole('searchbox').fill('ORD-0098');
+  await dialog.getByRole('combobox').selectOption('ORD-0098');
+  await page.getByRole('button', { name: 'Apply correction', exact: true }).click();
+  await expect(dialog).toBeHidden();
+
+  await page.reload();
+  await page.locator('[data-message-row]').first().getByRole('button', { expanded: false }).click();
+  await expect(page.getByText('Attached to ORD-0098', { exact: true })).toBeVisible();
+});
+
+test('AC31: an attached row made new work with category Order and a typed summary, and the new id is on Work', async ({
+  page,
+}) => {
+  await page.goto('/audit?tab=messages&outcome=attached');
+  await page.locator('[data-message-row]').first().getByRole('button', { expanded: false }).click();
+  await page.getByRole('button', { name: 'This is wrong', exact: true }).click();
+
+  const dialog = page.getByRole('dialog');
+
+  await dialog.getByRole('radio', { name: 'Create new work' }).check();
+  await dialog.getByLabel('Category', { exact: true }).selectOption({ label: 'Order' });
+  await dialog.getByLabel('Summary', { exact: true }).fill('New order from Toko Berkah, 12 pcs');
+  await page.getByRole('button', { name: 'Apply correction', exact: true }).click();
+  await expect(dialog).toBeHidden();
+
+  const created = page.getByText(/^Created ORD-\d+$/).first();
+
+  await expect(created).toBeVisible();
+  const id = ((await created.textContent()) ?? '').replace('Created ', '');
+
+  await page.goto('/work');
+  await expect(page.getByText(id, { exact: true }).first()).toBeVisible();
+});
