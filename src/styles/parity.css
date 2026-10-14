@@ -1563,7 +1563,7 @@ dialog.drawer.trace-drawer #dialog-content {
 .drawer-section-content .field > label {
   font-weight: 400;
 }
-.feed-item a.text-button {
+.feed-item a {
   display: flex;
   gap: 4px;
   align-items: center;
@@ -1574,7 +1574,7 @@ dialog.drawer.trace-drawer #dialog-content {
   line-height: 1.5;
   color: #91a07e;
 }
-.feed-item a.text-button .icon {
+.feed-item a .icon {
   width: 11px;
   height: 11px;
 }

@@ -25,7 +25,7 @@ function Item({ item }: { item: { title: string; occurredAt: string; kind: strin
       <div>
         <span className="feed-time">{time.replace(':', '.')}</span>
         <p>{item.title}</p>
-        <Link className="text-button" to="/audit">
+        <Link to="/audit">
           View information trail <Icon name="arrow-up-right" />
         </Link>
       </div>

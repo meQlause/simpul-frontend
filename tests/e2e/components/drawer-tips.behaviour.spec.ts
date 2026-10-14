@@ -169,7 +169,7 @@ const HEADERS: Row[] = [
     path: '/audit?tab=messages',
     open: openCorrection,
     tip: /^About /,
-    sentence: 'Lorem ipsum elit',
+    sentence: 'Choose where this message belongs. The change is recorded with your name.',
   },
 ];
 

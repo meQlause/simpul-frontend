@@ -156,21 +156,21 @@ export const messagesCopy = {
   applyCorrection: 'Apply correction',
   correctionApplied: 'Correction applied.',
   cancelWork: 'To cancel this work, close it from Work.',
-  // COPY-nnn: placeholder, id to be assigned (plan 5a)
-  search: 'Lorem ipsum dolor sit amet',
-  // COPY-nnn: channel, sender and message headers, id to be assigned (plan 5a)
-  columns: ['Lorem ipsum', 'Lorem ipsum dolor', 'Lorem ipsum dolor sit'],
-  // COPY-nnn: footnote while text access is off and its link, id to be assigned (plan 5a)
-  footnote: { off: 'Lorem ipsum dolor sit amet.', link: 'Lorem ipsum sit' },
-  // COPY-nnn: accessible name of the expand button, id to be assigned (plan 5a)
-  expand: 'Lorem ipsum amet',
-  // COPY-nnn: eyebrow, title, description and close label, id to be assigned (plan 5a)
+  // COPY-047
+  search: 'Search work IDs, people or channels…',
+  // COPY-048: channel, sender and message headers
+  columns: ['Channel', 'Sender', 'Message'],
+  // COPY-049: footnote while text access is off, and its link to Settings
+  footnote: { off: 'Message text is hidden.', link: 'Change this in Settings' },
+  // COPY-050: accessible name of a row's expand button
+  expand: 'Show steps',
+  // COPY-051: eyebrow, title, description and close label of the correction drawer
   drawer: [
-    'Lorem ipsum consectetur',
-    'Lorem ipsum adipiscing',
-    'Lorem ipsum elit',
-    'Lorem ipsum sed',
+    'HISTORY & AUDIT / CORRECTION',
+    'Correct this message',
+    'Choose where this message belongs. The change is recorded with your name.',
+    'Close correction',
   ],
-  // COPY-nnn: label and search placeholder of the work picker, id to be assigned (plan 5a)
-  work: { field: 'Lorem ipsum eiusmod', search: 'Lorem ipsum tempor' },
+  // COPY-052: label and search placeholder of the work picker
+  work: { field: 'Work', search: 'Search open work by ID or summary…' },
 };
