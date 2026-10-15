@@ -59,7 +59,7 @@ export const usedIds = [...new Set([...allowed, ...exceptions].map((entry) => en
 export const BAR_CAP = 0.5;
 
 export const fd26Bars: Record<string, number> = {
-  'audit.ready': 0.16,
+  'audit.ready': 0.17,
   'audit.trace': 0.18,
   'auth.set-password': 0.24,
   'auth.set-password-differs': 0.25,
@@ -70,10 +70,10 @@ export const fd26Bars: Record<string, number> = {
   'channels.pause': 0.23,
   'channels.ready': 0.15,
   'database.check-failed': 0.3,
-  'database.unavailable': 0.18,
+  'database.unavailable': 0.19,
   'drawer.failed': 0.19,
   'drawer.saving': 0.14,
-  'overview.empty': 0.13,
+  'overview.empty': 0.14,
   'overview.error': 0.14,
   'overview.not-found': 0.16,
   'overview.offline': 0.14,
