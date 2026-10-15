@@ -109,18 +109,13 @@
 .stat-subvisual i {
   width: 5px;
   background: #dce7d2;
-  height: 40%;
+  min-height: 2px;
   border-radius: 2px;
 }
-.stat-subvisual i:nth-child(3n) {
-  height: 80%;
+.stat-subvisual i.mid {
   background: #abc49a;
 }
-.stat-subvisual i:nth-child(3n + 1) {
-  height: 60%;
-}
-.stat-subvisual i:nth-child(4n) {
-  height: 100%;
+.stat-subvisual i.dark {
   background: #86aa73;
 }
 .stat-foot .icon {

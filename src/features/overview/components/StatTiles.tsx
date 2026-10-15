@@ -2,9 +2,9 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 import { Icon } from '../../../shared/ui/Icon';
 import type { Overview } from '../overview.schema';
+import { MiniBars, Sparkline } from './StatCharts';
 
 const numbers = new Intl.NumberFormat('en-US');
-const BARS = 9;
 const SHOWN_RECIPIENTS = 2;
 const initials = (name: string) =>
   name
@@ -53,11 +53,7 @@ function Messages({ overview }: Props) {
       label="Messages understood"
       icon="inbox"
       count={tile?.count}
-      extra={
-        <svg className="sparkline" viewBox="0 0 110 38" aria-hidden="true">
-          <path d="M1 33 14 24 25 29 38 18 48 23 60 12 72 17 84 7 94 10 109 2" />
-        </svg>
-      }
+      extra={<Sparkline values={tile?.series ?? []} />}
       foot={
         trend !== null && (
           <>
@@ -78,13 +74,7 @@ function Work({ overview }: Props) {
       label="Active work"
       icon="layers"
       count={tile?.count}
-      extra={
-        <span className="stat-subvisual">
-          {Array.from({ length: BARS }, (_item, index) => (
-            <i key={index} />
-          ))}
-        </span>
-      }
+      extra={<MiniBars values={tile?.series ?? []} />}
       foot={
         <>
           <span className="tiny-dot" />

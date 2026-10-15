@@ -1,12 +1,16 @@
 import { z as schema } from 'zod';
 
+// FR-UI-22: the chart values; an empty list draws flat (the mocks that predate the series still parse).
+const series = schema.array(schema.number()).default([]);
+
 export const responseSchema = schema.object({
   data: schema.object({
     messagesUnderstood: schema.object({
       count: schema.number(),
       trendPercent: schema.string().nullable(),
+      series,
     }),
-    activeWork: schema.object({ count: schema.number(), completedToday: schema.number() }),
+    activeWork: schema.object({ count: schema.number(), completedToday: schema.number(), series }),
     updatesDelivered: schema.object({
       count: schema.number(),
       recipients: schema.number(),
