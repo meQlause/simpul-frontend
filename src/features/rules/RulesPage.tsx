@@ -24,7 +24,8 @@ export function RulesPage() {
     return () => clearTimeout(timer);
   }, [toast]);
 
-  if (!query.data || state !== 'ready') {
+  // An empty list still renders the heading, so "Create rule" stays reachable.
+  if (!query.data || !['ready', 'empty'].includes(state)) {
     return (
       <ScreenState
         state={state}
