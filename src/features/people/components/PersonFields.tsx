@@ -37,6 +37,22 @@ export function PersonFields({ person, eligible, errors, onBackup }: Props) {
               {errors.roleName}
             </small>
           </label>
+          <label className="field" htmlFor="person-telegram">
+            <span id="person-telegram-label">{copy.telegramUsername}</span>
+            <input
+              id="person-telegram"
+              name="telegramHandle"
+              aria-labelledby="person-telegram-label"
+              defaultValue={telegramUsername(person)}
+              maxLength={33}
+              aria-invalid={Boolean(errors.telegramHandle)}
+              aria-describedby="person-telegram-help person-telegram-error"
+            />
+            <small id="person-telegram-help">{copy.usernameHelp}</small>
+            <small id="person-telegram-error" role="alert">
+              {errors.telegramHandle}
+            </small>
+          </label>
           <PersonSelect
             name="managerId"
             label={copy.supervisor}
@@ -125,4 +141,11 @@ function PersonSelect({
       </small>
     </label>
   );
+}
+
+// The stored handle is "@name"; the field shows the name, as Telegram writes it.
+function telegramUsername(person: Person) {
+  const handle = person.identities.find((identity) => identity.provider === 'telegram')?.handle;
+
+  return handle?.replace(/^@/u, '') ?? '';
 }

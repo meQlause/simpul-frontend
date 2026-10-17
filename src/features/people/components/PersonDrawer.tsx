@@ -1,12 +1,13 @@
 import { useState, type SubmitEvent } from 'react';
 import { useNavigate } from 'react-router';
+import { ChannelConfirmation } from '../../channels';
 import { ApiError } from '../../../shared/api/error';
 import { Drawer } from '../../../shared/ui/Drawer';
 import { ErrorToast } from '../../../shared/ui/ErrorToast';
 import { OfflineControls } from '../../../shared/ui/OfflineControls';
 import type { Person } from '../people.schema';
 import { personInputSchema } from '../people.schema';
-import { useSavePerson } from '../people.api';
+import { useDeactivatePerson, useSavePerson, useSignedInPersonId } from '../people.api';
 import { peopleCopy as copy } from '../people.copy';
 import { Icon } from '../../../shared/ui/Icon';
 import { initials, personColour } from './PersonRow';
@@ -14,7 +15,8 @@ import { PersonFields } from './PersonFields';
 import { PersonDelivery } from './PersonDelivery';
 import { useOnline } from '../../../shared/useOnline';
 
-function validationFields(error: unknown): Record<string, string> {
+// Shared with AddPersonDrawer: the server's field errors, under the field they name (FR-UI-16).
+export function validationFields(error: unknown): Record<string, string> {
   if (!(error instanceof ApiError) || error.code !== 'E-VALIDATION') {
     return {};
   }
@@ -31,14 +33,21 @@ function validationFields(error: unknown): Record<string, string> {
       }
 
       const message =
-        'message' in detail && typeof detail.message === 'string' ? detail.message : copy.invalid;
+        'message' in detail && typeof detail.message === 'string'
+          ? detail.message
+          : detailMessage(detail);
 
       return [[detail.field, message]];
     }),
   );
 }
 
-function focusInvalid(form: HTMLFormElement, errors: Record<string, string>) {
+// A username another person holds is the one duplicate the screens name; other details fall back to the generic line.
+function detailMessage(detail: object) {
+  return 'issue' in detail && detail.issue === 'duplicate' ? copy.duplicateUsername : copy.invalid;
+}
+
+export function focusInvalid(form: HTMLFormElement, errors: Record<string, string>) {
   const control = form.elements.namedItem(Object.keys(errors)[0]);
 
   if (control instanceof HTMLElement) {
@@ -49,13 +58,31 @@ function focusInvalid(form: HTMLFormElement, errors: Record<string, string>) {
 function readPersonForm(form: HTMLFormElement, personId: string, eligible: Person[]) {
   const data = new FormData(form);
   const input = Object.fromEntries(
-    [...data.entries()].filter(([key, value]) => key === 'roleName' || value !== ''),
+    // An empty username is sent on purpose: it removes the Telegram identity.
+    [...data.entries()].filter(
+      ([key, value]) => key === 'roleName' || key === 'telegramHandle' || value !== '',
+    ),
   );
 
   return personInputSchema(
     personId,
     eligible.map((candidate) => candidate.id),
   ).safeParse(input);
+}
+
+// The client's own rule messages: a role has its line, a username names its rule, the rest are generic.
+function clientFields(issues: { path: PropertyKey[]; message: string }[]) {
+  return Object.fromEntries(
+    issues.map((issue) => {
+      const field = String(issue.path[0]);
+      const message = {
+        roleName: copy.invalidRole,
+        telegramHandle: issue.message,
+      }[field];
+
+      return [field, message ?? copy.invalid];
+    }),
+  );
 }
 
 function usePersonForm(person: Person, eligible: Person[], onSaved: () => void) {
@@ -71,11 +98,6 @@ function usePersonForm(person: Person, eligible: Person[], onSaved: () => void) 
     focusInvalid(form, fields);
   }
 
-  function clearErrors() {
-    setFailed(false);
-    setErrors({});
-  }
-
   async function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -85,18 +107,12 @@ function usePersonForm(person: Person, eligible: Person[], onSaved: () => void) 
 
     const form = event.currentTarget;
 
-    clearErrors();
+    setFailed(false);
+    setErrors({});
     const parsed = readPersonForm(form, person.id, eligible);
 
     if (!parsed.success) {
-      const fields = Object.fromEntries(
-        parsed.error.issues.map((issue) => [
-          issue.path[0],
-          issue.path[0] === 'roleName' ? copy.invalidRole : copy.invalid,
-        ]),
-      );
-
-      showErrors(form, fields);
+      showErrors(form, clientFields(parsed.error.issues));
 
       return;
     }
@@ -112,6 +128,68 @@ function usePersonForm(person: Person, eligible: Person[], onSaved: () => void) 
   }
 
   return { submit, errors, failed, setFailed, pending: mutation.isPending };
+}
+
+// FR-UI-23: deactivation waits behind an in-page confirmation. The signed-in admin is never offered it, and the server refuses it too.
+function useDeactivation(person: Person, onDeactivated: () => void) {
+  const deactivate = useDeactivatePerson(person.id);
+  const signedInId = useSignedInPersonId().data;
+  const [confirming, setConfirming] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  async function confirm() {
+    setFailed(false);
+
+    try {
+      await deactivate.mutateAsync();
+      onDeactivated();
+    } catch {
+      setFailed(true);
+    }
+  }
+
+  return {
+    canDeactivate: signedInId !== undefined && signedInId !== person.id,
+    confirming,
+    open: () => setConfirming(true),
+    dismiss: () => {
+      setConfirming(false);
+      setFailed(false);
+    },
+    failed,
+    setFailed,
+    pending: deactivate.isPending,
+    confirm,
+  };
+}
+
+type Deactivation = ReturnType<typeof useDeactivation>;
+
+function DeactivateConfirmation({
+  person,
+  deactivation,
+}: {
+  person: Person;
+  deactivation: Deactivation;
+}) {
+  return (
+    <ChannelConfirmation
+      eyebrow={copy.deactivateEyebrow}
+      title={copy.deactivateTitle(person.name)}
+      description={copy.deactivateDescription}
+      label={copy.deactivate}
+      pending={deactivation.pending}
+      onClose={deactivation.dismiss}
+      onConfirm={() => {
+        void deactivation.confirm();
+      }}
+    >
+      <ErrorToast
+        message={deactivation.failed ? copy.saveFailed : ''}
+        onClose={() => deactivation.setFailed(false)}
+      />
+    </ChannelConfirmation>
+  );
 }
 
 function HandoffStep({ person, note }: { person: Person; note: string }) {
@@ -168,10 +246,12 @@ export function PersonDrawer({
   person,
   people,
   onSaved,
+  onDeactivated,
 }: {
   person: Person;
   people: Person[];
   onSaved: () => void;
+  onDeactivated: () => void;
 }) {
   const navigate = useNavigate();
   const online = useOnline();
@@ -182,6 +262,7 @@ export function PersonDrawer({
   const eligible = people.filter((candidate) => candidate.id !== person.id);
   const { submit, errors, failed, setFailed, pending } = usePersonForm(person, eligible, onSaved);
   const [backupId, setBackupId] = useState(person.backup?.id ?? '');
+  const deactivation = useDeactivation(person, onDeactivated);
 
   return (
     <Drawer
@@ -193,6 +274,11 @@ export function PersonDrawer({
       footer={
         <>
           <ErrorToast message={failed ? copy.saveFailed : ''} onClose={() => setFailed(false)} />
+          {deactivation.canDeactivate && (
+            <button type="button" className="button" onClick={deactivation.open}>
+              {copy.deactivate}
+            </button>
+          )}
           <button type="button" className="button" onClick={close}>
             {copy.cancel}
           </button>
@@ -228,6 +314,9 @@ export function PersonDrawer({
         </OfflineControls>
       </form>
       <PersonDelivery />
+      {deactivation.confirming && (
+        <DeactivateConfirmation person={person} deactivation={deactivation} />
+      )}
     </Drawer>
   );
 }

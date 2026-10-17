@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import {
   DirectoryCallout,
   DirectoryContext,
@@ -78,7 +78,12 @@ export function PeopleList({ people }: { people: Person[] }) {
 
   return (
     <>
-      <PageHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+      <PageHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description}>
+        <Link className="button button-primary" to="/people/new">
+          <Icon name="plus" />
+          {copy.add}
+        </Link>
+      </PageHeading>
       <DirectoryContext
         icon="users"
         headline={

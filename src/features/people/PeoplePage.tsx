@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { PeopleList } from './components/PeopleList';
 import { PersonDrawer } from './components/PersonDrawer';
+import { AddPersonDrawer } from './components/AddPersonDrawer';
+import type { Person } from './people.schema';
 import { peopleCopy as copy } from './people.copy';
 
 export function PeoplePage() {
@@ -12,7 +14,7 @@ export function PeoplePage() {
   const state = useScreenState(query, query.data?.data.length === 0);
   const { personId } = useParams();
   const navigate = useNavigate();
-  const [saved, setSaved] = useState(false);
+  const [toast, setToast] = useState('');
 
   if (!query.data || ['loading', 'error', 'not-found', 'empty'].includes(state)) {
     return (
@@ -26,7 +28,12 @@ export function PeoplePage() {
   }
 
   const people = query.data.data;
-  const person = people.find((candidate) => candidate.id === personId);
+
+  // Every drawer closes to the list and says what happened there.
+  const close = (message: string) => {
+    setToast(message);
+    void navigate('/people');
+  };
 
   return (
     <section data-component="PeoplePage" data-variant="default">
@@ -38,23 +45,46 @@ export function PeoplePage() {
         }}
       />
       <PeopleList people={people} />
-      {saved && (
+      {toast && (
         <div role="status" className="toast">
-          {copy.saved}
+          {toast}
         </div>
       )}
-      {person && (
-        <PersonDrawer
-          key={person.id}
-          person={person}
-          people={people}
-          onSaved={() => {
-            setSaved(true);
-            void navigate('/people');
-          }}
-        />
-      )}
-      {personId && !person && <ScreenState state="not-found" />}
+      <PeopleDrawers personId={personId} people={people} onClose={close} />
     </section>
+  );
+}
+
+function PeopleDrawers({
+  personId,
+  people,
+  onClose,
+}: {
+  personId?: string;
+  people: Person[];
+  onClose: (message: string) => void;
+}) {
+  const person = people.find((candidate) => candidate.id === personId);
+
+  if (personId === 'new') {
+    return <AddPersonDrawer onSaved={() => onClose(copy.added)} />;
+  }
+
+  if (!personId) {
+    return null;
+  }
+
+  if (!person) {
+    return <ScreenState state="not-found" />;
+  }
+
+  return (
+    <PersonDrawer
+      key={person.id}
+      person={person}
+      people={people}
+      onSaved={() => onClose(copy.saved)}
+      onDeactivated={() => onClose(copy.deactivated)}
+    />
   );
 }

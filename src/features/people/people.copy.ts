@@ -49,4 +49,25 @@ export const peopleCopy = {
   saved: 'Role and backup saved.', // COPY-012 — approved in docs/FE/copy-recommendations.md
   noMatch: 'No matches found',
   noMatchHelp: 'Try another name or filter.',
+  // FR-UI-23 — approved as written on 2026-10-16 (ticket add-person, D5).
+  add: 'Add person',
+  addEyebrow: 'PEOPLE & STRUCTURE / NEW PERSON',
+  addTitle: 'Add person',
+  addDescription: 'Add someone your team routes work to.',
+  name: 'Name',
+  telegramUsername: 'Telegram username',
+  usernameHelp:
+    'Their Telegram username. They are linked when they first write in a monitored group.',
+  team: 'Team',
+  savePerson: 'Save person',
+  added: 'Person added.',
+  deactivate: 'Deactivate person',
+  deactivateEyebrow: 'DEACTIVATE PERSON',
+  deactivateTitle: (name: string) => `Deactivate ${name}?`,
+  deactivateDescription:
+    "They leave the list and the backup and supervisor choices. Their role's notifications go to the backup.",
+  deactivated: 'Person deactivated.',
+  invalidName: 'Enter a name.',
+  invalidUsername: 'Use 5–32 letters, numbers or underscores.',
+  duplicateUsername: 'Another person already uses this username.',
 };
