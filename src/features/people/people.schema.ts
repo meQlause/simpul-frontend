@@ -22,6 +22,7 @@ const personSchema = namedPerson.extend({
   identities: schema.array(
     schema.object({ provider: schema.string(), handle: schema.string().nullable() }),
   ),
+  telegramStatus: schema.enum(['connected', 'waiting', 'not_connected']),
   role: namedPerson.extend({ team: schema.string() }).nullable(),
   manager: namedPerson.nullable(),
   backup: namedPerson.nullable(),
@@ -29,7 +30,19 @@ const personSchema = namedPerson.extend({
 
 export type Person = schema.infer<typeof personSchema>;
 
-export const responseSchema = schema.object({ data: schema.array(personSchema) });
+// meta.botUsername is null until the workspace's Telegram bot is ready (FR-UI-24).
+export const responseSchema = schema.object({
+  data: schema.array(personSchema),
+  meta: schema.object({ botUsername: schema.string().nullable() }),
+});
+
+// FR-TG-12: the link opens the bot's private chat on Start; nothing else is shown or copied.
+export const inviteSchema = schema.object({
+  data: schema.object({
+    link: schema.string().regex(/^https:\/\/t\.me\/\w+\?start=[0-9a-f]{32}$/u),
+    expiresAt: schema.iso.datetime(),
+  }),
+});
 
 export const savedPersonSchema = schema.object({ data: personSchema });
 

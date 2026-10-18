@@ -13,6 +13,7 @@ import { Icon } from '../../../shared/ui/Icon';
 import { initials, personColour } from './PersonRow';
 import { PersonFields } from './PersonFields';
 import { PersonDelivery } from './PersonDelivery';
+import { InviteLink } from './InviteLink';
 import { useOnline } from '../../../shared/useOnline';
 
 // Shared with AddPersonDrawer: the server's field errors, under the field they name (FR-UI-16).
@@ -247,11 +248,15 @@ export function PersonDrawer({
   people,
   onSaved,
   onDeactivated,
+  botUsername,
+  onInviteCopied,
 }: {
   person: Person;
   people: Person[];
   onSaved: () => void;
   onDeactivated: () => void;
+  botUsername: string | null;
+  onInviteCopied: () => void;
 }) {
   const navigate = useNavigate();
   const online = useOnline();
@@ -295,6 +300,7 @@ export function PersonDrawer({
       }
     >
       <PersonHero person={person} />
+      <InviteLink person={person} botUsername={botUsername} onCopied={onInviteCopied} />
       <form id="person-form" onSubmit={submit} noValidate>
         <OfflineControls>
           <PersonFields

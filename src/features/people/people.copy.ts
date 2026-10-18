@@ -70,4 +70,15 @@ export const peopleCopy = {
   invalidName: 'Enter a name.',
   invalidUsername: 'Use 5–32 letters, numbers or underscores.',
   duplicateUsername: 'Another person already uses this username.',
+  // FR-UI-24 — COPY-054 to COPY-057, approved 2026-10-17.
+  connected: 'Connected',
+  waitingForStart: 'Waiting for Start',
+  notConnected: 'Not connected',
+  copyInvite: 'Copy invite link',
+  validUntil: (date: string) => `Valid until ${date}`,
+  sendInvite: (name: string) =>
+    `Send this link to ${name}. They open it in Telegram and press Start.`,
+  inviteCopied: 'Invite link copied.',
+  connectBotFirst: 'Connect the Telegram bot in Channels first.',
+  done: 'Done',
 };

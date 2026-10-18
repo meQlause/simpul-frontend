@@ -50,7 +50,13 @@ export function PeoplePage() {
           {toast}
         </div>
       )}
-      <PeopleDrawers personId={personId} people={people} onClose={close} />
+      <PeopleDrawers
+        personId={personId}
+        people={people}
+        botUsername={query.data.meta.botUsername}
+        onClose={close}
+        onToast={setToast}
+      />
     </section>
   );
 }
@@ -58,16 +64,27 @@ export function PeoplePage() {
 function PeopleDrawers({
   personId,
   people,
+  botUsername,
   onClose,
+  onToast,
 }: {
   personId?: string;
   people: Person[];
+  botUsername: string | null;
   onClose: (message: string) => void;
+  onToast: (message: string) => void;
 }) {
+  const inviteCopied = () => onToast(copy.inviteCopied);
   const person = people.find((candidate) => candidate.id === personId);
 
   if (personId === 'new') {
-    return <AddPersonDrawer onSaved={() => onClose(copy.added)} />;
+    return (
+      <AddPersonDrawer
+        botUsername={botUsername}
+        onInviteCopied={inviteCopied}
+        onSaved={() => onClose('')}
+      />
+    );
   }
 
   if (!personId) {
@@ -85,6 +102,8 @@ function PeopleDrawers({
       people={people}
       onSaved={() => onClose(copy.saved)}
       onDeactivated={() => onClose(copy.deactivated)}
+      botUsername={botUsername}
+      onInviteCopied={inviteCopied}
     />
   );
 }

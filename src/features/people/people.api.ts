@@ -7,6 +7,7 @@ import {
   personInputSchema,
   newPersonSchema,
   signedInPersonSchema,
+  inviteSchema,
 } from './people.schema';
 
 export function usePeople() {
@@ -54,6 +55,16 @@ export function useDeactivatePerson(personId: string) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ active: false }),
       }),
+    onSuccess: () => client.invalidateQueries({ queryKey: queryKeys.page('people') }),
+  });
+}
+
+// FR-TG-12: every press makes a new link and voids the previous one; the list's status follows.
+export function useCreateInvite(personId: string) {
+  const client = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => getResponse(`/people/${personId}/invite`, inviteSchema, { method: 'POST' }),
     onSuccess: () => client.invalidateQueries({ queryKey: queryKeys.page('people') }),
   });
 }

@@ -9,6 +9,8 @@ import { useCreatePerson } from '../people.api';
 import { newPersonSchema, TEAMS } from '../people.schema';
 import { peopleCopy as copy } from '../people.copy';
 import { focusInvalid, validationFields } from './PersonDrawer';
+import { InviteLink } from './InviteLink';
+import type { Person } from '../people.schema';
 
 type Errors = Record<string, string>;
 
@@ -22,7 +24,7 @@ function fieldMessages(issues: { path: PropertyKey[]; message: string }[]): Erro
 }
 
 // FR-UI-23: the new person gets a role of their own and no sign-in; their Telegram account links on their first message.
-function useNewPerson(onSaved: () => void) {
+function useNewPerson(onSaved: (person: Person) => void) {
   const create = useCreatePerson();
   const [errors, setErrors] = useState<Errors>({});
   const [failed, setFailed] = useState(false);
@@ -63,8 +65,7 @@ function useNewPerson(onSaved: () => void) {
     }
 
     try {
-      await create.mutateAsync(parsed.data);
-      onSaved();
+      onSaved((await create.mutateAsync(parsed.data)).data);
     } catch (error) {
       showFailure(form, error);
     }
@@ -142,13 +143,66 @@ function NewPersonFields({ errors }: { errors: Errors }) {
   );
 }
 
-export function AddPersonDrawer({ onSaved }: { onSaved: () => void }) {
+// FR-UI-24: once saved, the drawer becomes "Person added." with the invite link; Done closes it.
+function AddedConfirmation({
+  person,
+  botUsername,
+  onInviteCopied,
+}: {
+  person: Person;
+  botUsername: string | null;
+  onInviteCopied: () => void;
+}) {
+  return (
+    <>
+      <p role="status" className="drawer-inline-note">
+        <Icon name="check" />
+        {copy.added}
+      </p>
+      <InviteLink person={person} botUsername={botUsername} onCopied={onInviteCopied} />
+    </>
+  );
+}
+
+export function AddPersonDrawer({
+  onSaved,
+  botUsername,
+  onInviteCopied,
+}: {
+  onSaved: () => void;
+  botUsername: string | null;
+  onInviteCopied: () => void;
+}) {
   const navigate = useNavigate();
   const online = useOnline();
-  const { submit, errors, failed, setFailed, pending } = useNewPerson(onSaved);
+  const [added, setAdded] = useState<Person>();
+  const { submit, errors, failed, setFailed, pending } = useNewPerson(setAdded);
   const close = () => {
     void navigate('/people');
   };
+
+  if (added) {
+    return (
+      <Drawer
+        title={copy.addTitle}
+        eyebrow={copy.addEyebrow}
+        description={copy.addDescription}
+        closeLabel={copy.close}
+        onClose={onSaved}
+        footer={
+          <button type="button" className="button button-primary" onClick={onSaved}>
+            {copy.done}
+          </button>
+        }
+      >
+        <AddedConfirmation
+          person={added}
+          botUsername={botUsername}
+          onInviteCopied={onInviteCopied}
+        />
+      </Drawer>
+    );
+  }
 
   return (
     <Drawer
