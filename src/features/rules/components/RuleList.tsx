@@ -1,5 +1,6 @@
 import { useSearchParams } from 'react-router';
 import { DirectoryFooter } from '../../../shared/ui/Directory';
+import { ScreenState } from '../../../shared/ui/ScreenState';
 import { useOnline } from '../../../shared/useOnline';
 import { useToggleRule } from '../rules.api';
 import { rulesCopy as copy } from '../rules.copy';
@@ -48,6 +49,16 @@ export function RuleList({
         onSuccess: () => onToast(rule.active ? copy.toggled.off : copy.toggled.on),
         onError: () => onToast(copy.saveFailed),
       },
+    );
+  }
+
+  // No rules yet: the heading keeps "Create rule" reachable above the empty state.
+  if (rules.length === 0) {
+    return (
+      <>
+        <RuleHeading active={0} />
+        <ScreenState state="empty" />
+      </>
     );
   }
 
