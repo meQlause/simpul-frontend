@@ -2,10 +2,10 @@ import { z as schema } from 'zod';
 
 export const meSchema = schema.object({
   data: schema.object({
-    person: schema.object({ name: schema.string(), roleName: schema.string() }),
+    person: schema.object({ name: schema.string(), roleName: schema.string().nullable() }),
     workspace: schema.object({
       name: schema.string(),
-      descriptor: schema.string(),
+      descriptor: schema.string().nullable(),
       timezone: schema.string(),
       counts: schema.object({
         members: schema.number().int().nonnegative(),

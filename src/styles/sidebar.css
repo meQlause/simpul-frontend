@@ -122,6 +122,9 @@
     background 0.15s,
     color 0.15s;
 }
+.nav-item:has(.nav-count) {
+  gap: 6px;
+}
 .nav-item .icon {
   width: 18px;
   height: 18px;
@@ -142,14 +145,15 @@
   font-size: calc(10px + var(--text-step));
   margin-left: auto;
   color: #8a928b;
+  min-width: 28px;
+  padding: 1px 0;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 .nav-count.attention-count {
   background: #f4f0df;
   color: #a27f36;
-  min-width: 20px;
-  padding: 1px 5px;
   border-radius: 5px;
-  text-align: center;
 }
 .nav-dot {
   width: 5px;

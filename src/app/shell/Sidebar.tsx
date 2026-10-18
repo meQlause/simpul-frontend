@@ -39,7 +39,15 @@ function QuietCard({ onNavigate }: { onNavigate: () => void }) {
   );
 }
 
-export function Sidebar({ expanded, onNavigate }: { expanded: boolean; onNavigate: () => void }) {
+export function Sidebar({
+  expanded,
+  onNavigate,
+  onProfile,
+}: {
+  expanded: boolean;
+  onNavigate: () => void;
+  onProfile: () => void;
+}) {
   const { me, workCount, attentionCount } = useShellData();
 
   return (
@@ -92,7 +100,7 @@ export function Sidebar({ expanded, onNavigate }: { expanded: boolean; onNavigat
       </nav>
       <div className="sidebar-bottom">
         <QuietCard onNavigate={onNavigate} />
-        <Link className="profile" to="/people" onClick={onNavigate}>
+        <button className="profile" type="button" onClick={onProfile} disabled={!me}>
           <span className="avatar profile-avatar">{initials(me?.person.name)}</span>
           <span>
             <strong>{me?.person.name}</strong>
@@ -101,7 +109,7 @@ export function Sidebar({ expanded, onNavigate }: { expanded: boolean; onNavigat
           <svg className="icon" aria-hidden="true">
             <use href="#i-chevron-down" />
           </svg>
-        </Link>
+        </button>
       </div>
     </aside>
   );

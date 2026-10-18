@@ -5,11 +5,13 @@ import { shellCopy } from './shell.copy';
 import { Sidebar } from './Sidebar';
 import { WorkspaceDrawer } from './WorkspaceDrawer';
 import { GuideDrawer } from './GuideDrawer';
+import { ProfileDrawer } from './ProfileDrawer';
 
 export function Shell() {
   const [expanded, setExpanded] = useState(false);
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   return (
     <>
@@ -20,6 +22,9 @@ export function Shell() {
         expanded={expanded}
         onNavigate={() => {
           setExpanded(false);
+        }}
+        onProfile={() => {
+          setProfileOpen(true);
         }}
       />
       <div className="app-shell" data-component="Shell">
@@ -52,6 +57,13 @@ export function Shell() {
         <WorkspaceDrawer
           onClose={() => {
             setWorkspaceOpen(false);
+          }}
+        />
+      )}
+      {profileOpen && (
+        <ProfileDrawer
+          onClose={() => {
+            setProfileOpen(false);
           }}
         />
       )}

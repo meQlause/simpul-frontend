@@ -187,3 +187,121 @@ test('A window shorter than the sidebar keeps brand and profile; only the menu s
   await sidebar.getByRole('link', { name: 'Settings' }).scrollIntoViewIfNeeded();
   await expect(sidebar.getByRole('link', { name: 'Settings' })).toBeInViewport();
 });
+
+async function stubAccount(
+  page: Page,
+  name: string,
+  roleName: string | null,
+  descriptor: string | null,
+) {
+  await stubShell(page);
+  const identity = {
+    person: { name, roleName },
+    workspace: {
+      name: 'Simpul',
+      descriptor,
+      timezone: 'Asia/Jakarta',
+      counts: { members: 1, channels: 0, activeRules: 0 },
+    },
+  };
+
+  await page.route('**/api/v1/me', (route) => route.fulfill({ json: { data: identity } }));
+
+  return identity;
+}
+
+for (const [roleName, descriptor] of [
+  [null, 'Operations workspace'],
+  ['Administrator', null],
+  [null, null],
+]) {
+  test(`AC5: nullable role ${roleName} and descriptor ${descriptor} keep workspace controls usable`, async ({
+    page,
+  }) => {
+    await stubAccount(page, 'Ardial', roleName, descriptor);
+    await page.goto('/work');
+    const workspace = page.locator('.topbar .workspace');
+
+    await expect(workspace).toBeEnabled();
+    await expect(workspace).toContainText('Simpul');
+    await expect(workspace.locator('.workspace-logo')).toHaveText('S');
+    await expect(page.locator('.sidebar .profile-avatar')).toHaveText('A');
+    await expect(page.locator('.sidebar .profile small')).toHaveText(roleName ?? '');
+    await expect(workspace.locator('.workspace-copy small')).toHaveText(descriptor ?? '');
+    await workspace.click();
+    await expect(page.getByRole('dialog')).toHaveAccessibleName('Simpul');
+  });
+}
+
+for (const [name, letters] of [
+  ['Ardial', 'A'],
+  ['Siti Aminah', 'SA'],
+]) {
+  test(`AC6 AC7: ${name} opens their account with initials and keyboard access`, async ({
+    page,
+  }) => {
+    await stubAccount(page, name, 'Administrator', null);
+    await page.goto('/work');
+    const profile = page.locator('.sidebar .profile');
+
+    await expect(profile).toHaveRole('button');
+    await expect(profile.locator('.profile-avatar')).toHaveText(letters);
+    await profile.focus();
+    await page.keyboard.press('Enter');
+    const drawer = page.getByRole('dialog');
+
+    await expect(drawer).toHaveAccessibleName(name);
+    await expect(drawer.locator('.drawer-person small')).toHaveText('Administrator');
+    await expect(drawer.locator('.drawer-person small')).toBeVisible();
+    await expect(drawer.locator('.avatar')).toHaveText(letters);
+    await page.keyboard.press('Escape');
+    await expect(drawer).toHaveCount(0);
+    await expect(profile).toBeFocused();
+  });
+
+  test(`AC6 AC7: ${name} closes their account without editing and People stays separate`, async ({
+    page,
+  }) => {
+    await stubAccount(page, name, 'Administrator', null);
+    await page.goto('/work');
+    const profile = page.locator('.sidebar .profile');
+
+    await profile.click();
+    const drawer = page.getByRole('dialog');
+
+    await expect(drawer).toHaveAccessibleName(name);
+    await expect(drawer.locator('input, textarea, select')).toHaveCount(0);
+    await expect(drawer.getByRole('button', { name: 'Sign out', exact: true })).toBeVisible();
+    await expect(page).toHaveURL('/work');
+    await page.getByRole('button', { name: 'Close', exact: true }).click();
+    await expect(drawer).toHaveCount(0);
+    await expect(profile).toBeFocused();
+    await page.getByRole('link', { name: 'People & structure', exact: true }).click();
+    await expect(page).toHaveURL('/people');
+  });
+}
+
+test('AC7: account Sign out ends the session and clears the previous identity cache', async ({
+  page,
+}) => {
+  const identity = await stubAccount(page, 'Ardial', 'Administrator', 'Operations workspace');
+  let signOutRequests = 0;
+
+  await page.route('**/api/auth/sign-out', async (route) => {
+    expect(route.request().method()).toBe('POST');
+    signOutRequests += 1;
+    await route.fulfill({ json: { success: true } });
+  });
+  await page.route('**/api/auth/sign-in/email', (route) => route.fulfill({ json: {} }));
+  await page.goto('/work');
+  await page.locator('.sidebar .profile').click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Sign out' }).click();
+  await expect(page).toHaveURL('/sign-in');
+  expect(signOutRequests).toBe(1);
+  identity.person.name = 'Budi Santoso';
+  await page.getByLabel('Email', { exact: true }).fill('budi@example.test');
+  await page.getByLabel('Password', { exact: true }).fill('test-password-123');
+  await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+  await expect(page.locator('.sidebar .profile')).toContainText('Budi Santoso');
+  await expect(page.locator('.sidebar .profile')).not.toContainText('Ardial');
+});
