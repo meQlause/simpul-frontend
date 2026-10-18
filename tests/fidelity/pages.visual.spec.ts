@@ -14,9 +14,12 @@ test.beforeAll(async () => {
 test.afterAll(() => backend?.stop());
 
 const only = process.env.FIDELITY_VIEW ?? '';
+// At 375px the mockup hides the footer's signature row, which the app keeps on every
+// authentication page (ticket ui-empty-layout, AC9); tests/e2e/auth-footer.spec.ts covers it.
+const RETIRED = new Set(['auth.set-password@375', 'auth.set-password-differs@375']);
 
 for (const entry of appViews.filter((candidate) => candidate.view.startsWith(only))) {
-  for (const width of widths) {
+  for (const width of widths.filter((size) => !RETIRED.has(`${entry.view}@${size}`))) {
     test(`${entry.view} at ${width}px equals the mockup`, async ({ page }) => {
       await open(page, backend.baseUrl, {
         path: entry.path,

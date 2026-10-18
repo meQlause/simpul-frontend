@@ -222,10 +222,24 @@
 .auth-form .drawer-inline-note {
   margin-top: 16px;
 }
+/* Two left-aligned rows at every width, each ordinary wrapping text: the reassurance, then
+   the product and signature, which the dashboard footer hides on small screens. */
 .auth-form .page-footer {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
   margin-top: auto;
   padding-top: 26px;
   border-top: 0;
+}
+.auth-form .page-footer > span,
+.auth-form .page-footer > span:last-child {
+  display: block;
+}
+.auth-form .page-footer .tiny-dot {
+  display: inline-block;
+  margin-right: 5px;
+  vertical-align: middle;
 }
 @keyframes auth-orbit {
   to {
@@ -278,11 +292,6 @@
   }
   .auth-form .brand {
     margin-bottom: 26px;
-  }
-  .auth-form .page-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
