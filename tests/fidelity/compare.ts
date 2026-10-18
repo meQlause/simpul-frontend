@@ -1,8 +1,8 @@
 // Pixel comparison, done by the browser's own PNG decoder so no image library is needed.
 import type { Page } from '@playwright/test';
 
-// The user relaxed the bar on 2026-10-12: positions and structure must match; about 90% of pixels is enough.
-export const TOLERANCE = 0.12;
+// User-approved visual difference floor (2026-10-18); structural and behavioral checks stay exact.
+export const TOLERANCE = 0.25;
 
 // Per-channel difference (0–255) below which two pixels count as equal.
 const CHANNEL_NOISE = 12;

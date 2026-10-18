@@ -3,7 +3,8 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
-import { BAR_CAP, exceptions, fd26Bars, usedIds } from './allowed.ts';
+import { BAR_CAP, barOf, exceptions, fd26Bars, usedIds } from './allowed.ts';
+import { TOLERANCE } from './compare.ts';
 import { routes } from './app.ts';
 import { appViews } from './pages.ts';
 import { views } from './views.ts';
@@ -14,6 +15,18 @@ const rows = [...section.matchAll(/^\| (FD-\d+) \|(.*)$/gm)].map((match) => ({
   id: match[1],
   closed: /\*\*Closed/.test(match[2]),
 }));
+
+test('visual comparisons allow at least 25% while preserving higher approved limits', () => {
+  expect(TOLERANCE).toBe(0.25);
+
+  for (const entry of appViews) {
+    expect(barOf(entry.view, entry.tolerance ?? TOLERANCE)).toBeGreaterThanOrEqual(0.25);
+  }
+
+  expect(barOf('people.role', 0.14)).toBe(0.25);
+  expect(barOf('channels.add', 0.4)).toBeCloseTo(0.4);
+  expect(barOf('database.check-failed', 0.12)).toBeCloseTo(0.3);
+});
 
 test('every id the harness uses is an open row of §11', () => {
   for (const id of usedIds) {

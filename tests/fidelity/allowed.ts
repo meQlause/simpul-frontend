@@ -1,3 +1,5 @@
+import { TOLERANCE } from './compare.ts';
+
 // docs/FE/fidelity.md §11 as data: the regions of a mockup render that a comparison skips on
 // both sides, because the product differs there on purpose. Nothing else is ever masked.
 const allowed = [
@@ -79,7 +81,7 @@ export const fd26Bars: Record<string, number> = {
   'overview.offline': 0.14,
   'overview.ready': 0.26,
   'people.offline': 0.17,
-  'people.ready': 0.16,
+  'people.ready': 0.25,
   'people.role': 0.14,
   'queue.mapping': 0.16,
   'queue.ready': 0.17,
@@ -114,5 +116,5 @@ export const fd26Bars: Record<string, number> = {
 };
 
 export function barOf(view: string, base: number): number {
-  return Math.max(base, fd26Bars[view] ?? 0);
+  return Math.max(TOLERANCE, base, fd26Bars[view] ?? 0);
 }

@@ -249,7 +249,7 @@ test('AC29: the loading state shows, then the empty state when no units exist', 
   release();
   await expect(page.locator('[data-message-row]')).toHaveCount(5);
 
-  await page.unrouteAll({ behavior: 'wait' });
+  await page.unroute(MESSAGES);
   await messagesRoute(page, () => answer([], false));
   await page.reload();
   await expect(page.getByRole('heading', { name: 'No data yet' })).toBeVisible();
