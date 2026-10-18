@@ -148,8 +148,15 @@
   color: var(--muted);
   font-size: calc(11px + var(--text-step));
 }
+/* One column: Generate code, the command at full width, Copy, then the waiting line. */
 .setup-command {
   display: flex;
-  gap: 8px;
-  align-items: end;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+.setup-command .field {
+  align-self: stretch;
+  width: 100%;
+  min-width: 0;
 }
