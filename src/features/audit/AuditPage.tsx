@@ -1,5 +1,5 @@
 import { useParams, useSearchParams } from 'react-router';
-import { InfoTip } from '../../shared/ui/InfoTip';
+import { PageHeading } from '../../shared/ui/Directory';
 import { ScreenState } from '../../shared/ui/ScreenState';
 import { useScreenState } from '../../shared/useScreenState';
 import { useAudit } from './audit.api';
@@ -22,15 +22,24 @@ function DecisionsTab() {
   const query = useAudit(kind, search);
   const first = query.data?.pages[0];
   const state = useScreenState(query, isEmptyUnfiltered(first, kind, search));
+  // The heading and tabs stay above every state, as on the Messages tab (ui-empty-layout, AC3).
+  const heading = (
+    <PageHeading eyebrow={copy.eyebrow} title={copy.title} description={copy.description}>
+      <AuditTabs active="decisions" />
+    </PageHeading>
+  );
 
   if (!first || state !== 'ready') {
     return (
-      <ScreenState
-        state={state}
-        onRetry={() => {
-          void query.refetch();
-        }}
-      />
+      <section data-component="AuditPage" data-variant="default">
+        {heading}
+        <ScreenState
+          state={state}
+          onRetry={() => {
+            void query.refetch();
+          }}
+        />
+      </section>
     );
   }
 
@@ -39,18 +48,7 @@ function DecisionsTab() {
 
   return (
     <section data-component="AuditPage" data-variant="default">
-      <header className="page-heading" data-component="PageHeading" data-variant="default">
-        <div>
-          <div className="eyebrow" data-role="eyebrow">
-            {copy.eyebrow}
-          </div>
-          <h1 className="page-title" data-role="title">
-            {copy.title}
-          </h1>
-          <InfoTip title={copy.title} text={copy.description} />
-        </div>
-        <AuditTabs active="decisions" />
-      </header>
+      {heading}
       <div className="directory-context">
         <svg className="icon" aria-hidden="true">
           <use href="#i-history" />

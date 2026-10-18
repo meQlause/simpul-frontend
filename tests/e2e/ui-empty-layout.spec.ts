@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { connectedWorkspace } from './helpers/database';
 
 for (const width of [1440, 375]) {
@@ -103,3 +103,62 @@ for (const width of [1440, 375]) {
     await expect(page).toHaveURL(/\/channels\/new$/);
   });
 }
+
+const NO_DECISIONS = {
+  data: [],
+  page: { nextCursor: null, total: 0 },
+  counts: { routing: 0, work: 0, queue: 0, digest: 0 },
+};
+const NO_MESSAGES = {
+  data: [],
+  page: { nextCursor: null, total: 0 },
+  counts: { created: 0, attached: 0, held: 0, rejected: 0, ignored: 0, pending: 0 },
+};
+
+async function expectAuditHeading(page: Page, active: 'Decisions' | 'Messages') {
+  await expect(page.getByText('EVERY DECISION HAS A REASON', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'History & audit', level: 1 })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'About History & audit' })).toBeVisible();
+  const tabs = page.getByRole('navigation', { name: 'Audit pages' });
+
+  await expect(tabs.getByRole('link', { name: active, exact: true })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+}
+
+test('AC3: empty Decisions keeps the heading and both tabs, and Messages is reachable', async ({
+  page,
+}) => {
+  await connectedWorkspace(page);
+  await page.route('**/api/v1/decisions*', (route) => route.fulfill({ json: NO_DECISIONS }));
+  await page.route('**/api/v1/messages*', (route) => route.fulfill({ json: NO_MESSAGES }));
+  await page.goto('/audit');
+  await expectAuditHeading(page, 'Decisions');
+  await expect(page.locator('[data-component="ScreenState"]')).toBeVisible();
+  await page.getByRole('link', { name: 'Messages', exact: true }).click();
+  await expect(page).toHaveURL(/\/audit\?tab=messages$/);
+  await expectAuditHeading(page, 'Messages');
+  await page.getByRole('link', { name: 'Decisions', exact: true }).click();
+  await expectAuditHeading(page, 'Decisions');
+});
+
+test('AC3: loading Decisions keeps the heading and both tabs', async ({ page }) => {
+  await connectedWorkspace(page);
+  await page.route('**/api/v1/decisions*', () => undefined);
+  await page.goto('/audit');
+  await expectAuditHeading(page, 'Decisions');
+});
+
+test('AC3: failed Decisions keeps the heading and both tabs above the retry', async ({ page }) => {
+  await connectedWorkspace(page);
+  await page.route('**/api/v1/decisions*', (route) =>
+    route.fulfill({
+      status: 500,
+      json: { error: { code: 'E-INTERNAL', message: '', details: [], requestId: 'audit' } },
+    }),
+  );
+  await page.goto('/audit');
+  await expect(page.getByRole('button', { name: 'Retry', exact: true })).toBeVisible();
+  await expectAuditHeading(page, 'Decisions');
+});
