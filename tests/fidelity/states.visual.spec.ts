@@ -46,8 +46,12 @@ test.beforeAll(async () => {
 });
 test.afterAll(() => backend?.stop());
 
+// Empty Channels keeps its page, while the mockup still shows the removed panel
+// (ticket ui-empty-layout, AC2). tests/e2e/ui-empty-layout.spec.ts covers that layout.
 const cases = PAGES.filter((candidate) => candidate.view.startsWith(only)).flatMap((entry) =>
-  STATES.flatMap((state) => widths.map((width) => ({ entry, state, width }))),
+  STATES.filter((state) => !(entry.view === 'channels' && state === 'empty')).flatMap((state) =>
+    widths.map((width) => ({ entry, state, width })),
+  ),
 );
 
 for (const { entry, state, width } of cases) {

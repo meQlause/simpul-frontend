@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 const routes = ['/', '/work', '/queue', '/rules', '/people', '/channels', '/audit', '/settings'];
-const lists = ['/work', '/queue', '/rules', '/people', '/channels', '/audit'];
+const lists = ['/work', '/queue', '/rules', '/people', '/audit'];
 const messages = {
   empty: ['No data yet', 'Connect a group or adjust your filters to get started.'],
   error: [

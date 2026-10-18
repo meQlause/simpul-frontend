@@ -21,7 +21,7 @@ export function ChannelsPage() {
 
   return (
     <>
-      <ScreenState state={state} onRetry={page.reload} />
+      {state !== 'empty' && <ScreenState state={state} onRetry={page.reload} />}
       {page.channels.data && (
         <ChannelList
           channels={page.channels.data.data}

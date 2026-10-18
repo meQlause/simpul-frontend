@@ -58,3 +58,48 @@ for (const width of [1440, 375]) {
     });
   }
 }
+
+const EMPTY_OVERVIEW = {
+  data: {
+    messagesUnderstood: { count: 0, trendPercent: null },
+    activeWork: { count: 0, completedToday: 0 },
+    updatesDelivered: { count: 0, recipients: 0, topRecipients: [] },
+    needsReview: { count: 0, areas: 0, byKind: { unrouted: 0, alias: 0, category: 0 } },
+  },
+};
+
+for (const width of [1440, 375]) {
+  test(`AC1: empty Home keeps its dashboard without the top empty panel at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await connectedWorkspace(page);
+    await page.route('**/api/v1/overview?*', (route) => route.fulfill({ json: EMPTY_OVERVIEW }));
+    await page.goto('/');
+    await expect(page.getByRole('heading', { name: 'Good morning, Siti.' })).toBeVisible();
+    await expect(page.locator('.stat-card')).toHaveCount(4);
+    await expect(page.locator('.stat-main strong').first()).toHaveText('0');
+    await expect(page.locator('[data-component="ScreenState"]')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Retry', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Review onboarding' })).toBeVisible();
+    await expect(page.locator('.page-footer')).toBeVisible();
+  });
+
+  test(`AC2: empty Channels keeps its heading and setup controls without the top empty panel at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await connectedWorkspace(page);
+    await page.goto('/channels');
+    await expect(page.getByRole('heading', { name: 'Channels', exact: true })).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Add Telegram channel', exact: true }),
+    ).toBeEnabled();
+    await expect(page.locator('[data-component="ConnectionCard"]')).toBeVisible();
+    await expect(page.locator('[data-component="ScreenState"]')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Retry', exact: true })).toHaveCount(0);
+    await page.getByRole('button', { name: 'Add Telegram channel', exact: true }).click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await expect(page).toHaveURL(/\/channels\/new$/);
+  });
+}

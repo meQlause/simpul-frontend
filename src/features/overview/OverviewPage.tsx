@@ -140,7 +140,7 @@ export function OverviewPage() {
 
   return (
     <>
-      {!ready && (
+      {!['ready', 'empty'].includes(state) && (
         <ScreenState
           state={state}
           skeleton="cards"

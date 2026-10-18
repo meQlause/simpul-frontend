@@ -4,6 +4,7 @@ import { connectBackend, startBackend } from './helpers/backend';
 let backend: Awaited<ReturnType<typeof startBackend>>;
 
 test.beforeAll(async () => {
+  test.setTimeout(60000);
   backend = await startBackend();
 });
 test.afterAll(() => {

@@ -6,15 +6,9 @@ import { widths } from './views.ts';
 
 let backend: Awaited<ReturnType<typeof startBackend>>;
 
-const STATES: State[] = ['ready', 'empty', 'error', 'offline', 'not-found'];
-const EMPTY = {
-  data: {
-    messagesUnderstood: { count: 0, trendPercent: null },
-    activeWork: { count: 0, completedToday: 0 },
-    updatesDelivered: { count: 0, recipients: 0, topRecipients: [] },
-    needsReview: { count: 0, areas: 0, byKind: { unrouted: 0, alias: 0, category: 0 } },
-  },
-};
+// No `empty`: an all-zero Home keeps its page, while the mockup still shows the removed panel
+// (ticket ui-empty-layout, AC1). tests/e2e/ui-empty-layout.spec.ts covers that layout.
+const STATES: State[] = ['ready', 'error', 'offline', 'not-found'];
 
 test.beforeAll(async () => {
   test.setTimeout(180000);
@@ -30,7 +24,7 @@ for (const state of STATES) {
       await open(page, backend.baseUrl, {
         path: '/',
         width,
-        prepare: () => induce(page, state, /\/api\/v1\/overview\?period=/, EMPTY),
+        prepare: () => induce(page, state, /\/api\/v1\/overview\?period=/),
       });
 
       if (state === 'offline') {
