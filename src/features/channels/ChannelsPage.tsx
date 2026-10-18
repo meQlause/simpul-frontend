@@ -12,6 +12,7 @@ import { ErrorToast } from '../../shared/ui/ErrorToast';
 import { ChannelList } from './components/ChannelList';
 import { ChannelDrawer } from './components/ChannelDrawer';
 import { ConnectionDrawer } from './components/ConnectionDrawer';
+import { NewConnectionDrawer } from './components/NewConnectionDrawer';
 import { ChannelConfirmation } from './components/ChannelConfirmation';
 
 export function ChannelsPage() {
@@ -139,8 +140,11 @@ function PageDrawers({ page }: { page: ReturnType<typeof useChannelPage> }) {
 
   const drawerState = useScreenState(detail, false);
 
+  // No bot yet: the connection form is the only drawer, and it creates the bot.
   if (!page.connection) {
-    return null;
+    return page.routeId === 'connection' || page.routeId === 'new' ? (
+      <NewConnectionDrawer onClose={page.close} onSaved={() => page.saved('Connection saved.')} />
+    ) : null;
   }
 
   return (

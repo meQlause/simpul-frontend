@@ -128,6 +128,16 @@ export function pollDelay(previous: number) {
   return Math.min(Math.max(previous * 2, FIRST_POLL_MS), MAX_POLL_MS);
 }
 
+// An active group is already monitored: there is nothing to activate.
+export function activationOffered(status: string | undefined) {
+  return status !== 'active';
+}
+
+// "The check expired" is news only while activation is still offered.
+export function staleNotice(facts: { status: string | undefined; ready: boolean; fresh: boolean }) {
+  return activationOffered(facts.status) && facts.ready && !facts.fresh;
+}
+
 export function shouldRecheck(wasFresh: boolean, fresh: boolean) {
   return wasFresh && !fresh;
 }

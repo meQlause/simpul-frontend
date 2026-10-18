@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import {
+  activationOffered,
   canRetry,
   channelName,
   dueCall,
@@ -9,6 +10,7 @@ import {
   setupFacts,
   setupSteps,
   shouldRecheck,
+  staleNotice,
   type SetupFacts,
 } from '../../../../src/features/channels/channels.rules';
 import type {
@@ -203,4 +205,14 @@ test('AC19, AC23: pollAgain stops at a received proof and at expiry; shouldReche
   expect(pollDelay(750)).toBe(1500);
   expect(pollDelay(6000)).toBe(10000);
   expect(pollDelay(10000)).toBe(10000);
+});
+
+test('an active group offers no activation and never says its old check expired', () => {
+  expect(activationOffered('active')).toBe(false);
+  expect(activationOffered('draft')).toBe(true);
+  expect(activationOffered('paused')).toBe(true);
+  expect(staleNotice({ status: 'active', ready: true, fresh: false })).toBe(false);
+  expect(staleNotice({ status: 'paused', ready: true, fresh: false })).toBe(true);
+  expect(staleNotice({ status: 'draft', ready: true, fresh: true })).toBe(false);
+  expect(staleNotice({ status: 'draft', ready: false, fresh: false })).toBe(false);
 });

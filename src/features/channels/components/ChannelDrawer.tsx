@@ -8,7 +8,7 @@ import { useOnline } from '../../../shared/useOnline';
 import { sentenceOf, useChannelSetup } from '../useChannelSetup';
 import { ErrorToast } from '../../../shared/ui/ErrorToast';
 import { channelsCopy as copy } from '../channels.copy';
-import { channelName, shouldRecheck } from '../channels.rules';
+import { activationOffered, channelName, shouldRecheck, staleNotice } from '../channels.rules';
 import { ChannelAudience } from './ChannelFields';
 import { useFreshVerification } from './Checklist';
 import { ChannelConfirmation } from './ChannelConfirmation';
@@ -31,7 +31,12 @@ export function ChannelDrawer({
 }) {
   const setup = useChannelSetup(channel, connection, onSaved);
   const fresh = useFreshVerification(setup.verification);
-  const stale = Boolean(setup.verification?.activationReady) && !fresh;
+  const status = setup.channel?.connectionStatus;
+  const stale = staleNotice({
+    status,
+    ready: Boolean(setup.verification?.activationReady),
+    fresh,
+  });
   const wasFresh = useRef(false);
 
   // A passing check that goes stale is checked once more, and the drawer says so.
@@ -58,6 +63,7 @@ export function ChannelDrawer({
           setup={setup}
           fresh={fresh}
           stale={stale}
+          status={status}
           onActivate={() => setActivationKey(crypto.randomUUID())}
         />
       }
@@ -111,11 +117,13 @@ function ChannelFooter({
   setup,
   fresh,
   stale,
+  status,
   onActivate,
 }: {
   setup: Setup;
   fresh: boolean;
   stale: boolean;
+  status: string | undefined;
   onActivate: () => void;
 }) {
   const online = useOnline();
@@ -151,18 +159,40 @@ function ChannelFooter({
           Save changes
         </button>
       )}
-      <button
-        className="button button-primary"
-        data-component="Button"
-        data-variant="primary"
-        data-size="drawer"
+      <ActivateButton
+        status={status}
         disabled={!fresh || !setup.consent || busy}
-        onClick={onActivate}
-      >
-        <Icon name="play" />
-        Activate monitoring
-      </button>
+        onActivate={onActivate}
+      />
     </>
+  );
+}
+
+function ActivateButton({
+  status,
+  disabled,
+  onActivate,
+}: {
+  status: string | undefined;
+  disabled: boolean;
+  onActivate: () => void;
+}) {
+  if (!activationOffered(status)) {
+    return null;
+  }
+
+  return (
+    <button
+      className="button button-primary"
+      data-component="Button"
+      data-variant="primary"
+      data-size="drawer"
+      disabled={disabled}
+      onClick={onActivate}
+    >
+      <Icon name="play" />
+      Activate monitoring
+    </button>
   );
 }
 
