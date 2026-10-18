@@ -1,0 +1,12 @@
+node_modules
+dist
+coverage
+test-results
+playwright-report
+tests
+.env
+.env.*
+.git
+.github
+.husky
+*.log
